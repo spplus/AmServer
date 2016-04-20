@@ -58,4 +58,5 @@
 // 日志对象简化
 #define		LOG		App_Logger::instance()	
 
+
 #endif

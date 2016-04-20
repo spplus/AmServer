@@ -63,26 +63,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bizbase.cpp" />
     <ClCompile Include="clienthandler.cpp" />
     <ClCompile Include="clientmgr.cpp" />
     <ClCompile Include="comclient.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="msghandler.cpp" />
+    <ClCompile Include="packetparser.cpp" />
     <ClCompile Include="reactortask.cpp" />
-    <ClCompile Include="recvtask.cpp" />
+    <ClCompile Include="clientmsgservice.cpp" />
     <ClCompile Include="tcpservermgr.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bizbase.h" />
     <ClInclude Include="clienthandler.h" />
     <ClInclude Include="clientmgr.h" />
+    <ClInclude Include="cmdbase.h" />
     <ClInclude Include="comclient.h" />
     <ClInclude Include="commands.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="msghandler.h" />
+    <ClInclude Include="packetparser.h" />
     <ClInclude Include="reactortask.h" />
-    <ClInclude Include="recvtask.h" />
+    <ClInclude Include="clientmsgservice.h" />
+    <ClInclude Include="structs.h" />
     <ClInclude Include="tcpservermgr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

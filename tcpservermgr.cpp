@@ -2,6 +2,12 @@
 #include "defines.h"
 #include "TcpServerMgr.h"
 
+void TcpServerMgr::init()
+{
+	// 加载服务器配置
+	// ...
+}
+
 bool TcpServerMgr::start()
 {
 	// 1.启动侦听
@@ -12,8 +18,6 @@ bool TcpServerMgr::start()
 	}
 	else
 	{
-		// 2.启动事件循环
-		m_rtTask.start();
 		return true;
 	}
 
@@ -23,8 +27,4 @@ void TcpServerMgr::stop()
 {
 	// 关闭断口
 	m_connector.close();
-
-	// 停止事件循环
-	m_rtTask.stop();
-
 }

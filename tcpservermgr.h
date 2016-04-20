@@ -11,11 +11,18 @@ typedef ACE_Acceptor<ClientHandler, ACE_SOCK_ACCEPTOR> SOCKAcceptor;
 class TcpServerMgr
 {
 public:
-	bool	start();
-	void	stop();
+
+	// 加载配置文件
+	void		init();
+
+	// 启动服务监听
+	bool		start();
+
+	// 关闭服务监听
+	void		stop();
 
 private:
-	ReactorTask		m_rtTask;
+	
 	SOCKAcceptor	m_connector;
 };
 

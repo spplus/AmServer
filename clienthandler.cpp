@@ -3,10 +3,10 @@
 #include "ace/Time_Value.h"
 #include "ace/Date_Time.h"
 #include "ace/Addr.h"
-#include <string>
 
 #include "clienthandler.h"
 #include "ClientMgr.h"
+#include "clientmsgservice.h"
 
 #define RECV_TIMEOUT	100
 #define SEND_TIMEOUT	100
@@ -29,11 +29,8 @@ int ClientHandler::open(void*p)
 		return -1;
 	}
 
-	// 启动数据处理线程
-	m_recvtsk.start();
-
 	// 保存客户端连接
-	App_ClientMgr::instance()->add(this);
+	m_connectId = App_ClientMgr::instance()->add(this);
 
 	return 0;
 }
@@ -99,7 +96,9 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 	// 接收完整包，投递到数据处理队列
 	if (total == plen)
 	{
-		m_recvtsk.putq(mb);
+		// 把消息标记上连接ID,以业务层处理完可以原路返回
+		mb->msg_type(m_connectId);
+		App_CMService::instance()->putq(mb);
 	}
 	else
 	{
@@ -136,11 +135,8 @@ int ClientHandler::handle_close(ACE_HANDLE h, ACE_Reactor_Mask mask)
 
 		this->closing_ = true;
 
-		// 停止数据处理线程
-		m_recvtsk.stop();
-
 		// 删除客户端连接对象
-		App_ClientMgr::instance()->del(this);
+		App_ClientMgr::instance()->del(m_connectId);
 
 		// 连接断开，通知工作线程退出
 		/*ACE_Message_Block* mb = new ACE_Message_Block(1);

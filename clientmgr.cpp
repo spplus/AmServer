@@ -1,17 +1,30 @@
 
 #include "ClientMgr.h"
-
-void ClientMgr::add(ClientHandler* client)
+ClientMgr::ClientMgr()
 {
-	m_clientList.push_back(client);
+	m_connectId = 1000;
 }
 
-void ClientMgr::del(ClientHandler* client)
+unsigned int ClientMgr::add(ClientHandler* client)
 {
-	m_clientList.remove(client);
+	m_connectId++;
+	m_clientList.insert( CMAP::value_type(m_connectId, client));
 }
 
-ClientHandler* ClientMgr::get()
+void ClientMgr::del(unsigned int connid)
 {
-	return m_clientList.back();
+	m_clientList.erase(m_clientList.find(connid));
+}
+
+ClientHandler* ClientMgr::get(unsigned int connid)
+{
+	CMAP::iterator iter = m_clientList.find(connid);
+	if (iter != m_clientList.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		return NULL;
+	}
 }

@@ -1,10 +1,16 @@
+/************************************************************************/
+/* 
+	DESC:	客户端连接处理器.
+	DATE:	2016-04-20
+	AUTHOR:	YUANLS
+*/
+/************************************************************************/
+
 #ifndef __CLIENTHANDLER_H__
 #define __CLIENTHANDLER_H__
 
 #include "ace/Svc_Handler.h"
 #include "ace/SOCK_Stream.h"
-#include "RecvTask.h"
-
 
 class ClientHandler :public ACE_Svc_Handler<ACE_SOCK_STREAM, ACE_NULL_SYNCH>
 {
@@ -18,8 +24,10 @@ public:
 private: 
 	void			SendBack();
 
-private:
-	RecvTask		m_recvtsk;
+private: 
+	// 连接ID
+	unsigned int	m_connectId;
+
 };
 
 #endif
