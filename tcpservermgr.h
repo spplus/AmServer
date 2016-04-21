@@ -3,8 +3,9 @@
 
 #include "ace/Acceptor.h"
 #include "ace/SOCK_Acceptor.h"
+#include "ace/Mutex.h"
+#include "ace/Singleton.h"
 #include "ClientHandler.h"
-#include "ReactorTask.h"
 
 typedef ACE_Acceptor<ClientHandler, ACE_SOCK_ACCEPTOR> SOCKAcceptor;
 
@@ -25,5 +26,5 @@ private:
 	
 	SOCKAcceptor	m_connector;
 };
-
+typedef ACE_Singleton<TcpServerMgr, ACE_Recursive_Thread_Mutex>  App_TcpServer;
 #endif

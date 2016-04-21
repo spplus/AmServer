@@ -5,14 +5,27 @@
 		AUTHOR:	YUANLS
 */
 /************************************************************************/
+#ifndef __PACKETPARSER_H__
+#define __PACKETPARSER_H__
+
 #include "structs.h"
 
 class PacketParser
 {
 public:
-	// 打包
+	
+	// 客户端  <--> 服务器 打包
 	sClientMsg*		decoder(char* data,int datalength);
 
-	// 解包
-	char*		encoder(char* data,int datalength,int &outlengh);
+	// 客户端  <--> 服务器 解包
+	char*			encoder(char* data,int datalength,int &outlengh);
+
+	// 服务器  <--> SCADA 打包
+	sClientMsg*		decoderS(char* data,int datalength);
+
+	// 服务器  <--> SCADA 解包
+	char*			encoderS(char* data,int datalength,int &outlengh);
+
 };
+
+#endif

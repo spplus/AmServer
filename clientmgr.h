@@ -14,6 +14,7 @@
 
 #include "ace/Singleton.h"
 #include "ClientHandler.h"
+#include "packetparser.h"
 
 using namespace std;
 
@@ -23,15 +24,23 @@ class ClientMgr
 {
 public:
 	ClientMgr();
+
+	// 连接管理
 	unsigned int add(ClientHandler* client);
 	void del(unsigned int connid);
 	ClientHandler* get(unsigned int connid);
 
+	// 发送数据
+	int			sendData(unsigned int connid,char* data,int length);
+
 private:
 
+	// 数据打包
+	PacketParser	m_pack;
+
 	// 连接ID，递增
-	unsigned int m_connectId;
-	CMAP	m_clientList;
+	unsigned int	m_connectId;
+	CMAP			m_clientList;
 };
 
 typedef ACE_Singleton<ClientMgr, ACE_Recursive_Thread_Mutex>  App_ClientMgr;

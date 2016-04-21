@@ -45,17 +45,8 @@
     <ClCompile Include="clienthandler.cpp">
       <Filter>server</Filter>
     </ClCompile>
-    <ClCompile Include="reactortask.cpp">
-      <Filter>server</Filter>
-    </ClCompile>
     <ClCompile Include="tcpservermgr.cpp">
       <Filter>server</Filter>
-    </ClCompile>
-    <ClCompile Include="comclient.cpp">
-      <Filter>client</Filter>
-    </ClCompile>
-    <ClCompile Include="msghandler.cpp">
-      <Filter>client</Filter>
     </ClCompile>
     <ClCompile Include="clientmsgservice.cpp">
       <Filter>server</Filter>
@@ -69,6 +60,21 @@
     <ClCompile Include="bizbase.cpp">
       <Filter>biz</Filter>
     </ClCompile>
+    <ClCompile Include="scadahandler.cpp">
+      <Filter>client</Filter>
+    </ClCompile>
+    <ClCompile Include="keepAliveHandler.cpp">
+      <Filter>client</Filter>
+    </ClCompile>
+    <ClCompile Include="recvTask.cpp">
+      <Filter>client</Filter>
+    </ClCompile>
+    <ClCompile Include="tcpClient.cpp">
+      <Filter>client</Filter>
+    </ClCompile>
+    <ClCompile Include="scadaclientmgr.cpp">
+      <Filter>client</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -80,17 +86,8 @@
     <ClInclude Include="clienthandler.h">
       <Filter>server</Filter>
     </ClInclude>
-    <ClInclude Include="reactortask.h">
-      <Filter>server</Filter>
-    </ClInclude>
     <ClInclude Include="tcpservermgr.h">
       <Filter>server</Filter>
-    </ClInclude>
-    <ClInclude Include="comclient.h">
-      <Filter>client</Filter>
-    </ClInclude>
-    <ClInclude Include="msghandler.h">
-      <Filter>client</Filter>
     </ClInclude>
     <ClInclude Include="commands.h">
       <Filter>com</Filter>
@@ -112,6 +109,21 @@
     </ClInclude>
     <ClInclude Include="structs.h">
       <Filter>com</Filter>
+    </ClInclude>
+    <ClInclude Include="scadahandler.h">
+      <Filter>client</Filter>
+    </ClInclude>
+    <ClInclude Include="keepAliveHandler.h">
+      <Filter>client</Filter>
+    </ClInclude>
+    <ClInclude Include="recvTask.h">
+      <Filter>client</Filter>
+    </ClInclude>
+    <ClInclude Include="tcpClient.h">
+      <Filter>client</Filter>
+    </ClInclude>
+    <ClInclude Include="ScadaClientMgr.h">
+      <Filter>client</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

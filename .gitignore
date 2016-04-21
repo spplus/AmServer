@@ -81,3 +81,5 @@ $RECYCLE.BIN/
 *.sdf
 *.suo
 *.ipch
+*.manifest
+*.ilk

@@ -1,11 +1,13 @@
 
 #include "defines.h"
 #include "TcpServerMgr.h"
+#include "clientmsgservice.h"
 
 void TcpServerMgr::init()
 {
 	// 加载服务器配置
 	// ...
+	LOG->message("服务器配置加载成功.");
 }
 
 bool TcpServerMgr::start()
@@ -18,6 +20,11 @@ bool TcpServerMgr::start()
 	}
 	else
 	{
+		LOG->message("server started on port:%d",port_to_listen.get_port_number());
+
+		// 启动客户端消息循环
+		App_CMService::instance()->start();
+
 		return true;
 	}
 
@@ -27,4 +34,7 @@ void TcpServerMgr::stop()
 {
 	// 关闭断口
 	m_connector.close();
+
+	// 关闭客户端消息循环
+	App_CMService::instance()->stop();
 }

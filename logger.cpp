@@ -19,7 +19,7 @@
 #include <ace/Configuration.h>
 #include <ace/Configuration_Import_Export.h>
 
-#include "hp_logger.h"
+#include "logger.h"
 
 static void * pthr_cleaner_process(void * arg);
 

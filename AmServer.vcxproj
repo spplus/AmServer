@@ -42,6 +42,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ACE_ROOT)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -66,13 +67,15 @@
     <ClCompile Include="bizbase.cpp" />
     <ClCompile Include="clienthandler.cpp" />
     <ClCompile Include="clientmgr.cpp" />
-    <ClCompile Include="comclient.cpp" />
+    <ClCompile Include="keepAliveHandler.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="msghandler.cpp" />
     <ClCompile Include="packetparser.cpp" />
-    <ClCompile Include="reactortask.cpp" />
     <ClCompile Include="clientmsgservice.cpp" />
+    <ClCompile Include="recvTask.cpp" />
+    <ClCompile Include="scadahandler.cpp" />
+    <ClCompile Include="tcpClient.cpp" />
+    <ClCompile Include="scadaclientmgr.cpp" />
     <ClCompile Include="tcpservermgr.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -80,15 +83,17 @@
     <ClInclude Include="clienthandler.h" />
     <ClInclude Include="clientmgr.h" />
     <ClInclude Include="cmdbase.h" />
-    <ClInclude Include="comclient.h" />
     <ClInclude Include="commands.h" />
     <ClInclude Include="defines.h" />
+    <ClInclude Include="keepAliveHandler.h" />
     <ClInclude Include="logger.h" />
-    <ClInclude Include="msghandler.h" />
     <ClInclude Include="packetparser.h" />
-    <ClInclude Include="reactortask.h" />
     <ClInclude Include="clientmsgservice.h" />
+    <ClInclude Include="recvTask.h" />
+    <ClInclude Include="scadahandler.h" />
     <ClInclude Include="structs.h" />
+    <ClInclude Include="tcpClient.h" />
+    <ClInclude Include="ScadaClientMgr.h" />
     <ClInclude Include="tcpservermgr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,4 +1,5 @@
 
+#include "defines.h"
 #include "ClientMgr.h"
 ClientMgr::ClientMgr()
 {
@@ -9,6 +10,7 @@ unsigned int ClientMgr::add(ClientHandler* client)
 {
 	m_connectId++;
 	m_clientList.insert( CMAP::value_type(m_connectId, client));
+	return m_connectId;
 }
 
 void ClientMgr::del(unsigned int connid)
@@ -26,5 +28,23 @@ ClientHandler* ClientMgr::get(unsigned int connid)
 	else
 	{
 		return NULL;
+	}
+}
+
+int ClientMgr::sendData(unsigned int connid,char* data,int length)
+{
+	// 打包数据
+	int outLength = 0;
+	m_pack.encoder(data,length,outLength);
+	
+	ClientHandler* handler = get(connid);
+	if (handler != NULL)
+	{
+		return handler->SendData(data,outLength);
+	}
+	else
+	{
+		LOG->error("can not find connection :%d,send failed.",connid);
+		return -1;
 	}
 }

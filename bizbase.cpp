@@ -5,7 +5,7 @@
 void BizBase::exec(sClientMsg* msg)
 {
 	CmdBase* pbase = 0;
-	switch (msg.type)
+	switch (msg->type)
 	{
 	case CMD_USER_LONGIN:
 
@@ -15,7 +15,7 @@ void BizBase::exec(sClientMsg* msg)
 	default:
 		break;
 	}
-	if (pbase != NULL)
+	if (pbase != 0)
 	{
 		pbase->exec(msg);
 	}

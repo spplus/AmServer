@@ -21,7 +21,7 @@ struct sClientMsg
 		connectId = 0;
 		length = 0;
 		type = 0;
-		data = NULL;
+		data = 0;
 	}
 };
 

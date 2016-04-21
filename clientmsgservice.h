@@ -39,6 +39,6 @@ private:
 	PacketParser	m_pack;
 };
 
-typedef ACE_Singleton<ClientMsgService, ACE_Mutex> App_CMService;
+typedef ACE_Singleton<ClientMsgService, ACE_Recursive_Thread_Mutex> App_CMService;
 
 #endif

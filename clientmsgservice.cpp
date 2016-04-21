@@ -2,12 +2,14 @@
 #include "ace/OS_NS_unistd.h"
 #include "clientmsgservice.h"
 #include "commands.h"
-
+#include "defines.h"
 
 void ClientMsgService::start()
 {
 	m_stop = false;
 	activate();
+
+	LOG->message("client message service started.");
 }
 
 void ClientMsgService::stop()
@@ -23,6 +25,7 @@ int ClientMsgService::put(ACE_Message_Block* mb)
 
 int ClientMsgService::svc()
 {
+	ACE_Time_Value tv(0,10);
 	while(!m_stop)
 	{
 		ACE_Message_Block* mb ;
@@ -33,7 +36,7 @@ int ClientMsgService::svc()
 
 			mb->release();
 		}
-		
+		ACE_OS::sleep(tv);
 	}
 	return 0;
 }
@@ -44,10 +47,10 @@ void ClientMsgService::parseData(ACE_Message_Block* mb)
 	sClientMsg* msg = m_pack.decoder(mb->rd_ptr(),mb->length());
 
 	// 设置连接ID
-	msg.connectId = mb->msg_type();
+	msg->connectId = mb->msg_type();
 
 	// 调用业务逻辑处理
-	m_biz.exec(outMsgType,msg,outLength);
+	m_biz.exec(msg);
 
 	delete []msg;
 
