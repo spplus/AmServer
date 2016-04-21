@@ -9,7 +9,9 @@
 #ifndef __CMDBASE_H__
 #define __CMDBASE_H__
 
+#include "defines.h"
 #include "structs.h"
+#include "clientmgr.h"
 
 class CmdBase
 {

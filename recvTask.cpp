@@ -31,18 +31,11 @@ int RecvTask::svc()
 {
 	LOG->message("RecvTask start ok.");
 	ACE_Message_Block* mb = NULL;
-	ACE_Time_Value tv(0,10);
+	ACE_Time_Value tv(0,1);
 	while (!m_stop)
 	{
-		if (getq(mb,&tv) != -1)
+		if (getq(mb) != -1)
 		{
-			// 判断是否为退出消息
-			if (mb->msg_type() == ACE_Message_Block::MB_STOP)
-			{
-				mb->release();
-				break;
-			}
-	
 			ParseData(mb);
 			mb->release();
 		}

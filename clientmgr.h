@@ -31,7 +31,7 @@ public:
 	ClientHandler* get(unsigned int connid);
 
 	// ·¢ËÍÊı¾İ
-	int			sendData(unsigned int connid,char* data,int length);
+	int			sendData(unsigned int connid,string data,int msgtype);
 
 private:
 

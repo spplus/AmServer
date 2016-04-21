@@ -8,7 +8,9 @@
 #ifndef __PACKETPARSER_H__
 #define __PACKETPARSER_H__
 
+#include <string>
 #include "structs.h"
+using namespace std;
 
 class PacketParser
 {
@@ -18,13 +20,13 @@ public:
 	sClientMsg*		decoder(char* data,int datalength);
 
 	// 客户端  <--> 服务器 解包
-	char*			encoder(char* data,int datalength,int &outlengh);
+	char*				encoder(string data,int msgtype,int &outlengh);
 
 	// 服务器  <--> SCADA 打包
 	sClientMsg*		decoderS(char* data,int datalength);
 
 	// 服务器  <--> SCADA 解包
-	char*			encoderS(char* data,int datalength,int &outlengh);
+	char*				encoderS(char* data,int datalength,int &outlengh);
 
 };
 

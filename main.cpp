@@ -32,8 +32,7 @@ int ACE_TMAIN (int, ACE_TCHAR *[])
 
 	// 启动事件循环
 	ACE_Reactor::instance()->run_reactor_event_loop();
-	//App_Reactor::instance()->start();
-
+	
 	ACE::fini();
 	return 0;
 }

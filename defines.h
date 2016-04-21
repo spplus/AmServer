@@ -18,19 +18,19 @@
 #include "logger.h"
 
 // 服务器监听端口
-#define		SVR__PORT	45211
+#define		SVR__PORT			45211
 
-// 接收数据包固定长度
-#define		DECODER_PACKET_FIXLEN 2+4+2+2+4+4+4
+// 包头
+const short		FRAM_TAG_HEAD = 	0x11;
 
-// 发送数据包固定长度
-#define		ENCODER_PACKET_FIXLEN 2+2+4+4+4
+// 包尾
+const short		FRAME_TAG_END = 	0x88;
 
-// 单包长度
-#define		BUFFER_LEN             1024
+// 包标识长度
+#define		FRAME_TAG__LEN	2
 
-// 包体长度
-#define		FRAME_HEAD_LEN		4
+// 消息长度
+#define		FRAME_HEAD_LEN	4
 
 // 消息类型长度
 #define		DATA_TYPE_LEN		4

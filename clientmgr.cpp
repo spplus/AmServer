@@ -31,19 +31,20 @@ ClientHandler* ClientMgr::get(unsigned int connid)
 	}
 }
 
-int ClientMgr::sendData(unsigned int connid,char* data,int length)
+int ClientMgr::sendData(unsigned int connid,string data,int msgtype)
 {
 	// 打包数据
 	int outLength = 0;
-	m_pack.encoder(data,length,outLength);
+	char * buff = m_pack.encoder(data,msgtype,outLength);
 	
 	ClientHandler* handler = get(connid);
 	if (handler != NULL)
 	{
-		return handler->SendData(data,outLength);
+		return handler->SendData(buff,outLength);
 	}
 	else
 	{
+		delete []buff;
 		LOG->error("can not find connection :%d,send failed.",connid);
 		return -1;
 	}

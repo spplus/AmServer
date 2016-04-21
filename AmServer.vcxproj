@@ -67,8 +67,10 @@
     <ClCompile Include="bizbase.cpp" />
     <ClCompile Include="clienthandler.cpp" />
     <ClCompile Include="clientmgr.cpp" />
+    <ClCompile Include="dbaccess.cpp" />
     <ClCompile Include="keepAliveHandler.cpp" />
     <ClCompile Include="logger.cpp" />
+    <ClCompile Include="logincmd.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="packetparser.cpp" />
     <ClCompile Include="clientmsgservice.cpp" />
@@ -84,9 +86,11 @@
     <ClInclude Include="clientmgr.h" />
     <ClInclude Include="cmdbase.h" />
     <ClInclude Include="commands.h" />
+    <ClInclude Include="dbaccess.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="keepAliveHandler.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="logincmd.h" />
     <ClInclude Include="packetparser.h" />
     <ClInclude Include="clientmsgservice.h" />
     <ClInclude Include="recvTask.h" />

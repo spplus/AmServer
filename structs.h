@@ -23,6 +23,13 @@ struct sClientMsg
 		type = 0;
 		data = 0;
 	}
+	~sClientMsg()
+	{
+		if (data != 0)
+		{
+			delete []data;
+		}
+	}
 };
 
 #endif

@@ -25,7 +25,7 @@ int ClientMsgService::put(ACE_Message_Block* mb)
 
 int ClientMsgService::svc()
 {
-	ACE_Time_Value tv(0,10);
+	ACE_Time_Value tv(0,1);
 	while(!m_stop)
 	{
 		ACE_Message_Block* mb ;
@@ -43,6 +43,11 @@ int ClientMsgService::svc()
 
 void ClientMsgService::parseData(ACE_Message_Block* mb)
 {
+	if (mb->length() > MAX_PACKET_LEN)
+	{
+		LOG->error("Invalid data length %d",mb->length());
+		return;
+	}
 	// 解包
 	sClientMsg* msg = m_pack.decoder(mb->rd_ptr(),mb->length());
 
@@ -52,7 +57,5 @@ void ClientMsgService::parseData(ACE_Message_Block* mb)
 	// 调用业务逻辑处理
 	m_biz.exec(msg);
 
-	delete []msg;
-
-	
+	delete msg;
 }

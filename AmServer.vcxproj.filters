@@ -75,6 +75,12 @@
     <ClCompile Include="scadaclientmgr.cpp">
       <Filter>client</Filter>
     </ClCompile>
+    <ClCompile Include="logincmd.cpp">
+      <Filter>biz</Filter>
+    </ClCompile>
+    <ClCompile Include="dbaccess.cpp">
+      <Filter>db</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -124,6 +130,12 @@
     </ClInclude>
     <ClInclude Include="ScadaClientMgr.h">
       <Filter>client</Filter>
+    </ClInclude>
+    <ClInclude Include="logincmd.h">
+      <Filter>biz</Filter>
+    </ClInclude>
+    <ClInclude Include="dbaccess.h">
+      <Filter>db</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@ void ScadaClientMgr::init()
 {
 	// 读取配置信息
 	// ...
-	m_svrAddr.set("127.0.0.1",5555);
+	m_svrAddr.set(8888,"127.0.0.1");
 
 	// 创建消息接收任务
 	m_rTask = new RecvTask();

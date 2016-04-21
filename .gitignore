@@ -83,3 +83,11 @@ $RECYCLE.BIN/
 *.ipch
 *.manifest
 *.ilk
+*.lastbuildstate
+*.exp
+*.log
+*.pdb
+*.cache
+*.tlog
+*.idb
+*.vsp

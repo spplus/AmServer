@@ -7,7 +7,7 @@ void TcpServerMgr::init()
 {
 	// 加载服务器配置
 	// ...
-	LOG->message("服务器配置加载成功.");
+	LOG->message("load server config ok.");
 }
 
 bool TcpServerMgr::start()
