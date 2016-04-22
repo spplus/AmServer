@@ -9,6 +9,7 @@
 #include "logger.h"
 #include "tcpservermgr.h"
 #include "scadaclientmgr.h"
+#include "dbaccess.h"
 
 int ACE_TMAIN (int, ACE_TCHAR *[]) 
 {
@@ -29,6 +30,7 @@ int ACE_TMAIN (int, ACE_TCHAR *[])
 
 
 	// 初始化数据库连接
+	App_Dba::instance()->init();
 
 	// 启动事件循环
 	ACE_Reactor::instance()->run_reactor_event_loop();

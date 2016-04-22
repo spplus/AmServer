@@ -41,13 +41,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ACE_ROOT)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ACE_ROOT);$(MYSQL_HOME)/include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ACE_ROOT)/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ACEd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ACE_ROOT)/lib;$(MYSQL_HOME)/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ACEd.lib;libmysql.lib;mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
