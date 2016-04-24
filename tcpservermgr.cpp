@@ -1,18 +1,18 @@
 
 #include "defines.h"
-#include "TcpServerMgr.h"
+#include "tcpservermgr.h"
 #include "clientmsgservice.h"
 
 void TcpServerMgr::init()
 {
-	// ¼ÓÔØ·þÎñÆ÷ÅäÖÃ
+	// ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	// ...
 	LOG->message("load server config ok.");
 }
 
 bool TcpServerMgr::start()
 {
-	// 1.Æô¶¯ÕìÌý
+	// 1.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	ACE_INET_Addr port_to_listen(SVR__PORT);
 	if (m_connector.open(port_to_listen) == -1)
 	{
@@ -22,7 +22,7 @@ bool TcpServerMgr::start()
 	{
 		LOG->message("server started on port:%d",port_to_listen.get_port_number());
 
-		// Æô¶¯¿Í»§¶ËÏûÏ¢Ñ­»·
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢Ñ­ï¿½ï¿½
 		App_CMService::instance()->start();
 
 		return true;
@@ -32,9 +32,9 @@ bool TcpServerMgr::start()
 
 void TcpServerMgr::stop()
 {
-	// ¹Ø±Õ¶Ï¿Ú
+	// ï¿½Ø±Õ¶Ï¿ï¿½
 	m_connector.close();
 
-	// ¹Ø±Õ¿Í»§¶ËÏûÏ¢Ñ­»·
+	// ï¿½Ø±Õ¿Í»ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢Ñ­ï¿½ï¿½
 	App_CMService::instance()->stop();
 }

@@ -6,13 +6,13 @@
 
 #include "defines.h"
 #include "clienthandler.h"
-#include "ClientMgr.h"
+#include "clientmgr.h"
 #include "clientmsgservice.h"
 
-#define RECV_TIMEOUT	100
-#define SEND_TIMEOUT	100
-#define FRAME_HEAD_LEN	4
-#define MAX_PACKET_LEN	1024*1024*1024
+//#define RECV_TIMEOUT	100
+//#define SEND_TIMEOUT	100
+//#define FRAME_HEAD_LEN	4
+//#define MAX_PACKET_LEN	1024*1024*1024
 
 int ClientHandler::open(void*p)
 {
@@ -23,16 +23,16 @@ int ClientHandler::open(void*p)
 	}
 	ACE_INET_Addr svraddr;
 
-	//»ñµÃÔ¶³ÌÁ´½ÓµØÖ·ºÍ¶Ë¿Ú
+	//ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½Ö·ï¿½Í¶Ë¿ï¿½
 	if(this->peer().get_remote_addr(svraddr) == -1)
 	{
 		LOG->warn(" get_remote_addr failed!");
 		return -1;
 	}
 
-	LOG->message("new client connection£º%s",svraddr.get_host_addr());
+	LOG->message("new client connectionï¿½ï¿½%s",svraddr.get_host_addr());
 
-	// ±£´æ¿Í»§¶ËÁ¬½Ó
+	// ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	m_connectId = App_ClientMgr::instance()->add(this);
 
 	return 0;
@@ -58,23 +58,23 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 		return 0;
 	}
 
-	// ½âÎö³öÊý¾Ý°ü³¤¶È
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½
 	int plen = 0;
 	ACE_OS::memcpy(&plen,buff,FRAME_HEAD_LEN);
 	
-	// ÅÐ¶ÏÊý¾Ý°ü³¤¶ÈÊÇ·ñ·Ç·¨
+	// ï¿½Ð¶ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½Ç·ï¿½Ç·ï¿½
 	if (plen > MAX_PACKET_LEN || plen <0)
 	{
 		LOG->warn("invalid packet length:%d",plen);
 		return 0;
 	}
-	// ½ÓÊÕ°üÌåÄÚÈÝ
+	// ï¿½ï¿½ï¿½Õ°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	ACE_Message_Block* mb = new ACE_Message_Block(plen);
 
-	// ×Ü½ÓÊÕ³¤¶È
+	// ï¿½Ü½ï¿½ï¿½Õ³ï¿½ï¿½ï¿½
 	int total = 0;
 
-	// ¼ÌÐø¶ÁÈ¡°üÌåÄÚÈÝ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	int dlen = peer().recv(mb->wr_ptr(),plen,&nowait);
 	if (dlen <= 0)
 	{
@@ -85,7 +85,7 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 	total = dlen;
 	mb->wr_ptr(dlen);
 
-	// Èç¹û¶Ì¶Á£¬Ôò¼ÌÐø¶ÁÈ¡¡£
+	// ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½
 	while(total < plen)
 	{
 		ACE_DEBUG((LM_DEBUG,"[%D]total:%d,this length:%d,read:%d.\n",plen,dlen,total));
@@ -99,10 +99,10 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 		total += dlen;
 	}
 
-	// ½ÓÊÕÍêÕû°ü£¬Í¶µÝµ½Êý¾Ý´¦Àí¶ÓÁÐ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¶ï¿½Ýµï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (total == plen)
 	{
-		// °ÑÏûÏ¢±ê¼ÇÉÏÁ¬½ÓID,ÒÔÒµÎñ²ã´¦ÀíÍê¿ÉÒÔÔ­Â··µ»Ø
+		// ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID,ï¿½ï¿½Òµï¿½ï¿½ã´¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­Â·ï¿½ï¿½ï¿½ï¿½
 		mb->msg_type(m_connectId);
 		if(App_CMService::instance()->putq(mb) != -1)
 		{
@@ -113,7 +113,7 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 	{
 		mb->release();
 
-		// ½ÓÊÕ°ü³¤¶È´íÎó
+		// ï¿½ï¿½ï¿½Õ°ï¿½È´ï¿½ï¿½ï¿½
 		LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
 	}
 	return 0;
@@ -135,20 +135,20 @@ int ClientHandler::handle_close(ACE_HANDLE h, ACE_Reactor_Mask mask)
 			LOG->debug("Connection closed:%s.",peer_name);
 		}
 
-		// ÊÍ·Å¶ÓÁÐ×ÊÔ´
+		// ï¿½Í·Å¶ï¿½ï¿½ï¿½ï¿½ï¿½Ô´
 		this->wait();
 
-		// ¹Ø±ÕÁ´Â·
+		// ï¿½Ø±ï¿½ï¿½ï¿½Â·
 		this->peer().close_reader();
 		this->peer().close_writer();
 		this->peer().close();
 
 		this->closing_ = true;
 
-		// É¾³ý¿Í»§¶ËÁ¬½Ó¶ÔÏó
+		// É¾ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½
 		App_ClientMgr::instance()->del(m_connectId);
 
-		// Á¬½Ó¶Ï¿ª£¬Í¨Öª¹¤×÷Ïß³ÌÍË³ö
+		// ï¿½ï¿½ï¿½Ó¶Ï¿ï¿½ï¿½ï¿½Í¨Öªï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½Ë³ï¿½
 		/*ACE_Message_Block* mb = new ACE_Message_Block(1);
 		mb->msg_type(ACE_Message_Block::MB_STOP);
 		m_checktsk->put(mb);*/
@@ -175,12 +175,12 @@ bool ClientHandler::SendData(const char* data,int length)
 
 	const char* pData = data;
 	
-	//·¢ËÍÊý¾ÝµÄ×Ü³¤¶È
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½Ü³ï¿½ï¿½ï¿½
 	int nSendLen = length;
 
 	int nIsSendSize = 0;
 
-	//Ñ­»··¢ËÍ£¬Ö±µ½Êý¾Ý·¢ËÍÍê³É¡£
+	//Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½Ö±ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ï¿½É¡ï¿½
 	while(nIsSendSize < nSendLen)
 	{
 
@@ -190,7 +190,7 @@ bool ClientHandler::SendData(const char* data,int length)
 		{
 			if(nErr == EWOULDBLOCK)
 			{
-				//Èç¹û·¢ËÍ¶ÂÈû£¬ÔòµÈ10ºÁÃëºóÔÙ·¢ËÍ¡£
+				//ï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½10ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù·ï¿½ï¿½Í¡ï¿½
 				ACE_Time_Value tvSleep(0, 10 * 1000);
 				ACE_OS::sleep(tvSleep);
 				continue;
@@ -198,19 +198,19 @@ bool ClientHandler::SendData(const char* data,int length)
 			delete []data;
 			return false;
 		}
-		// Ò»´ÎÐÔ·¢ËÍÍêÒ»°üÊý¾Ý
+		// Ò»ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½
 		else if(nDataLen >= nSendLen)   
 		{
 			delete []data;
 			return true;
 		}
-		// ·Ö¶à´Î·¢ËÍ
+		// ï¿½Ö¶ï¿½Î·ï¿½ï¿½ï¿½
 		else
 		{
 			nIsSendSize  += nDataLen;
 			nSendLen -= nDataLen;
 
-			// ¶à´Î·¢ËÍÍê±Ï
+			// ï¿½ï¿½Î·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if (nIsSendSize == nSendLen)
 			{
 				delete []data;

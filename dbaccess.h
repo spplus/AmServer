@@ -1,6 +1,6 @@
 /************************************************************************/
 /* 
-	DESC:	Êý¾Ý¿â²Ù×÷½Ó¿Ú.
+	DESC:	ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½.
 	DATE:	2016-04-21
 	AUTHOR:	YUANLS	
 */
@@ -18,7 +18,7 @@
 #endif
 
 #include <string>
-#include "mysql.h"
+#include <mysql/mysql.h>
 
 
 using namespace std;
@@ -29,14 +29,14 @@ public:
 
 	DbAccess();
 
-	// ¼ÓÔØÊý¾Ý¿âÅäÖÃ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½
 	void			init();
 
-	// Ö´ÐÐsql
+	// Ö´ï¿½ï¿½sql
 	int				execSql(char* sql);
 
-	// ²éÑ¯ÁÐ±í
-	vector<map<string,string>> getList(char* sql);
+	// ï¿½ï¿½Ñ¯ï¿½Ð±ï¿½
+	vector<map<string,string> > getList(char* sql);
 
 private:
 	bool			conn2db();

@@ -1,6 +1,6 @@
 #include "ace/Log_Msg.h"
 #include "ace/Reactor.h"
-#include "recvtask.h"
+#include "recvTask.h"
 #include "scadaclientmgr.h"
 #include "structs.h"
 
@@ -44,7 +44,7 @@ int RecvTask::svc()
 
 	LOG->message("RecvTask exit");
 
-	// 系统退出
+	// 系统锟剿筹拷
 	close();
 	return 0;
 }
@@ -52,7 +52,7 @@ int RecvTask::svc()
 void RecvTask::ParseData(ACE_Message_Block* mb)
 {
 
-	// 1. 数据解包
+	// 1. 锟斤拷萁锟斤拷
 	switch (mb->msg_type())
 	{
 	case SYS_MSG_CONNECTED:
@@ -65,7 +65,7 @@ void RecvTask::ParseData(ACE_Message_Block* mb)
 		{
 			sClientMsg*	msg = m_pack.decoderS(mb->rd_ptr(),mb->length());
 
-			// 调用业务路径处理
+			// 锟斤拷锟斤拷业锟斤拷路锟斤拷锟斤拷锟斤拷
 			m_biz.exec(msg);
 
 		}

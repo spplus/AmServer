@@ -29,7 +29,7 @@ void DbAccess::init()
 
 	LOG->message("MySQL ssock init OK.");
 
-	//Á¬½Óµ½Ö¸¶¨µÄÊý¾Ý¿â
+	//ï¿½ï¿½ï¿½Óµï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 	if (conn2db())
 	{
 		LOG->message("MySQL connnect OK... ");
@@ -39,7 +39,7 @@ void DbAccess::init()
 
 bool DbAccess::conn2db()
 {
-	//Á¬½Óµ½Ö¸¶¨µÄÊý¾Ý¿â
+	//ï¿½ï¿½ï¿½Óµï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 	m_mysql =mysql_real_connect(m_mysql, m_dbhost.c_str(),m_dbuser.c_str(),m_dbpwd.c_str(), m_dbname.c_str(),m_dbport, NULL, 0);
 	if(!m_mysql)
 	{
@@ -69,9 +69,9 @@ int DbAccess::execSql(char* sql)
 	return ret;
 }
 
-vector<map<string,string>> DbAccess::getList(char* sql)
+vector<map<string,string> > DbAccess::getList(char* sql)
 {
-	vector<map<string,string>> retList;
+	vector<map<string,string> > retList;
 	if (!conn2db())
 	{
 		return retList;
