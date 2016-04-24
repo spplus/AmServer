@@ -1,6 +1,6 @@
 
 #include "defines.h"
-#include "ClientMgr.h"
+#include "clientmgr.h"
 ClientMgr::ClientMgr()
 {
 	m_connectId = 1000;

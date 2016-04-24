@@ -81,6 +81,12 @@
     <ClCompile Include="dbaccess.cpp">
       <Filter>db</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\buff\msgbean.pb.cc">
+      <Filter>buff</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\buff\msgbody.pb.cc">
+      <Filter>buff</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -136,6 +142,12 @@
     </ClInclude>
     <ClInclude Include="dbaccess.h">
       <Filter>db</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\buff\msgbean.pb.h">
+      <Filter>buff</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\buff\msgbody.pb.h">
+      <Filter>buff</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,8 +1,11 @@
 #include "logincmd.h"
+#include "msgbody.pb.h"
 
 void LoginCmd::exec(sClientMsg* msg)
 {
 	// 1.把消息内容序列化为对于的buff 结构
+	PBNS::UserLoginMsg_Response res;
+	res.ParseFromArray(msg->data,msg->length);
 
 	// 2.获取数据库连接
 

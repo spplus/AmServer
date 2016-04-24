@@ -6,13 +6,9 @@
 
 #include "defines.h"
 #include "clienthandler.h"
-#include "ClientMgr.h"
+#include "clientmgr.h"
 #include "clientmsgservice.h"
 
-#define RECV_TIMEOUT	100
-#define SEND_TIMEOUT	100
-#define FRAME_HEAD_LEN	4
-#define MAX_PACKET_LEN	1024*1024*1024
 
 int ClientHandler::open(void*p)
 {

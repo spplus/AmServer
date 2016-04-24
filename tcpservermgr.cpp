@@ -1,6 +1,6 @@
 
 #include "defines.h"
-#include "TcpServerMgr.h"
+#include "tcpservermgr.h"
 #include "clientmsgservice.h"
 
 void TcpServerMgr::init()

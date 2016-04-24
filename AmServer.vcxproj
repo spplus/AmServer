@@ -41,13 +41,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ACE_ROOT);$(MYSQL_HOME)/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ACE_ROOT);$(MYSQL_ROOT)/include;$(PB_ROOT)/include;../common/buff</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ACE_ROOT)/lib;$(MYSQL_HOME)/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ACEd.lib;libmysql.lib;mysqlclient.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ACE_ROOT)/lib;$(MYSQL_ROOT)/lib;$(PB_ROOT)/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ACEd.lib;libmysql.lib;mysqlclient.lib;libprotobufd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,6 +64,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\buff\msgbean.pb.cc" />
+    <ClCompile Include="..\common\buff\msgbody.pb.cc" />
     <ClCompile Include="bizbase.cpp" />
     <ClCompile Include="clienthandler.cpp" />
     <ClCompile Include="clientmgr.cpp" />
@@ -81,6 +83,8 @@
     <ClCompile Include="tcpservermgr.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\buff\msgbean.pb.h" />
+    <ClInclude Include="..\common\buff\msgbody.pb.h" />
     <ClInclude Include="bizbase.h" />
     <ClInclude Include="clienthandler.h" />
     <ClInclude Include="clientmgr.h" />
