@@ -1,6 +1,6 @@
 /************************************************************************/
 /* 
-	DESC:	ï¿½ï¿½ï¿½Ö¿Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½.
+	DESC:	±£³Ö¿Í»§¶ËÁ¬½ÓÁÐ±í.
 	DATE:	2016-04-20
 	AUTHOR:	YUANLS
 */
@@ -13,7 +13,7 @@
 #include <map>
 
 #include "ace/Singleton.h"
-#include "clienthandler.h"
+#include "ClientHandler.h"
 #include "packetparser.h"
 
 using namespace std;
@@ -25,20 +25,20 @@ class ClientMgr
 public:
 	ClientMgr();
 
-	// ï¿½ï¿½ï¿½Ó¹ï¿½ï¿½ï¿½
+	// Á¬½Ó¹ÜÀí
 	unsigned int add(ClientHandler* client);
 	void del(unsigned int connid);
 	ClientHandler* get(unsigned int connid);
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ·¢ËÍÊý¾Ý
 	int			sendData(unsigned int connid,string data,int msgtype);
 
 private:
 
-	// ï¿½ï¿½Ý´ï¿½ï¿½
+	// Êý¾Ý´ò°ü
 	PacketParser	m_pack;
 
-	// ï¿½ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// Á¬½ÓID£¬µÝÔö
 	unsigned int	m_connectId;
 	CMAP			m_clientList;
 };

@@ -1,6 +1,6 @@
 
 #include "defines.h"
-#include "clientmgr.h"
+#include "ClientMgr.h"
 ClientMgr::ClientMgr()
 {
 	m_connectId = 1000;
@@ -33,7 +33,7 @@ ClientHandler* ClientMgr::get(unsigned int connid)
 
 int ClientMgr::sendData(unsigned int connid,string data,int msgtype)
 {
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ´ò°üÊý¾Ý
 	int outLength = 0;
 	char * buff = m_pack.encoder(data,msgtype,outLength);
 	

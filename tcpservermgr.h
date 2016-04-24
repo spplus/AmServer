@@ -5,7 +5,7 @@
 #include "ace/SOCK_Acceptor.h"
 #include "ace/Mutex.h"
 #include "ace/Singleton.h"
-#include "clienthandler.h"
+#include "ClientHandler.h"
 
 typedef ACE_Acceptor<ClientHandler, ACE_SOCK_ACCEPTOR> SOCKAcceptor;
 
@@ -13,13 +13,13 @@ class TcpServerMgr
 {
 public:
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+	// ¼ÓÔØÅäÖÃÎÄ¼þ
 	void		init();
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// Æô¶¯·þÎñ¼àÌý
 	bool		start();
 
-	// ï¿½Ø±Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ¹Ø±Õ·þÎñ¼àÌý
 	void		stop();
 
 private:
