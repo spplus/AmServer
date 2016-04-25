@@ -23,7 +23,7 @@ public:
 	void		stop();
 
 private:
-	
+	int				m_port;
 	SOCKAcceptor	m_connector;
 };
 typedef ACE_Singleton<TcpServerMgr, ACE_Recursive_Thread_Mutex>  App_TcpServer;

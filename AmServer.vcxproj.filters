@@ -87,6 +87,9 @@
     <ClCompile Include="..\common\buff\msgbody.pb.cc">
       <Filter>buff</Filter>
     </ClCompile>
+    <ClCompile Include="confmgr.cpp">
+      <Filter>com</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="..\common\buff\msgbody.pb.h">
       <Filter>buff</Filter>
+    </ClInclude>
+    <ClInclude Include="confmgr.h">
+      <Filter>com</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

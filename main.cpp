@@ -10,6 +10,7 @@
 #include "tcpservermgr.h"
 #include "scadaclientmgr.h"
 #include "dbaccess.h"
+#include "confmgr.h"
 
 int ACE_TMAIN (int, ACE_TCHAR *[]) 
 {
@@ -19,6 +20,14 @@ int ACE_TMAIN (int, ACE_TCHAR *[])
 	App_Logger::instance()->load_config(CONFIG_FILE);
 	App_Logger::instance()->set_logname(LOGNAME);
 	App_Logger::instance()->open_logger();
+
+	// 加载服务器配置
+	if (!App_Config::instance()->load(SERVER_CONFIG))
+	{
+		LOG->error("加载服务器配置失败，服务器自动退出.");
+		return 0;
+	}
+
 
 	// 启动服务器
 	App_TcpServer::instance()->init();

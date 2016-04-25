@@ -47,6 +47,17 @@ const short		FRAME_TAG_END = 	0x88;
 // 日志配置文件
 #define		CONFIG_FILE ACE_TEXT("logconf.conf")
 
+// 服务器配置文件
+#define		SERVER_CONFIG "server.conf"
+
+// 服务器配置根KEY
+#define		SERVER_ROOT		"SERVER"
+
+// 数据库配置根KEY
+#define		DB_ROOT			"DB"
+
+
+
 // 日志文件名称
 #define		LOGNAME "AmServer"
 
