@@ -17,9 +17,6 @@
 #include "ace/OS.h"
 #include "logger.h"
 
-// 服务器监听端口
-#define		SVR__PORT			45211
-
 // 包头
 const short		FRAM_TAG_HEAD = 	0x11;
 
@@ -55,7 +52,6 @@ const short		FRAME_TAG_END = 	0x88;
 
 // 数据库配置根KEY
 #define		DB_ROOT			"DB"
-
 
 
 // 日志文件名称

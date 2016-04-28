@@ -1,9 +1,10 @@
 #include "dbaccess.h"
 #include "defines.h"
+#include "confmgr.h"
 
 DbAccess::DbAccess()
 {
-	m_dbhost = "";
+	m_dbhost = "127.0.0.1";
 	m_dbname = "uc";
 	m_dbuser = "root";
 	m_dbpwd = "123456";
@@ -11,11 +12,15 @@ DbAccess::DbAccess()
 
 }
 
-
-
 void DbAccess::init()
 {
-	
+	// ¼ÓÔØÊý¾Ý¿âÅäÖÃ
+	m_dbhost = App_Config::instance()->getValue(DB_ROOT,"DBAddr");
+	m_dbname =App_Config::instance()->getValue(DB_ROOT,"DBPort");
+	m_dbpwd = App_Config::instance()->getValue(DB_ROOT,"UserPwd");
+	m_dbuser = App_Config::instance()->getValue(DB_ROOT,"DBUser");
+	m_dbport = ACE_OS::atoi(App_Config::instance()->getValue(DB_ROOT,"DBPort").c_str());
+
 	unsigned long i;
 
 	m_mysql = (MYSQL *)malloc(sizeof(MYSQL));  
@@ -69,9 +74,9 @@ int DbAccess::execSql(char* sql)
 	return ret;
 }
 
-vector<map<string,string>> DbAccess::getList(char* sql)
+vector<map<string,string> > DbAccess::getList(char* sql)
 {
-	vector<map<string,string>> retList;
+	vector<map<string,string> > retList;
 	if (!conn2db())
 	{
 		return retList;

@@ -36,7 +36,7 @@ public:
 	int				execSql(char* sql);
 
 	// ≤È—Ø¡–±Ì
-	vector<map<string,string>> getList(char* sql);
+	vector<map<string,string> > getList(char* sql);
 
 private:
 	bool			conn2db();

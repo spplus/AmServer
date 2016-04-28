@@ -1,7 +1,7 @@
 
 #include "ace/OS_NS_unistd.h"
 #include "clientmsgservice.h"
-#include "commands.h"
+#include "include/commands.h"
 #include "defines.h"
 
 void ClientMsgService::start()
@@ -51,6 +51,11 @@ void ClientMsgService::parseData(ACE_Message_Block* mb)
 	// 解包
 	sClientMsg* msg = m_pack.decoder(mb->rd_ptr(),mb->length());
 
+	if (msg == NULL)
+	{
+		return ;
+	}
+	
 	// 设置连接ID
 	msg->connectId = mb->msg_type();
 

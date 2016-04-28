@@ -5,7 +5,7 @@
 #include "ace/SOCK_Acceptor.h"
 #include "ace/Mutex.h"
 #include "ace/Singleton.h"
-#include "ClientHandler.h"
+#include "clienthandler.h"
 
 typedef ACE_Acceptor<ClientHandler, ACE_SOCK_ACCEPTOR> SOCKAcceptor;
 

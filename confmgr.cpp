@@ -5,15 +5,13 @@ bool ConfMgr::load(string fname)
 	
 	if (m_config.open() == -1)
 	{
-		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("(%P|%t) %p\n"), ACE_TEXT("config.open()")), -1);
-		return false;
+		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("(%P|%t) %p\n"), ACE_TEXT("config.open()")),false);
 	}
 
 	ACE_Ini_ImpExp config_importer(m_config);
 	if (config_importer.import_config(ACE_TEXT(fname.c_str())) == -1)
 	{
-		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("(%P|%t) %p\n"), fname.c_str()), -1);
-		return false;
+		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("(%P|%t) %p\n"), fname.c_str()),false);
 	}
 
 	return true;

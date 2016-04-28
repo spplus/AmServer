@@ -13,7 +13,7 @@
 #include <map>
 
 #include "ace/Singleton.h"
-#include "ClientHandler.h"
+#include "clienthandler.h"
 #include "packetparser.h"
 
 using namespace std;

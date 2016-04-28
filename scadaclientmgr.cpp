@@ -4,11 +4,10 @@
 void ScadaClientMgr::init()
 {
 	// 读取配置信息
-	// ...
 	int port = ACE_OS::atoi(App_Config::instance()->getValue(SERVER_ROOT,"ScadaPort").c_str());
 	string addr = App_Config::instance()->getValue(SERVER_ROOT,"ScadaAddr");
 
-	m_svrAddr.set(8888,"127.0.0.1");
+	m_svrAddr.set(port,addr.c_str());
 
 	// 创建消息接收任务
 	m_rTask = new RecvTask();
