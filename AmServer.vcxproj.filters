@@ -90,6 +90,9 @@
     <ClCompile Include="confmgr.cpp">
       <Filter>com</Filter>
     </ClCompile>
+    <ClCompile Include="devstatecmd.cpp">
+      <Filter>biz</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="confmgr.h">
       <Filter>com</Filter>
+    </ClInclude>
+    <ClInclude Include="devstatecmd.h">
+      <Filter>biz</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

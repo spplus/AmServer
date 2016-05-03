@@ -57,7 +57,7 @@ bool DbAccess::conn2db()
 	return true;
 }
 
-int DbAccess::execSql(char* sql)
+int DbAccess::execSql(const char* sql)
 {
 	if (!conn2db())
 	{
@@ -74,7 +74,7 @@ int DbAccess::execSql(char* sql)
 	return ret;
 }
 
-vector<map<string,string> > DbAccess::getList(char* sql)
+vector<map<string,string> > DbAccess::getList(const char* sql)
 {
 	vector<map<string,string> > retList;
 	if (!conn2db())

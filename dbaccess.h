@@ -33,10 +33,10 @@ public:
 	void			init();
 
 	// 执行sql
-	int				execSql(char* sql);
+	int				execSql(const char* sql);
 
 	// 查询列表
-	vector<map<string,string> > getList(char* sql);
+	vector<map<string,string> > getList(const char* sql);
 
 private:
 	bool			conn2db();

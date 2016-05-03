@@ -12,6 +12,9 @@
 #include "defines.h"
 #include "structs.h"
 #include "clientmgr.h"
+#include "buff/msgbody.pb.h"
+#include "dbaccess.h"
+#include "clientmgr.h"
 
 class CmdBase
 {

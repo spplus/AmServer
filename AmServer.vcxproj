@@ -71,6 +71,7 @@
     <ClCompile Include="clientmgr.cpp" />
     <ClCompile Include="confmgr.cpp" />
     <ClCompile Include="dbaccess.cpp" />
+    <ClCompile Include="devstatecmd.cpp" />
     <ClCompile Include="keepAliveHandler.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="logincmd.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="confmgr.h" />
     <ClInclude Include="dbaccess.h" />
     <ClInclude Include="defines.h" />
+    <ClInclude Include="devstatecmd.h" />
     <ClInclude Include="keepAliveHandler.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="logincmd.h" />
