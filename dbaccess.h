@@ -11,6 +11,7 @@
 #include "ace/Singleton.h"
 #include <vector>
 #include <map>
+#include <stdarg.h>
 
 #ifdef WIN32
 #include <STDIO.H>
@@ -37,6 +38,9 @@ public:
 
 	// 查询列表
 	vector<map<string,string> > getList(const char* sql);
+
+	// 格式化SQL
+	string		formatSql(const char * fmt, ...);
 
 private:
 	bool			conn2db();

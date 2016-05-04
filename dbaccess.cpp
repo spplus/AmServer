@@ -12,11 +12,20 @@ DbAccess::DbAccess()
 
 }
 
+string DbAccess::formatSql(const char * fmt, ...)
+{
+	va_list ap;
+	char _buff[ 1024] = {0};
+	va_start(ap, fmt);
+	ACE_OS::vsnprintf(_buff, 1024, fmt, ap);
+	return _buff;
+}
+
 void DbAccess::init()
 {
 	// ¼ÓÔØÊý¾Ý¿âÅäÖÃ
 	m_dbhost = App_Config::instance()->getValue(DB_ROOT,"DBAddr");
-	m_dbname =App_Config::instance()->getValue(DB_ROOT,"DBPort");
+	m_dbname =App_Config::instance()->getValue(DB_ROOT,"DBName");
 	m_dbpwd = App_Config::instance()->getValue(DB_ROOT,"UserPwd");
 	m_dbuser = App_Config::instance()->getValue(DB_ROOT,"DBUser");
 	m_dbport = ACE_OS::atoi(App_Config::instance()->getValue(DB_ROOT,"DBPort").c_str());

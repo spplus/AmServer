@@ -2,6 +2,7 @@
 #include "cmdbase.h"
 #include "include/commands.h"
 #include "logincmd.h"
+#include "devstatecmd.h"
 
 void BizBase::exec(sClientMsg* msg)
 {
@@ -13,7 +14,9 @@ void BizBase::exec(sClientMsg* msg)
 		// 创建登录业务处理命令
 		pbase = new LoginCmd;
 		break;
-
+	case CMD_DEV_STATE:
+		pbase = new DevStateCmd;
+		break;
 	default:
 		break;
 	}
