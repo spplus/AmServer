@@ -55,5 +55,5 @@ private:
 	string	m_dbname;
 	int		m_dbport;
 };
-typedef ACE_Singleton<DbAccess, ACE_Recursive_Thread_Mutex>  App_Dba;
+typedef ACE_Singleton<DbAccess, ACE_Thread_Mutex>  App_Dba;
 #endif

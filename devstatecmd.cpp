@@ -12,9 +12,11 @@ void DevStateCmd::exec(sClientMsg* msg)
 
 	// 通过数据库进行查询元件状态
 	string sql ;
-	char * p = "select CimId, State,IsElectric,IsBoard from UnitStatus a left join Units b on a.UnitId=b.id where a.SaveId=%d and StationId=%d";
+	char * p = "select CimId, State,IsElectric,IsBoard from Unit_Status a left join Units b on a.UnitId=b.id where a.SaveId=%d and a.StationId=%d";
 	sql = App_Dba::instance()->formatSql(p,req.saveid(),req.stationid());
-	vector<map<string,string> > stateList = App_Dba::instance()->getList(sql.c_str());
+	vector<map<string,string> > stateList;
+
+	stateList = App_Dba::instance()->getList(sql.c_str());
 
 	PBNS::DevStateMsg_Response res;
 	// 把vector转buff

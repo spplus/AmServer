@@ -30,9 +30,7 @@ void DbAccess::init()
 	m_dbuser = App_Config::instance()->getValue(DB_ROOT,"DBUser");
 	m_dbport = ACE_OS::atoi(App_Config::instance()->getValue(DB_ROOT,"DBPort").c_str());
 
-	unsigned long i;
-
-	m_mysql = (MYSQL *)malloc(sizeof(MYSQL));  
+	/*m_mysql = (MYSQL *)malloc(sizeof(MYSQL));  
 	mysql_init(m_mysql);
 
 	if(m_mysql == NULL)
@@ -42,17 +40,27 @@ void DbAccess::init()
 	}
 
 	LOG->message("MySQL ssock init OK.");
-
+*/
 	//连接到指定的数据库
-	if (conn2db())
+	
+	/*if (conn2db())
 	{
 		LOG->message("MySQL connnect OK... ");
-	}
-
+	}*/
+	
 }
 
 bool DbAccess::conn2db()
 {
+	m_mysql = (MYSQL *)malloc(sizeof(MYSQL));  
+	mysql_init(m_mysql);
+
+	if(m_mysql == NULL)
+	{
+		LOG->error("EROR: MySQL ssock init error. ");
+		return  false;
+	}
+
 	//连接到指定的数据库
 	m_mysql =mysql_real_connect(m_mysql, m_dbhost.c_str(),m_dbuser.c_str(),m_dbpwd.c_str(), m_dbname.c_str(),m_dbport, NULL, 0);
 	if(!m_mysql)
@@ -113,7 +121,7 @@ vector<map<string,string> > DbAccess::getList(const char* sql)
 		for(int i=0;i<fieldcount; i++)
 		{
 			record.insert(map<string,string>::value_type(fieldlist.at(i),row[i]));
-			LOG->debug("filedname:%s,value:%s",fieldlist.at(i),row[i]);
+			LOG->debug("filedname:%s,value:%s",fieldlist.at(i).c_str(),row[i]);
 		}
 
 		retList.push_back(record);
