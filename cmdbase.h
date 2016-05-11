@@ -15,6 +15,7 @@
 #include "buff/msgbody.pb.h"
 #include "dbaccess.h"
 #include "clientmgr.h"
+#include "include/commands.h"
 
 class CmdBase
 {

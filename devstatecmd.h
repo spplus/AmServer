@@ -15,6 +15,17 @@ class DevStateCmd	:public CmdBase
 {
 public:
 	void exec(sClientMsg* msg);
+
+private:
+	// 获取设备状态
+	void	getDevState(sClientMsg* msg);
+
+	// 获取站点分类
+	void	getStationType(sClientMsg* msg);
+
+	// 获取站点列表
+	void	getStationList(sClientMsg* msg);
+
 };
 
 #endif
