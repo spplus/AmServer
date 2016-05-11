@@ -15,6 +15,8 @@ void BizBase::exec(sClientMsg* msg)
 		pbase = new LoginCmd;
 		break;
 	case CMD_DEV_STATE:
+	case CMD_STATION_TYPE:
+	case CMD_STATION_LIST:
 		pbase = new DevStateCmd;
 		break;
 	default:
