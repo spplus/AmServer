@@ -26,6 +26,8 @@ private:
 	// 获取站点列表
 	void	getStationList(sClientMsg* msg);
 
+	void getStationByTypeId(PBNS::StationTypeBean *typebean);
+
 };
 
 #endif

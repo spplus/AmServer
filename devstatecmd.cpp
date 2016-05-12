@@ -15,6 +15,8 @@ void DevStateCmd::exec(sClientMsg* msg)
 	case CMD_STATION_TYPE:
 		getStationType(msg);
 		break;
+	
+		// 该命令暂不用了
 	case CMD_STATION_LIST:
 		getStationList(msg);
 		break;
@@ -103,12 +105,70 @@ void DevStateCmd::getStationType(sClientMsg* msg)
 		{
 			bean->set_name(iter->second.c_str());
 		}
+
+		// 获取该类别下的站点列表
+		getStationByTypeId(bean);
 	}
 
 	// 返回到客户端
 	string data;
 	res.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+}
+
+void DevStateCmd::getStationByTypeId(PBNS::StationTypeBean *typebean)
+{
+	// 通过数据库进行查询元件状态
+	string sql ;
+	char * p = "select id, CategoryId, CimId,Name,CurrentName,Path from stations where CategoryId=%d";
+	sql = App_Dba::instance()->formatSql(p,typebean->id());
+	vector<map<string,string> > stateList;
+
+	stateList = App_Dba::instance()->getList(sql.c_str());
+
+	// 把vector转buff
+	for (int i=0;i<stateList.size();i++)
+	{
+		map<string,string> record = stateList.at(i);
+		map<string,string>::iterator iter;
+		PBNS::StationBean* bean = typebean->add_stationlist();
+
+		iter = record.find("id");
+		if (iter != record.end())
+		{
+			bean->set_id(ACE_OS::atoi(iter->second.c_str()));
+		}
+
+		iter = record.find("CategoryId");
+		if (iter != record.end())
+		{
+			bean->set_categoryid(ACE_OS::atoi(iter->second.c_str()));
+		}
+
+		iter = record.find("CimId");
+		if (iter != record.end())
+		{
+			bean->set_cimid(iter->second);
+		}
+
+		iter = record.find("Name");
+		if (iter != record.end())
+		{
+			bean->set_name(iter->second);
+		}
+
+		iter = record.find("CurrentName");
+		if (iter != record.end())
+		{
+			bean->set_currentname(iter->second);
+		}
+
+		iter = record.find("Path");
+		if (iter != record.end())
+		{
+			bean->set_path(iter->second);
+		}
+	}
 }
 
 void DevStateCmd::getStationList(sClientMsg* msg)
