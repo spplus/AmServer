@@ -2,6 +2,7 @@
 #include "cmdbase.h"
 #include "include/commands.h"
 #include "logincmd.h"
+#include "usermgrlistcmd.h"
 #include "devstatecmd.h"
 
 void BizBase::exec(sClientMsg* msg)
@@ -10,9 +11,16 @@ void BizBase::exec(sClientMsg* msg)
 	switch (msg->type)
 	{
 	case CMD_USER_LONGIN:
-
 		// 创建登录业务处理命令
 		pbase = new LoginCmd;
+		break;
+	case CMD_USER_MANAGER:
+	case CMD_USER_ROLE:
+	case CMD_USER_ADD:
+	case CMD_USER_DEL:
+	case CMD_USER_MODIFY:
+		//对应用户管理涉及的用户列表、角色、增加、删除、修改业务处理命令
+		pbase = new UserMgrListCmd;
 		break;
 	case CMD_DEV_STATE:
 	case CMD_STATION_TYPE:

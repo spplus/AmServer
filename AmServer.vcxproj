@@ -85,15 +85,16 @@
     <ClCompile Include="tcpClient.cpp" />
     <ClCompile Include="scadaclientmgr.cpp" />
     <ClCompile Include="tcpservermgr.cpp" />
+    <ClCompile Include="usermgrlistcmd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\buff\msgbean.pb.h" />
     <ClInclude Include="..\common\buff\msgbody.pb.h" />
+    <ClInclude Include="..\common\include\commands.h" />
     <ClInclude Include="bizbase.h" />
     <ClInclude Include="clienthandler.h" />
     <ClInclude Include="clientmgr.h" />
     <ClInclude Include="cmdbase.h" />
-    <ClInclude Include="commands.h" />
     <ClInclude Include="confmgr.h" />
     <ClInclude Include="dbaccess.h" />
     <ClInclude Include="defines.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="tcpClient.h" />
     <ClInclude Include="ScadaClientMgr.h" />
     <ClInclude Include="tcpservermgr.h" />
+    <ClInclude Include="usermgrlistcmd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

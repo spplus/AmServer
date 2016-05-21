@@ -93,6 +93,9 @@
     <ClCompile Include="devstatecmd.cpp">
       <Filter>biz</Filter>
     </ClCompile>
+    <ClCompile Include="usermgrlistcmd.cpp">
+      <Filter>biz</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -106,9 +109,6 @@
     </ClInclude>
     <ClInclude Include="tcpservermgr.h">
       <Filter>server</Filter>
-    </ClInclude>
-    <ClInclude Include="commands.h">
-      <Filter>com</Filter>
     </ClInclude>
     <ClInclude Include="clientmsgservice.h">
       <Filter>server</Filter>
@@ -159,6 +159,12 @@
       <Filter>com</Filter>
     </ClInclude>
     <ClInclude Include="devstatecmd.h">
+      <Filter>biz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\include\commands.h">
+      <Filter>com</Filter>
+    </ClInclude>
+    <ClInclude Include="usermgrlistcmd.h">
       <Filter>biz</Filter>
     </ClInclude>
   </ItemGroup>
