@@ -21,6 +21,12 @@ class CmdBase
 {
 public:
 	virtual void		exec(sClientMsg* msg) = 0;
+
+protected:
+	int		str2i(string val)
+	{
+		return ACE_OS::atoi(val.c_str());
+	}
 };
 
 #endif

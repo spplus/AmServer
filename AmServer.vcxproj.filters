@@ -96,6 +96,9 @@
     <ClCompile Include="usermgrlistcmd.cpp">
       <Filter>biz</Filter>
     </ClCompile>
+    <ClCompile Include="topobizcmd.cpp">
+      <Filter>biz</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -165,6 +168,9 @@
       <Filter>com</Filter>
     </ClInclude>
     <ClInclude Include="usermgrlistcmd.h">
+      <Filter>biz</Filter>
+    </ClInclude>
+    <ClInclude Include="topobizcmd.h">
       <Filter>biz</Filter>
     </ClInclude>
   </ItemGroup>
