@@ -19,7 +19,11 @@ private:
 	void				topoEntire();
 
 	// 根据元件ID查找对应的连接点
-	vector<string,string>		getConnIdByUnitsId(string unitid);
+	LISTMAP	getConnIdByUnitsId(string unitid);
+
+	// 根据连接点查找关联的设备
+	LISTMAP		getUnitsByConnId(string connid);
+
 };
 
 #endif

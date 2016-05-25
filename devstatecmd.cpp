@@ -35,7 +35,7 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 	string sql ;
 	char * p = "select CimId, State,IsElectric,IsBoard from Unit_Status a left join Units b on a.UnitId=b.id where a.SaveId=%d and a.StationId=%d";
 	sql = App_Dba::instance()->formatSql(p,req.saveid(),req.stationid());
-	vector<map<string,string> > stateList;
+	LISTMAP stateList;
 
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
@@ -43,8 +43,8 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 	// 把vector转buff
 	for (int i=0;i<stateList.size();i++)
 	{
-		map<string,string> record = stateList.at(i);
-		map<string,string>::iterator iter;
+		STRMAP record = stateList.at(i);
+		MAP_ITERATOR iter;
 		PBNS::StateBean* bean = res.add_devstate();
 		iter = record.find("CimId");
 		if (iter != record.end())
@@ -55,19 +55,19 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 		iter = record.find("State");
 		if (iter != record.end())
 		{
-			bean->set_state(ACE_OS::atoi(iter->second.c_str()));
+			bean->set_state(str2i(iter->second));
 		}
 
 		iter = record.find("IsElectric");
 		if (iter != record.end())
 		{
-			bean->set_iselectric(ACE_OS::atoi(iter->second.c_str()));
+			bean->set_iselectric(str2i(iter->second));
 		}
 
 		iter = record.find("IsBoard");
 		if (iter != record.end())
 		{
-			bean->set_isboard(ACE_OS::atoi(iter->second.c_str()));
+			bean->set_isboard(str2i(iter->second));
 		}
 	}
 
@@ -82,7 +82,7 @@ void DevStateCmd::getStationType(sClientMsg* msg)
 
 	string sql = "select id, Name from station_category order by OrderNum ";
 	
-	vector<map<string,string> > stateList;
+	LISTMAP stateList;
 
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
@@ -91,19 +91,19 @@ void DevStateCmd::getStationType(sClientMsg* msg)
 	// 把vector转buff
 	for (int i=0;i<stateList.size();i++)
 	{
-		map<string,string> record = stateList.at(i);
-		map<string,string>::iterator iter;
+		STRMAP record = stateList.at(i);
+		MAP_ITERATOR iter;
 		PBNS::StationTypeBean* bean = res.add_typelist();
 		iter = record.find("id");
 		if (iter != record.end())
 		{
-			bean->set_id(ACE_OS::atoi(iter->second.c_str()));
+			bean->set_id(str2i(iter->second));
 		}
 
 		iter = record.find("Name");
 		if (iter != record.end())
 		{
-			bean->set_name(iter->second.c_str());
+			bean->set_name(iter->second);
 		}
 
 		// 获取该类别下的站点列表
@@ -122,27 +122,27 @@ void DevStateCmd::getStationByTypeId(PBNS::StationTypeBean *typebean)
 	string sql ;
 	char * p = "select id, CategoryId, CimId,Name,CurrentName,Path from stations where CategoryId=%d";
 	sql = App_Dba::instance()->formatSql(p,typebean->id());
-	vector<map<string,string> > stateList;
+	LISTMAP stateList;
 
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
 	// 把vector转buff
 	for (int i=0;i<stateList.size();i++)
 	{
-		map<string,string> record = stateList.at(i);
-		map<string,string>::iterator iter;
+		STRMAP record = stateList.at(i);
+		MAP_ITERATOR iter;
 		PBNS::StationBean* bean = typebean->add_stationlist();
 
 		iter = record.find("id");
 		if (iter != record.end())
 		{
-			bean->set_id(ACE_OS::atoi(iter->second.c_str()));
+			bean->set_id(str2i(iter->second));
 		}
 
 		iter = record.find("CategoryId");
 		if (iter != record.end())
 		{
-			bean->set_categoryid(ACE_OS::atoi(iter->second.c_str()));
+			bean->set_categoryid(str2i(iter->second));
 		}
 
 		iter = record.find("CimId");
@@ -180,7 +180,7 @@ void DevStateCmd::getStationList(sClientMsg* msg)
 	string sql ;
 	char * p = "select id, CategoryId, CimId,Name,CurrentName,Path from stations where CategoryId=%d";
 	sql = App_Dba::instance()->formatSql(p,req.stationid());
-	vector<map<string,string> > stateList;
+	LISTMAP stateList;
 
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
@@ -188,20 +188,20 @@ void DevStateCmd::getStationList(sClientMsg* msg)
 	// 把vector转buff
 	for (int i=0;i<stateList.size();i++)
 	{
-		map<string,string> record = stateList.at(i);
-		map<string,string>::iterator iter;
+		STRMAP record = stateList.at(i);
+		MAP_ITERATOR iter;
 		PBNS::StationBean* bean = res.add_stationlist();
 
 		iter = record.find("id");
 		if (iter != record.end())
 		{
-			bean->set_id(ACE_OS::atoi(iter->second.c_str()));
+			bean->set_id(str2i(iter->second));
 		}
 
 		iter = record.find("CategoryId");
 		if (iter != record.end())
 		{
-			bean->set_categoryid(ACE_OS::atoi(iter->second.c_str()));
+			bean->set_categoryid(str2i(iter->second));
 		}
 
 		iter = record.find("CimId");

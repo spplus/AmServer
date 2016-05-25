@@ -16,6 +16,9 @@
 #include "ace/ACE.h"
 #include "ace/OS.h"
 #include "logger.h"
+#include <map>
+#include <vector>
+using namespace std;
 
 // 包头
 const short		FRAM_TAG_HEAD = 	0x11;
@@ -66,5 +69,13 @@ const short		FRAME_TAG_END = 	0x88;
 #define		LOG		App_Logger::instance()	
 
 #define		PBNS	com::spplus::buff
-
+//
+//// 重定义查询结果数据类型
+//#define 		STRMAP			map<string,string>
+//
+typedef		map<string,string>					STRMAP;
+typedef		STRMAP::value_type				MAPVAL;
+typedef		STRMAP::iterator						MAP_ITERATOR;
+typedef   		vector<STRMAP>					LISTMAP	;		
+//
 #endif

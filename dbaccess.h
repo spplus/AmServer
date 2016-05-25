@@ -20,7 +20,7 @@
 
 #include <string>
 #include "mysql.h"
-
+#include "defines.h"
 
 using namespace std;
 
@@ -37,7 +37,7 @@ public:
 	int				execSql(const char* sql);
 
 	// 查询列表
-	vector<map<string,string> > getList(const char* sql);
+	LISTMAP	getList(const char* sql);
 
 	// 格式化SQL
 	string		formatSql(const char * fmt, ...);

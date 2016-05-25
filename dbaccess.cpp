@@ -91,9 +91,9 @@ int DbAccess::execSql(const char* sql)
 	return ret;
 }
 
-vector<map<string,string> > DbAccess::getList(const char* sql)
+LISTMAP DbAccess::getList(const char* sql)
 {
-	vector<map<string,string> > retList;
+	LISTMAP retList;
 	if (!conn2db())
 	{
 		return retList;
@@ -117,10 +117,10 @@ vector<map<string,string> > DbAccess::getList(const char* sql)
 	row = mysql_fetch_row(result);
 	while(NULL != row)
 	{
-		map<string,string> record;
+		STRMAP record;
 		for(int i=0;i<fieldcount; i++)
 		{
-			record.insert(map<string,string>::value_type(fieldlist.at(i),row[i]));
+			record.insert(MAPVAL(fieldlist.at(i),row[i]));
 			LOG->debug("filedname:%s,value:%s",fieldlist.at(i).c_str(),row[i]);
 		}
 
