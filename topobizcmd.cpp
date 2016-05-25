@@ -45,13 +45,36 @@ void TopoBizCmd::topoEntire()
 		LISTMAP connIds = getConnIdByUnitsId(powerid);
 
 		// 3.根据连接点ID在连接关系表查询关联的设备
-		
 		for (int j = 0;j<connIds.size();j++)
 		{
+			STRMAP connMap = connIds.at(j);
+			MAP_ITERATOR connIter = connMap.find("connId");
+			if (connIter != connMap.end())
+			{
+				// 根据连接点，查找该连接点关联的设备集合
+				LISTMAP unitsList = getUnitsByConnId(connIter->second);
+				
+				// 遍历该设备集合
+				for (int k = 0;k<unitsList.size();k++)
+				{
+					STRMAP  unitMap = unitsList.at(k);
+					MAP_ITERATOR unitIter = unitMap.find("id");
+					if (unitIter != unitMap.end())
+					{
+						// 判断是否已经做为起始设备进行搜索，如果是则跳过
+						if (passedNodes.find(unitIter->second) != passedNodes.end())
+						{
+							continue;
+						}
 
-			// 判断是否已经做为起始设备进行搜索，如果是则跳过
+						// 4.如果该设备为为开关，刀闸，闭合即为带电，否则为不带电；
+
+
+					}
+				}
+			
+			}
 		
-
 		}
 
 	}
@@ -60,7 +83,7 @@ void TopoBizCmd::topoEntire()
 
 	
 
-	// 4.如果该设备为为开关，刀闸，闭合即为带电，否则为不带电；
+	
 
 	// 5.如果该设备不是开关设备，则设置为带电；
 

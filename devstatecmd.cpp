@@ -182,6 +182,7 @@ void DevStateCmd::getStationList(sClientMsg* msg)
 	sql = App_Dba::instance()->formatSql(p,req.stationid());
 	LISTMAP stateList;
 
+
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
 	PBNS::StationListMsg_Response res;
