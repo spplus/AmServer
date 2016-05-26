@@ -71,9 +71,12 @@ const short		FRAME_TAG_END = 	0x88;
 #define		PBNS	com::spplus::buff
 //
 //// 重定义查询结果数据类型
-typedef		map<string,string>					STRMAP;
+typedef		map<string,string>				STRMAP;
 typedef		STRMAP::value_type				MAPVAL;
-typedef		STRMAP::iterator						MAP_ITERATOR;
-typedef   		vector<STRMAP>					LISTMAP	;		
+typedef		STRMAP::iterator				MAP_ITERATOR;
+typedef   	vector<STRMAP>					LISTMAP	;		
 
+
+// 定义设备类型
+enum eUnitType{eBreaker,eSwitch,eBus,eCapacitor,eLoad,eGenerator,ePt,eTransformer,eLine};
 #endif

@@ -16,13 +16,22 @@ public:
 
 private:
 	// 整站拓扑
-	void				topoEntire();
+	void		topoEntire();
+
+	// 根据元件ID进行拓扑
+	void		topoByUnitId(string unitid,string stationid,STRMAP& passNodes);
 
 	// 根据元件ID查找对应的连接点
-	LISTMAP	getConnIdByUnitsId(string unitid);
+	LISTMAP		getConnIdByUnitsId(string unitid);
 
 	// 根据连接点查找关联的设备
 	LISTMAP		getUnitsByConnId(string connid);
+
+	// 更新设备带电状态
+	void		updateIsElectricByUnitId(string unitid,int state);
+
+	// 更新设备是绝对电源点
+	void		updateIsPowerByUnitId(string unitid);
 
 };
 

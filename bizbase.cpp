@@ -4,6 +4,7 @@
 #include "logincmd.h"
 #include "usermgrlistcmd.h"
 #include "devstatecmd.h"
+#include "topobizcmd.h"
 
 void BizBase::exec(sClientMsg* msg)
 {
@@ -26,6 +27,10 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_STATION_TYPE:
 	case CMD_STATION_LIST:
 		pbase = new DevStateCmd;
+		break;
+
+	case CMD_TOPO_ENTIRE:
+		pbase = new TopoBizCmd;
 		break;
 	default:
 		break;
