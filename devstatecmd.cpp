@@ -33,8 +33,8 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 
 	// 通过数据库进行查询元件状态
 	string sql ;
-	char * p = "select CimId, State,IsElectric,IsBoard from Unit_Status a left join Units b on a.UnitId=b.id where a.SaveId=%d and a.StationId=%d";
-	sql = App_Dba::instance()->formatSql(p,req.saveid(),req.stationid());
+	char * p = "select CimId, State,IsElectric,IsBoard from Unit_Status a left join Units b on a.UnitCim=b.CimId  where a.SaveId=%d and a.StationCim=%s";
+	sql = App_Dba::instance()->formatSql(p,req.saveid(),req.stationcim().c_str());
 	LISTMAP stateList;
 
 	stateList = App_Dba::instance()->getList(sql.c_str());
