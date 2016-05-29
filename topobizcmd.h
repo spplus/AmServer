@@ -15,10 +15,11 @@ public:
 	void				exec(sClientMsg* msg);
 
 private:
+
 	// 整站拓扑
 	void		topoEntire();
 
-	// 根据元件ID进行拓扑
+	// 根据元件ID进行拓扑，更新数据库版本
 	void		topoByUnitId(string unitid,string stationid,STRMAP& passNodes);
 
 	// 根据元件ID查找对应的连接点
@@ -32,6 +33,13 @@ private:
 
 	// 更新设备是绝对电源点
 	void		updateIsPowerByUnitId(string unitid);
+
+	// 开关变位拓扑
+	void		topoOnBreakerChange(sClientMsg *msg);
+
+	// 根据元件CIMID进行拓扑，不更新数据库版本
+	void		topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap);
+
 
 };
 
