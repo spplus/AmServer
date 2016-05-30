@@ -3,6 +3,7 @@
 #include "include/commands.h"
 #include "logincmd.h"
 #include "usermgrlistcmd.h"
+#include "stationmgrcmd.h"
 #include "devstatecmd.h"
 #include "topobizcmd.h"
 
@@ -20,8 +21,17 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_USER_ADD:
 	case CMD_USER_DEL:
 	case CMD_USER_MODIFY:
+	case CMD_PWD_MODIFY:
 		//对应用户管理涉及的用户列表、角色、增加、删除、修改业务处理命令
 		pbase = new UserMgrListCmd;
+		break;
+	case CMD_STATION_TYPE_ADD:
+	case CMD_STATION_TYPE_DEL:
+	case CMD_STATION_TYPE_MODIFY:
+	case CMD_STATION_TYPE_LIST:
+	case CMD_STATION_MANAGER:
+		//对应厂站和厂站类型管理涉及的厂站站点修改配置，厂站类型增加、修改业务处理命令
+		pbase = new StationMgrcmd;
 		break;
 	case CMD_DEV_STATE:
 	case CMD_STATION_TYPE:

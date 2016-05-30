@@ -18,28 +18,51 @@ void LoginCmd::exec(sClientMsg* msg)
 	// 6.调用返回内容到客户端
 	//string data = "hello client";
 
-	// 通过数据库进行登录用户验证
+	// 通过数据库进行登录用户验证 SELECT ID,RoleId,Name,Password,RealName FROM users where name='admin' and Password='202cb962ac59075b964b07152d234b70'
 	string sql ;
-	char *psql = "SELECT COUNT(id) as userstate FROM users where name='%s' and Password='%s' ";
+	char *psql = "SELECT ID,RoleId,Name,Password,RealName FROM users where name='%s' and Password='%s' ";
 	sql = App_Dba::instance()->formatSql(psql,res.username().c_str(),res.userpwd().c_str());
-	//sql = App_Dba::instance()->formatSql(p,req.saveid(),req.stationid());
-	vector<map<string,string> > usersatelist;
+	LISTMAP usersatelist;
 
 	usersatelist = App_Dba::instance()->getList(sql.c_str());
 
 	PBNS::UserListMsg_Response rep;
 	for (int i=0; i < usersatelist.size(); i++)
 	{
-		map<string,string> record = usersatelist.at(i);
-		map<string,string>::iterator iter;
-		iter = record.find("userstate");
+		STRMAP record = usersatelist.at(i);
+		MAP_ITERATOR iter;
+		PBNS::UserBean *ubean = rep.add_userlist();
+
+		iter = record.find("ID");
 		if (iter != record.end())
 		{
-			string t = iter->first;
-			int it = -1;
-			it = ACE_OS::atoi(iter->first.c_str());
-			rep.set_rescode(ACE_OS::atoi(iter->second.c_str()));
+			ubean->set_userid(iter->second);
 		}
+		
+		iter = record.find("RoleId");
+		if (iter != record.end())
+		{
+			ubean->set_userrole(iter->second);
+		}
+
+		iter = record.find("Name");
+		if (iter != record.end())
+		{
+			ubean->set_username(iter->second);
+		}
+
+		iter = record.find("Password");
+		if (iter != record.end())
+		{
+			ubean->set_userpwd(iter->second);
+		}
+
+		iter = record.find("RealName");
+		if (iter != record.end())
+		{
+			ubean->set_realname(iter->second);
+		}
+
 	}
 
 	// 返回到客户端

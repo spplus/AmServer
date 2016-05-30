@@ -33,7 +33,11 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 
 	// 通过数据库进行查询元件状态
 	string sql ;
-	char * p = "select CimId, State,IsElectric,IsBoard from Unit_Status a left join Units b on a.UnitCim=b.CimId  where a.SaveId=%d and a.StationCim=%s";
+	char * p = "select b.CimId, State,IsElectric,IsBoard ,c.VolValue " \
+		"from Unit_Status a " \
+		"left join Units b on a.UnitCim=b.CimId  " \
+		"left join voltages c on c.CimId = b.VolCim " \
+		"where a.SaveId=%d and a.StationCim=%s";
 	sql = App_Dba::instance()->formatSql(p,req.saveid(),req.stationcim().c_str());
 	LISTMAP stateList;
 
@@ -68,6 +72,12 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 		if (iter != record.end())
 		{
 			bean->set_isboard(str2i(iter->second));
+		}
+
+		iter = record.find("VolValue");
+		if (iter != record.end())
+		{
+			bean->set_volvalue(iter->second);
 		}
 	}
 

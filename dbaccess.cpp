@@ -120,7 +120,7 @@ LISTMAP DbAccess::getList(const char* sql)
 		STRMAP record;
 		for(int i=0;i<fieldcount; i++)
 		{
-			record.insert(MAPVAL(fieldlist.at(i),row[i]));
+			record.insert(MAPVAL(fieldlist.at(i),row[i]==NULL?"":row[i]));
 			LOG->debug("filedname:%s,value:%s",fieldlist.at(i).c_str(),row[i]);
 		}
 

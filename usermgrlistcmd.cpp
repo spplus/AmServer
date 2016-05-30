@@ -14,6 +14,7 @@ void UserMgrListCmd::exec(sClientMsg* msg)
 	case CMD_USER_ADD:
 	case CMD_USER_DEL:
 	case CMD_USER_MODIFY:
+	case CMD_PWD_MODIFY:
 		userManager(msg);
 		break;
 	}
@@ -33,14 +34,15 @@ void UserMgrListCmd::getUserList(sClientMsg* msg)
 
 	sql = App_Dba::instance()->formatSql(psql);
 
-	vector<map<string,string> > userlist;
+	//vector<map<string,string> > userlist;
+	LISTMAP userlist;
 	userlist = App_Dba::instance()->getList(sql.c_str());
 
 	PBNS::UserListMsg_Response resp;
 	for (int i=0; i < userlist.size(); i++)
 	{
-		map<string,string> recode = userlist.at(i);
-		map<string,string>::iterator iter;
+		STRMAP recode = userlist.at(i);
+		MAP_ITERATOR iter;
 		PBNS::UserBean *ulbean = resp.add_userlist();
 
 		iter = recode.find("ID");
@@ -98,14 +100,14 @@ void UserMgrListCmd::getUserRoleList(sClientMsg* msg)
 
 	sql = App_Dba::instance()->formatSql(psql);
 
-	vector<map<string,string> > userrolelist;
+	LISTMAP userrolelist;
 	userrolelist = App_Dba::instance()->getList(sql.c_str());
 
 	PBNS::UserRoleListMsg_Response resp;
 	for (int i=0;i < userrolelist.size(); i++)
 	{
-		map<string,string>	recode = userrolelist.at(i);
-		map<string,string>::iterator iter;
+		STRMAP	recode = userrolelist.at(i);
+		MAP_ITERATOR iter;
 
 		PBNS::UserRoleBean *urBean = resp.add_userrolelist();
 

@@ -96,7 +96,7 @@
     <ClCompile Include="usermgrlistcmd.cpp">
       <Filter>biz</Filter>
     </ClCompile>
-    <ClCompile Include="topobizcmd.cpp">
+    <ClCompile Include="stationmgrcmd.cpp">
       <Filter>biz</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,7 +170,7 @@
     <ClInclude Include="usermgrlistcmd.h">
       <Filter>biz</Filter>
     </ClInclude>
-    <ClInclude Include="topobizcmd.h">
+    <ClInclude Include="stationmgrcmd.h">
       <Filter>biz</Filter>
     </ClInclude>
   </ItemGroup>
