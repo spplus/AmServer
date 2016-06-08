@@ -42,8 +42,11 @@ void TopoBizCmd::topoEntire()
 			stationid = iter->second;
 		}
 		
+		// 遍历所有saveid ,每个存档都拓扑一次
+		string saveid;
+
 		// 根据元件进行拓扑
-		topoByUnitId(powerid,stationid,passedNodes);
+		topoByUnitId(saveid,powerid,stationid,passedNodes);
 
 	}
 	
@@ -59,13 +62,22 @@ LISTMAP TopoBizCmd::getConnIdByUnitsId(string unitid)
 {
 	LISTMAP connList ;
 	char* psql = "select ConnCim as connId from Relations where UnitCim=%s";
-	string sql = App_Dba::instance()->formatSql(psql,unitid);
+	string sql = App_Dba::instance()->formatSql(psql,unitid.c_str());
 	connList = App_Dba::instance()->getList(sql.c_str());
 	return connList;
 }
 
+LISTMAP TopoBizCmd::getStationIdByLineId(string unitid,string stationid)
+{
+	LISTMAP stationList;
+	char* psql = "select StationCim from related_line where UnitCim=%s and StationCim=%s";
+	string sql = App_Dba::instance()->formatSql(psql,unitid.c_str(),stationid.c_str());
+	stationList = App_Dba::instance()->getList(sql.c_str());
+	return stationList;
+}
 
-LISTMAP TopoBizCmd::getUnitsByConnId(string connid)
+
+LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 {
 
 	// 问题：关联查询设备状态的时候，不用考虑saveid么？unit_status表中，同一个unit可能会有多条记录，以哪天记录为准呢？
@@ -74,13 +86,13 @@ LISTMAP TopoBizCmd::getUnitsByConnId(string connid)
 		"from Relations a left join Units b on a.UnitCim=b.CimId  "\
 		"left join unit_status c on b.UnitCim=b.cimid " \
 		"left join voltages d on d.CimId=b.VolCim " \
-		"where a.ConnCim=%s";
-	string sql = App_Dba::instance()->formatSql(psql,connid);
+		"where a.ConnCim=%s and c.saveid=%s";
+	string sql = App_Dba::instance()->formatSql(psql,connid.c_str(),saveid.c_str());
 	unitsList = App_Dba::instance()->getList(sql.c_str());
 	return unitsList;
 }
 
-void TopoBizCmd::topoByUnitId(string unitid,string stationid,STRMAP& passNodes)
+void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMAP& passNodes)
 {
 	// 把当前元件加入到已分析列表
 	passNodes.insert(MAPVAL(unitid,unitid));
@@ -96,7 +108,7 @@ void TopoBizCmd::topoByUnitId(string unitid,string stationid,STRMAP& passNodes)
 		if (connIter != connMap.end())
 		{
 			// 根据连接点，查找该连接点关联的设备集合
-			LISTMAP unitsList = getUnitsByConnId(connIter->second);
+			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
 
 			// 遍历该设备集合
 			for (int k = 0;k<unitsList.size();k++)
@@ -138,12 +150,12 @@ void TopoBizCmd::topoByUnitId(string unitid,string stationid,STRMAP& passNodes)
 							if (state == 1)
 							{
 								// 更新该设备带电状态为带电
-								updateIsElectricByUnitId(unitId,1);
+								updateIsElectricByUnitId(saveid,unitId,1);
 							}
 							else
 							{
 								// 6.如果该设备为开关，且为断开，则不用再遍历该设备的关联设备；
-								updateIsElectricByUnitId(unitId,0);
+								updateIsElectricByUnitId(saveid,unitId,0);
 
 								// 标记不需要拓扑
 								flag = 1;
@@ -154,32 +166,52 @@ void TopoBizCmd::topoByUnitId(string unitid,string stationid,STRMAP& passNodes)
 					else
 					{
 						// 5.如果该设备不是开关设备，则设置为带电；
-						updateIsElectricByUnitId(unitId,1);
+						updateIsElectricByUnitId(saveid,unitId,1);
 					}
+				}
+
+				// 如果当前设备为进出线，则到进出线关联关系表中，查出进出线关联的另一端站点ID，更新状态表中进出线在该站点为相对电源点
+				if (etype == eLine)
+				{
+					LISTMAP stationList = getStationIdByLineId(unitId,stationid);
+					if (stationList.size()>0)
+					{
+						STRMAP stationMap = stationList.at(0);
+						unitIter = stationMap.find("StationCim");
+						if (unitIter != stationMap.end())
+						{
+							updateIsPowerByUnitId(unitId,unitIter->second,saveid);
+						}
+					}
+
 				}
 
 				// 判断是否为跨站点
 				unitIter = unitMap.find("StationId");
+				//if (unitIter != unitMap.end())
+				//{
+
+				//	// 如果该次遍历出的设备站点ID与起始设备的站点ID不相同，且该设备为进出线，则标记该进出线为相对电源点；
+				//	if (str2i(unitIter->second) != str2i(stationid))
+				//	{
+				//		if (etype == eLine)
+				//		{
+				//			updateIsPowerByUnitId(unitid);
+				//		}
+				//	}
+				//}
+
+				string sId;
 				if (unitIter != unitMap.end())
 				{
-
-					// 如果该次遍历出的设备站点ID与起始设备的站点ID不相同，且该设备为进出线，则标记该进出线为相对电源点；
-					if (str2i(unitIter->second) != str2i(stationid))
-					{
-						if (etype == eLine)
-						{
-							updateIsPowerByUnitId(unitid);
-						}
-					}
+					// 站点ID
+					sId = unitIter->second;
 				}
-
-				// 站点ID
-				string sId = unitIter->second;
 				
 				if (flag != 1)
 				{
 					// 递归，以该元件为起点进行重新遍历
-					topoByUnitId(unitid,sId,passNodes);
+					topoByUnitId(saveid,unitid,sId,passNodes);
 				}
 				
 			}
@@ -189,10 +221,10 @@ void TopoBizCmd::topoByUnitId(string unitid,string stationid,STRMAP& passNodes)
 	}
 }
 
-void TopoBizCmd::updateIsPowerByUnitId(string unitid)
+void TopoBizCmd::updateIsPowerByUnitId(string unitid,string stationid,string saveid)
 {
-	char* psql = "update unit_status set IsPower=1 where UnitCim=%s";
-	string sql = App_Dba::instance()->formatSql(psql,unitid);
+	char* psql = "update unit_status set IsPower=1 where UnitCim=%s and StationCim=%s and SaveId=%s";
+	string sql = App_Dba::instance()->formatSql(psql,unitid.c_str(),stationid.c_str(),saveid.c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());
 	if (ret>0)
 	{
@@ -205,10 +237,10 @@ void TopoBizCmd::updateIsPowerByUnitId(string unitid)
 	
 }
 
-void TopoBizCmd::updateIsElectricByUnitId(string unitid,int state)
+void TopoBizCmd::updateIsElectricByUnitId(string saveid,string unitid,int state)
 {
-	char* psql = "update unit_status set IsElectric=%d where UnitCim=%s";
-	string sql = App_Dba::instance()->formatSql(psql,state,unitid);
+	char* psql = "update unit_status set IsElectric=%d where UnitCim=%s and saveid=%s";
+	string sql = App_Dba::instance()->formatSql(psql,state,unitid.c_str(),saveid.c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());
 	if (ret>0)
 	{
@@ -232,7 +264,7 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	// 保存拓扑分析的结果，即设备的带电状态
 	PBNS::DevStateMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);
-
+	
 	int saveId = req.saveid();
 	string cimid = req.unitcim();
 
@@ -272,9 +304,13 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 				{
 					bean.set_iselectric(str2i(iter->second));
 				}
+				char temp[16];
+				ACE_OS::itoa(req.saveid(),temp,10);
+				string saveid;
+				saveid.append(temp);
 
 				// 以该设备为起点进行拓扑分析
-				topoByUnitIdMem(bean,passedNodes,rsltMap);
+				topoByUnitIdMem(bean,saveid,passedNodes,rsltMap);
 			}
 		}
 	}
@@ -295,10 +331,10 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 }
 
 
-void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap)
+void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap)
 {
 	string unitid = bean.cimid();
-
+	
 	LOG->debug("topoByUnitIdMem,uinit cimid:%s",unitid.c_str());
 
 	// 把当前元件加入到已分析列表
@@ -315,7 +351,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 		if (connIter != connMap.end())
 		{
 			// 根据连接点，查找该连接点关联的设备集合
-			LISTMAP unitsList = getUnitsByConnId(connIter->second);
+			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
 
 			// 遍历该设备集合
 			for (int k = 0;k<unitsList.size();k++)
@@ -390,7 +426,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 				if (flag != 1)
 				{
 					// 递归，以该元件为起点进行重新遍历
-					topoByUnitIdMem(cbean,passNodes,rsltMap);
+					topoByUnitIdMem(cbean,saveid,passNodes,rsltMap);
 				}
 			
 			}
