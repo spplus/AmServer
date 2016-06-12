@@ -33,7 +33,7 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 
 	// 通过数据库进行查询元件状态
 	string sql ;
-	char * p = "select b.CimId, State,IsElectric,IsBoard ,c.VolValue " \
+	char * p = "select b.CimId, State,IsElectric,IsBoard ,c.VolValue,b.unitType " \
 		"from Unit_Status a " \
 		"left join Units b on a.UnitCim=b.CimId  " \
 		"left join voltages c on c.CimId = b.VolCim " \
@@ -78,6 +78,12 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 		if (iter != record.end())
 		{
 			bean->set_volvalue(iter->second);
+		}
+
+		iter = record.find("unitType");
+		if (iter != record.end())
+		{
+			bean->set_unittype(str2i(iter->second));
 		}
 	}
 
