@@ -28,6 +28,15 @@ private:
 
 	void getStationByTypeId(PBNS::StationTypeBean *typebean);
 
+	// 挂摘牌
+	void	updateIsBoard(sClientMsg* msg);			
+
+	// 设置电源点
+	void updateIsPower(sClientMsg* msg);
+
+	// 设置进出线
+	void updateIsLine(sClientMsg* msg);
+
 };
 
 #endif

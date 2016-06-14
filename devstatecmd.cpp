@@ -20,6 +20,18 @@ void DevStateCmd::exec(sClientMsg* msg)
 	case CMD_STATION_LIST:
 		getStationList(msg);
 		break;
+
+	case CMD_TAG_OP:
+		updateIsBoard(msg);
+		break;
+
+	case CMD_POWER_SET:
+		updateIsPower(msg);
+		break;
+
+	case CMD_LINE_SET:
+		updateIsLine(msg);
+		break;
 	default:
 		break;
 	}
@@ -250,4 +262,130 @@ void DevStateCmd::getStationList(sClientMsg* msg)
 	string data;
 	res.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+}
+
+void DevStateCmd::updateIsBoard(sClientMsg* msg)
+{
+	PBNS::TagMsg_Request req;
+	req.ParseFromArray(msg->data,msg->length);
+
+	int tag ;
+	if (req.type() == 1)
+	{
+		tag = 0;
+	}
+	else
+	{
+		tag = 1;
+	}
+	// 返回内容
+	PBNS::TagMsg_Response res;
+
+	// 是否允许挂牌，摘牌
+	int flag = 0;
+
+	// 1. 检测是否已经挂牌或已经摘牌
+	char * psql = "select count(*) as count  from unit_status   where UnitCim=%s and SaveId=%d and IsBoard=%d";
+	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.saveid(),tag);
+	LISTMAP countMap = App_Dba::instance()->getList(sql.c_str());
+	if (countMap.size()>0)
+	{
+		STRMAP strMap = countMap.at(0);
+		MAP_ITERATOR iter = strMap.find("count");
+		if (iter != strMap.end())
+		{
+			// 允许操作
+			if (str2i(iter->second) ==0)
+			{
+				flag = 1;
+			}
+		}
+	}
+	if (flag == 1)
+	{
+		// 2.更新挂摘牌标志 
+		psql = "update unit_status set IsBoard=%d where UnitCim=%s and SaveId=%d ";
+		sql = App_Dba::instance()->formatSql(psql,req.type(),req.unitcim().c_str(),req.saveid());
+		int ret = App_Dba::instance()->execSql(sql.c_str());
+		if (ret >0)
+		{
+			// 执行成功
+			res.set_rescode(0);
+			res.set_resmsg("操作成功");
+		}
+		else
+		{
+			res.set_resmsg("更新失败");
+			res.set_rescode(1);
+		}
+	}
+	else
+	{
+		// 操作失败
+		res.set_rescode(2);
+		res.set_resmsg("未查找到相应的记录");
+	}
+
+	string data;
+	res.SerializeToString(&data);
+	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+}
+
+void DevStateCmd::updateIsLine(sClientMsg* msg)
+{
+
+	PBNS::LineSetMsg_Request req;
+	req.ParseFromArray(msg->data,msg->length);
+
+	// 1.删除 related_line表中 unitcim等于该cimid的记录
+	char * psql = "delete from related_line where UnitCim=%s";
+	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str());
+	App_Dba::instance()->execSql(sql.c_str());
+
+	// 2.插入两条记录
+	psql = "insert into related_line(UnitCim,StationCim) values(%s,%s)";
+	sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.stationonecim().c_str());
+	int ret =App_Dba::instance()->execSql(sql.c_str());
+
+	sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.stationothercim().c_str());
+	ret += App_Dba::instance()->execSql(sql.c_str());
+
+	PBNS::LineSetMsg_Response res;
+
+	if (ret == 2)
+	{
+		// 操作成功
+		res.set_rescode(0);
+	}
+	else
+	{
+		res.set_rescode(1);
+	}
+	string data;
+	res.SerializeToString(&data);
+	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+}
+
+void DevStateCmd::updateIsPower(sClientMsg* msg)
+{
+	PBNS::PowerSetMsg_Request req;
+	req.ParseFromArray(msg->data,msg->length);
+
+	// 更新RelatedLine表UnitCim字段等于CimId，StationCim等于StationId的IsPower字段；
+	char* psql = "update related_line set IsPower=1 where UnitCim=%s and StationCim=%s";
+	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.stationcim().c_str());
+	int ret = App_Dba::instance()->execSql(sql.c_str());
+	PBNS::PowerSetMsg_Response res;
+	if (ret == 1)
+	{
+		res.set_rescode(0);
+	}
+	else
+	{
+		res.set_rescode(1);
+	}
+	string data;
+	res.SerializeToString(&data);
+	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+
 }
