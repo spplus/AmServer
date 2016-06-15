@@ -352,15 +352,9 @@ void DevStateCmd::updateIsLine(sClientMsg* msg)
 
 	PBNS::LineSetMsg_Response res;
 
-	if (ret == 2)
-	{
-		// 操作成功
-		res.set_rescode(0);
-	}
-	else
-	{
-		res.set_rescode(1);
-	}
+	// 操作成功
+	res.set_rescode(0);
+	
 	string data;
 	res.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
