@@ -285,7 +285,7 @@ void DevStateCmd::updateIsBoard(sClientMsg* msg)
 	int flag = 0;
 
 	// 1. 检测是否已经挂牌或已经摘牌
-	char * psql = "select count(*) as count  from unit_status   where UnitCim=%s and SaveId=%d and IsBoard=%d";
+	char * psql = "select count(*) as count  from unit_status   where UnitCim='%s' and SaveId=%d and IsBoard=%d";
 	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.saveid(),tag);
 	LISTMAP countMap = App_Dba::instance()->getList(sql.c_str());
 	if (countMap.size()>0)
@@ -304,10 +304,10 @@ void DevStateCmd::updateIsBoard(sClientMsg* msg)
 	if (flag == 1)
 	{
 		// 2.更新挂摘牌标志 
-		psql = "update unit_status set IsBoard=%d where UnitCim=%s and SaveId=%d ";
+		psql = "update unit_status set IsBoard=%d where UnitCim='%s' and SaveId=%d ";
 		sql = App_Dba::instance()->formatSql(psql,req.type(),req.unitcim().c_str(),req.saveid());
 		int ret = App_Dba::instance()->execSql(sql.c_str());
-		if (ret >0)
+		if (ret == 1)
 		{
 			// 执行成功
 			res.set_rescode(0);
@@ -338,7 +338,7 @@ void DevStateCmd::updateIsLine(sClientMsg* msg)
 	req.ParseFromArray(msg->data,msg->length);
 
 	// 1.删除 related_line表中 unitcim等于该cimid的记录
-	char * psql = "delete from related_line where UnitCim=%s";
+	char * psql = "delete from related_line where UnitCim='%s'";
 	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str());
 	App_Dba::instance()->execSql(sql.c_str());
 
@@ -352,8 +352,16 @@ void DevStateCmd::updateIsLine(sClientMsg* msg)
 
 	PBNS::LineSetMsg_Response res;
 
-	// 操作成功
-	res.set_rescode(0);
+	if (ret == 2)
+	{
+		// 操作成功
+		res.set_rescode(0);
+	}
+	else
+	{
+		// 操作失败
+		res.set_rescode(1);
+	}
 	
 	string data;
 	res.SerializeToString(&data);
@@ -366,7 +374,7 @@ void DevStateCmd::updateIsPower(sClientMsg* msg)
 	req.ParseFromArray(msg->data,msg->length);
 
 	// 更新RelatedLine表UnitCim字段等于CimId，StationCim等于StationId的IsPower字段；
-	char* psql = "update related_line set IsPower=1 where UnitCim=%s and StationCim=%s";
+	char* psql = "update related_line set IsPower=1 where UnitCim='%s' and StationCim='%s'";
 	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.stationcim().c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());
 	PBNS::PowerSetMsg_Response res;

@@ -85,7 +85,7 @@ int DbAccess::execSql(const char* sql)
 	{
 		LOG->error("mysql_query() Error, %s\n", mysql_error(m_mysql));  
 	}
-
+	ret = mysql_affected_rows(m_mysql);
 	mysql_close(m_mysql);
 
 	return ret;
