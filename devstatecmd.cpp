@@ -17,9 +17,9 @@ void DevStateCmd::exec(sClientMsg* msg)
 		break;
 	
 		// 该命令暂不用了
-	case CMD_STATION_LIST:
-		getStationList(msg);
-		break;
+	//case CMD_STATION_LIST:
+		//getStationList(msg);
+		//break;
 
 	case CMD_TAG_OP:
 		updateIsBoard(msg);
@@ -31,6 +31,14 @@ void DevStateCmd::exec(sClientMsg* msg)
 
 	case CMD_LINE_SET:
 		updateIsLine(msg);
+		break;
+
+	case CMD_READ_SAVING:
+		getSavingList(msg);
+		break;
+
+	case CMD_WRITE_SAVING:
+		writeSaving(msg);
 		break;
 	default:
 		break;
@@ -389,5 +397,41 @@ void DevStateCmd::updateIsPower(sClientMsg* msg)
 	string data;
 	res.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+
+}
+
+void DevStateCmd::getSavingList(sClientMsg* msg)
+{
+	PBNS::SavingListMsg_Response res;
+	char* psql = "select id,name,savetime from virtual_saves";
+	LISTMAP saveList = App_Dba::instance()->getList(psql);
+	for (int i = 0;i<saveList.size();i++)
+	{
+		PBNS::SavingBean *bean = res.add_savelist();
+		STRMAP saveMap = saveList.at(i);
+		MAP_ITERATOR iter = saveMap.find("id");
+		if (iter != saveMap.end())
+		{
+			bean->set_id(str2i(iter->second));
+		}
+
+		iter = saveMap.find("name");
+		if (iter != saveMap.end())
+		{
+			bean->set_name(iter->second);
+		}
+
+		iter = saveMap.find("savetime");
+		if (iter != saveMap.end())
+		{
+			bean->set_savetime(iter->second);
+		}
+	}
+
+	App_ClientMgr::instance()->sendData(msg->connectId,res.SerializeAsString(),msg->type);
+}
+
+void DevStateCmd::writeSaving(sClientMsg* msg)
+{
 
 }

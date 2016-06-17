@@ -39,6 +39,8 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_LINE_SET:
 	case CMD_POWER_SET:
 	case CMD_TAG_OP:
+	case CMD_READ_SAVING:
+	case CMD_WRITE_SAVING:
 		pbase = new DevStateCmd;
 		break;
 
