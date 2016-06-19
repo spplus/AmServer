@@ -389,10 +389,12 @@ void DevStateCmd::updateIsPower(sClientMsg* msg)
 	if (ret == 1)
 	{
 		res.set_rescode(0);
+		LOG->message("设置电源点成功");
 	}
 	else
 	{
 		res.set_rescode(1);
+		LOG->message("设置电源点失败");
 	}
 	string data;
 	res.SerializeToString(&data);
@@ -433,5 +435,23 @@ void DevStateCmd::getSavingList(sClientMsg* msg)
 
 void DevStateCmd::writeSaving(sClientMsg* msg)
 {
+	PBNS::WriteSavingMsg_Request req;
+	PBNS::WriteSavingMsg_Response res;
+	req.ParseFromArray(msg->data,msg->length);
+	
+	char *psql = "insert into virtual_saves(name,savetime) values('%s',now())";
+	string sql = App_Dba::instance()->formatSql(psql,req.savename().c_str());
+	int ret = App_Dba::instance()->execSql(sql.c_str());
+	if (ret == 1)
+	{
+		res.set_rescode(0);
+		LOG->message("保持存档成功,存档名称：%s",req.savename().c_str());
+	}
+	else
+	{
+		res.set_rescode(1);
+		LOG->message("保持存档失败,存档名称：%s",req.savename().c_str());
+	}
+	App_ClientMgr::instance()->sendData(msg->connectId,res.SerializeAsString(),msg->type);
 
 }
