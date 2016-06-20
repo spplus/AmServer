@@ -13,11 +13,10 @@ void TopoBizCmd::exec(sClientMsg* msg)
 	}
 }
 
-void TopoBizCmd::topoEntire()
+void TopoBizCmd::topoBySaveId(string saveid)
 {
 	// 已经做个起点分析的设备ID集合
 	STRMAP passedNodes;
-
 
 	// 1.查询所有发动机设备
 	string sql ;
@@ -25,7 +24,7 @@ void TopoBizCmd::topoEntire()
 	LISTMAP	 powerList;
 	MAP_ITERATOR iter;
 	powerList = App_Dba::instance()->getList(p);
-	
+
 	for (int i = 0;i<powerList.size();i++)
 	{
 		STRMAP power = powerList.at(i);
@@ -41,21 +40,28 @@ void TopoBizCmd::topoEntire()
 		{
 			stationid = iter->second;
 		}
-		
-		// 遍历所有saveid ,每个存档都拓扑一次
-		string saveid;
 
 		// 根据元件进行拓扑
 		topoByUnitId(saveid,powerid,stationid,passedNodes);
 
 	}
-	
 
-	// 7.重复步骤2
+}
 
-	// 8.如果该次遍历出的设备站点ID与起始设备的站点ID不相同，且该设备为进出线，则标记该进出线为相对电源点；
-
-	// 9.已经作为起始点的设备，不再作为起始点进行遍历
+void TopoBizCmd::topoEntire()
+{
+	// 查询所有断面
+	char* psql = "select id from virtual_saves ";
+	LISTMAP saveList = App_Dba::instance()->getList(psql);
+	for (int i = 0;i<saveList.size();i++)
+	{
+		STRMAP saveMap = saveList.at(i);
+		MAP_ITERATOR iter = saveMap.find("id");
+		if(iter != saveMap.end())
+		{
+			topoBySaveId(iter->second);
+		}
+	}
 }
 
 LISTMAP TopoBizCmd::getConnIdByUnitsId(string unitid)

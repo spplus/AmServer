@@ -1,4 +1,5 @@
 #include "devstatecmd.h"
+#include "topobizcmd.h"
 
 void DevStateCmd::exec(sClientMsg* msg)
 {
@@ -452,6 +453,40 @@ void DevStateCmd::writeSaving(sClientMsg* msg)
 		res.set_rescode(1);
 		LOG->message("保持存档失败,存档名称：%s",req.savename().c_str());
 	}
+
+	// 查询新生成的存档ID
+	string nSaveId ;
+	psql = "select max(id) as id from virtual_saves";
+	LISTMAP idList = App_Dba::instance()->getList(psql);
+	if (idList.size()>0)
+	{
+		STRMAP idMap = idList.at(0);
+		MAP_ITERATOR iter = idMap.find("id");
+		if (iter != idMap.end())
+		{
+			nSaveId = iter->second;
+		}
+	}
+
+	// 查询原SaveID下面存档的状态数据
+	psql = "insert into unit_status(SaveId,UnitCim,StationCim,State,IsElectric,IsPower,IsBoard) " \
+		"select %s, UnitCim,StationCim,State,IsElectric,IsPower,IsBoard from unit_status where saveid=%d";
+	sql = App_Dba::instance()->formatSql(psql,nSaveId.c_str(),req.saveid());
+	App_Dba::instance()->execSql(sql.c_str());
+
+	// 更新客户端操作后的设备状态，包括开关，刀闸的状态，挂牌状态
+	for (int i=0;i<req.statelist_size();i++)
+	{
+		PBNS::StateBean bean = req.statelist(i);
+		psql = "update unit_status set IsBoard=%d,State=%d where SaveId=%s and UnitCim=%s";
+		sql = App_Dba::instance()->formatSql(psql,bean.isboard(),bean.state(),nSaveId.c_str(),bean.cimid().c_str());
+		App_Dba::instance()->execSql(sql.c_str());
+	}
+
+	// 对新存档进行整站拓扑
+	TopoBizCmd topo;
+	topo.topoBySaveId(nSaveId);
+
 	App_ClientMgr::instance()->sendData(msg->connectId,res.SerializeAsString(),msg->type);
 
 }

@@ -12,8 +12,10 @@
 class TopoBizCmd	:public CmdBase
 {
 public:
-	void				exec(sClientMsg* msg);
+	void			exec(sClientMsg* msg);
 
+	// 按存档ID进行拓扑
+	void			topoBySaveId(string saveid);
 private:
 
 	// 整站拓扑
