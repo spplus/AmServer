@@ -478,7 +478,7 @@ void DevStateCmd::writeSaving(sClientMsg* msg)
 	for (int i=0;i<req.statelist_size();i++)
 	{
 		PBNS::StateBean bean = req.statelist(i);
-		psql = "update unit_status set IsBoard=%d,State=%d where SaveId=%s and UnitCim=%s";
+		psql = "update unit_status set IsBoard=%d,State=%d where SaveId='%s' and UnitCim='%s' ";
 		sql = App_Dba::instance()->formatSql(psql,bean.isboard(),bean.state(),nSaveId.c_str(),bean.cimid().c_str());
 		App_Dba::instance()->execSql(sql.c_str());
 	}
