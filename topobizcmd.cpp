@@ -60,8 +60,29 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 
 void TopoBizCmd::topoEntire()
 {
+
+	// 检查状态表有没有ispower等于2的记录，如果有，则不执行拓扑分析
+	int count = 0;
+	char* psql = "select count(*) as count from unit_status where IsPower=2 ";
+	LISTMAP countList = App_Dba::instance()->getList(psql);
+	if (countList.size()>0)
+	{
+		STRMAP countMap = countList.at(0);
+		MAP_ITERATOR countIter = countMap.find("count");
+		if (countIter != countMap.end())
+		{
+			count = str2i(countIter->second);
+		}
+	}
+
+	// 如果有，则不执行拓扑分析
+	if (count>0)
+	{
+		return;
+	}
+
 	// 查询所有断面
-	char* psql = "select id from virtual_saves ";
+	psql = "select id from virtual_saves ";
 	LISTMAP saveList = App_Dba::instance()->getList(psql);
 	for (int i = 0;i<saveList.size();i++)
 	{
