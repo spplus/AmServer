@@ -13,17 +13,19 @@ void TopoBizCmd::exec(sClientMsg* msg)
 	}
 }
 
-void TopoBizCmd::topoBySaveId(string saveid)
+void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 {
 	// 已经做个起点分析的设备ID集合
 	STRMAP passedNodes;
 
 	// 1.查询所有发动机设备
 	string sql ;
-	char * p = "select Id,StationCim as StationId from units where UnitType=5";
+	char * p = "select Id,StationCim as StationId from units where UnitType=%d";
+	sql = App_Dba::instance()->formatSql(p,unittype);
+
 	LISTMAP	 powerList;
 	MAP_ITERATOR iter;
-	powerList = App_Dba::instance()->getList(p);
+	powerList = App_Dba::instance()->getList(sql.c_str());
 
 	for (int i = 0;i<powerList.size();i++)
 	{
@@ -41,9 +43,17 @@ void TopoBizCmd::topoBySaveId(string saveid)
 			stationid = iter->second;
 		}
 
-		// 根据元件进行拓扑
-		topoByUnitId(saveid,powerid,stationid,passedNodes);
-
+		if (unittype == 5)
+		{
+			// 根据元件进行拓扑带电状态
+			topoByUnitId(saveid,powerid,stationid,passedNodes);
+		}
+		else if (unittype == 10)
+		{
+			// 拓扑接地
+			topoByGround(saveid,powerid,stationid,passedNodes);
+		}
+		
 	}
 
 }
@@ -59,7 +69,11 @@ void TopoBizCmd::topoEntire()
 		MAP_ITERATOR iter = saveMap.find("id");
 		if(iter != saveMap.end())
 		{
-			topoBySaveId(iter->second);
+			// 拓扑带电状态
+			topoBySaveId(iter->second,5);
+
+			// 拓扑接地状态
+			topoBySaveId(iter->second,10);
 		}
 	}
 }
@@ -227,6 +241,110 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 	}
 }
 
+
+void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMAP& passNodes)
+{
+	// 把当前元件加入到已分析列表
+	passNodes.insert(MAPVAL(unitid,unitid));
+
+	// 2.根据元件ID，查找对应的连接点（可能是两个）
+	LISTMAP connIds = getConnIdByUnitsId(unitid);
+
+	// 3.根据连接点ID在连接关系表查询关联的设备
+	for (int j = 0;j<connIds.size();j++)
+	{
+		STRMAP connMap = connIds.at(j);
+		MAP_ITERATOR connIter = connMap.find("connId");
+		if (connIter != connMap.end())
+		{
+			// 根据连接点，查找该连接点关联的设备集合
+			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
+
+			// 遍历该设备集合
+			for (int k = 0;k<unitsList.size();k++)
+			{
+				STRMAP  unitMap = unitsList.at(k);
+				MAP_ITERATOR unitIter = unitMap.find("id");
+				string unitId ;
+				if (unitIter != unitMap.end())
+				{
+					// 判断是否已经做为起始设备进行搜索，如果是则跳过
+					if (passNodes.find(unitIter->second) != passNodes.end())
+					{
+						continue;
+					}
+				}
+
+				// 本次查询的元件CIMID
+				unitId = unitIter->second;
+
+				// 查询元件类型
+				unitIter = unitMap.find("UnitType");
+
+				// 设备类型
+				int etype ;
+
+				// 标记时候需要拓扑 0 需要拓扑，1 不需要拓扑
+				int flag = 0;
+
+				if (unitIter != unitMap.end())
+				{
+					etype = str2i(unitIter->second);
+					if (etype == eBreaker || etype == eSwitch)
+					{
+						// 4.如果该设备为为开关，刀闸，闭合即为带电，否则为不带电；
+						unitIter = unitMap.find("State");
+						if (unitIter != unitMap.end())
+						{
+							int state = str2i(unitIter->second);
+							if (state == 1)
+							{
+								// 更新该设备带电状态为带电
+								updateIsGroundByUnitId(saveid,unitId,1);
+							}
+							else
+							{
+								// 6.如果该设备为开关，且为断开，则不用再遍历该设备的关联设备；
+								updateIsGroundByUnitId(saveid,unitId,0);
+
+								// 标记不需要拓扑
+								flag = 1;
+							}
+						}
+
+					}
+					else
+					{
+						// 5.如果该设备不是开关设备，则设置为接地；
+						updateIsGroundByUnitId(saveid,unitId,1);
+					}
+				}
+
+				unitIter = unitMap.find("StationId");
+				
+				string sId;
+				if (unitIter != unitMap.end())
+				{
+					// 站点ID
+					sId = unitIter->second;
+				}
+
+				if (flag != 1)
+				{
+					// 递归，以该元件为起点进行重新遍历
+					topoByGround(saveid,unitid,sId,passNodes);
+				}
+
+			}
+
+		}
+
+	}
+}
+
+
+
+
 void TopoBizCmd::updateIsPowerByUnitId(string unitid,string stationid,string saveid)
 {
 	char* psql = "update unit_status set IsPower=1 where UnitCim=%s and StationCim=%s and SaveId=%s";
@@ -257,6 +375,22 @@ void TopoBizCmd::updateIsElectricByUnitId(string saveid,string unitid,int state)
 		LOG->message("update :%s to electric failed.",unitid.c_str());
 	}
 }
+
+void TopoBizCmd::updateIsGroundByUnitId(string saveid,string unitid,int state)
+{
+	char* psql = "update unit_status set IsGround=%d where UnitCim=%s and saveid=%s";
+	string sql = App_Dba::instance()->formatSql(psql,state,unitid.c_str(),saveid.c_str());
+	int ret = App_Dba::instance()->execSql(sql.c_str());
+	if (ret>0)
+	{
+		LOG->message("update :%s to IsGround  success.",unitid.c_str());
+	}
+	else
+	{
+		LOG->message("update :%s to IsGround failed.",unitid.c_str());
+	}
+}
+
 
 
 void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)

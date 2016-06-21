@@ -485,7 +485,7 @@ void DevStateCmd::writeSaving(sClientMsg* msg)
 
 	// 对新存档进行整站拓扑
 	TopoBizCmd topo;
-	topo.topoBySaveId(nSaveId);
+	topo.topoBySaveId(nSaveId,5);
 
 	App_ClientMgr::instance()->sendData(msg->connectId,res.SerializeAsString(),msg->type);
 

@@ -15,7 +15,7 @@ public:
 	void			exec(sClientMsg* msg);
 
 	// 按存档ID进行拓扑
-	void			topoBySaveId(string saveid);
+	void			topoBySaveId(string saveid,int unittype=5);
 private:
 
 	// 整站拓扑
@@ -23,6 +23,9 @@ private:
 
 	// 根据元件ID进行拓扑，更新数据库版本
 	void		topoByUnitId(string saveid,string unitid,string stationid,STRMAP& passNodes);
+
+	// 拓扑接地刀闸
+	void		topoByGround(string saveid,string unitid,string stationid,STRMAP& passNodes);
 
 	// 根据元件ID查找对应的连接点
 	LISTMAP		getConnIdByUnitsId(string unitid);
@@ -35,6 +38,9 @@ private:
 
 	// 更新设备带电状态
 	void		updateIsElectricByUnitId(string saveid,string unitid,int state);
+
+	// 更新为是否接地
+	void		updateIsGroundByUnitId(string saveid,string unitid,int state);
 
 	// 更新设备是绝对电源点
 	void		updateIsPowerByUnitId(string unitid,string stationid,string saveid);
