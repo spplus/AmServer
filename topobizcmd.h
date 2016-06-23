@@ -15,7 +15,7 @@ public:
 	void			exec(sClientMsg* msg);
 
 	// 按存档ID进行拓扑
-	void			topoBySaveId(string saveid,int unittype=5);
+	void			topoBySaveId(string saveid,int unittype=eGENERATOR);
 private:
 
 	// 整站拓扑
@@ -52,7 +52,8 @@ private:
 	// 根据元件CIMID进行拓扑，不更新数据库版本
 	void		topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap);
 
-
+	// 执行开关变位拓扑
+	string	execTopoOnBreakerChange(int saveid,string unitcim);
 };
 
 #endif

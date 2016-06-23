@@ -78,5 +78,5 @@ typedef   	vector<STRMAP>					LISTMAP	;
 
 
 // 定义设备类型
-enum eUnitType{eBreaker,eSwitch,eBus,eCapacitor,eLoad,eGenerator,ePt,eTransformer,eLine};
+//enum eUnitType{eBreaker,eSwitch,eBus,eCapacitor,eLoad,eGenerator,ePt,eTransformer,eLine};
 #endif

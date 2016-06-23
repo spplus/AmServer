@@ -43,12 +43,12 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 			stationid = iter->second;
 		}
 
-		if (unittype == 5)
+		if (unittype ==eGENERATOR)
 		{
 			// 根据元件进行拓扑带电状态
 			topoByUnitId(saveid,powerid,stationid,passedNodes);
 		}
-		else if (unittype == 10)
+		else if (unittype == eGROUNDSWITCH)
 		{
 			// 拓扑接地
 			topoByGround(saveid,powerid,stationid,passedNodes);
@@ -91,10 +91,10 @@ void TopoBizCmd::topoEntire()
 		if(iter != saveMap.end())
 		{
 			// 拓扑带电状态
-			topoBySaveId(iter->second,5);
+			topoBySaveId(iter->second,eGENERATOR);
 
 			// 拓扑接地状态
-			topoBySaveId(iter->second,10);
+			topoBySaveId(iter->second,eGROUNDSWITCH);
 		}
 	}
 }
@@ -181,7 +181,7 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 				if (unitIter != unitMap.end())
 				{
 					etype = str2i(unitIter->second);
-					if (etype == eBreaker || etype == eSwitch)
+					if (etype == eBREAKER || etype == eSWITCH)
 					{
 						// 4.如果该设备为为开关，刀闸，闭合即为带电，否则为不带电；
 						unitIter = unitMap.find("State");
@@ -212,7 +212,7 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 				}
 
 				// 如果当前设备为进出线，则到进出线关联关系表中，查出进出线关联的另一端站点ID，更新状态表中进出线在该站点为相对电源点
-				if (etype == eLine)
+				if (etype == eLINE)
 				{
 					LISTMAP stationList = getStationIdByLineId(unitId,stationid);
 					if (stationList.size()>0)
@@ -311,7 +311,7 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 				if (unitIter != unitMap.end())
 				{
 					etype = str2i(unitIter->second);
-					if (etype == eBreaker || etype == eSwitch)
+					if (etype == eBREAKER || etype == eSWITCH)
 					{
 						// 4.如果该设备为为开关，刀闸，闭合即为带电，否则为不带电；
 						unitIter = unitMap.find("State");
@@ -413,21 +413,8 @@ void TopoBizCmd::updateIsGroundByUnitId(string saveid,string unitid,int state)
 }
 
 
-
-void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
+string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid)
 {
-	/*
-	输入参数：	1.存档ID
-						2.元件CIMID
-	运算结果：
-					找出本站设备在此次开关变位后的的带电状态.
-	*/
-	// 保存拓扑分析的结果，即设备的带电状态
-	PBNS::DevStateMsg_Request req;
-	req.ParseFromArray(msg->data,msg->length);
-	
-	int saveId = req.saveid();
-	string cimid = req.unitcim();
 
 
 	// 设备的cimid,带电状态 1带电，0不带电
@@ -466,7 +453,7 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 					bean.set_iselectric(str2i(iter->second));
 				}
 				char temp[16];
-				ACE_OS::itoa(req.saveid(),temp,10);
+				ACE_OS::itoa(saveId,temp,10);
 				string saveid;
 				saveid.append(temp);
 
@@ -485,10 +472,37 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 		// 查询该设备的电压等级
 		bean->CopyFrom(rsltMap.at(i));
 	}
-	string data;
-	res.SerializeToString(&data);
-	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+	
+	return res.SerializeAsString();
+	//App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
 
+}
+
+void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
+{
+	/*
+	输入参数：	1.存档ID
+						2.元件CIMID
+						3.是否允许校验
+	运算结果：
+					找出本站设备在此次开关变位后的的带电状态.
+	*/
+	// 保存拓扑分析的结果，即设备的带电状态
+	PBNS::OprationMsg_Request req;
+	req.ParseFromArray(msg->data,msg->length);
+	int saveId = req.saveid();
+	string cimid = req.unitcim();
+
+	if (req.ischeck())
+	{
+		// 规则校验
+	}
+	else
+	{
+		string data = execTopoOnBreakerChange(saveId,cimid);
+
+		App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+	}
 }
 
 
@@ -555,7 +569,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& pass
 						cbean.set_volvalue(unitIter->second);
 					}
 
-					if (etype == eBreaker || etype == eSwitch)
+					if (etype == eBREAKER || etype == eSWITCH)
 					{
 						// 4.如果该设备为为开关，刀闸，闭合即为带电，否则为不带电；
 						unitIter = unitMap.find("State");
