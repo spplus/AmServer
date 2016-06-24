@@ -28,6 +28,15 @@ protected:
 	{
 		return ACE_OS::atoi(val.c_str());
 	}
+
+	string	i2str(int val)
+	{
+		char temp[16];
+		ACE_OS::itoa(val,temp,10);
+		string strval;
+		strval.append(temp);
+		return strval;
+	}
 };
 
 #endif

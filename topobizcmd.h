@@ -54,6 +54,14 @@ private:
 
 	// 执行开关变位拓扑
 	string	execTopoOnBreakerChange(int saveid,string unitcim);
+
+	// 规则检查
+	void		roleCheck(int connid,int saveid,string unitcim);
+	void		sendRuleBack(int connid,vector<int> ruleList);
+
+	bool		check1(int saveid,string unitcim);
+	bool		check2(int saveid,string unitcim);
+
 };
 
 #endif

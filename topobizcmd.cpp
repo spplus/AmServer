@@ -10,6 +10,11 @@ void TopoBizCmd::exec(sClientMsg* msg)
 	case CMD_TOPO_BREAKER_CHANGE:		// 开关变位
 		topoOnBreakerChange(msg);
 		break;
+	case CMD_CHECK_PASS:					// 规则校验通过
+		topoOnBreakerChange(msg);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -116,7 +121,6 @@ LISTMAP TopoBizCmd::getStationIdByLineId(string unitid,string stationid)
 	stationList = App_Dba::instance()->getList(sql.c_str());
 	return stationList;
 }
-
 
 LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 {
@@ -262,7 +266,6 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 	}
 }
 
-
 void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMAP& passNodes)
 {
 	// 把当前元件加入到已分析列表
@@ -362,9 +365,6 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 
 	}
 }
-
-
-
 
 void TopoBizCmd::updateIsPowerByUnitId(string unitid,string stationid,string saveid)
 {
@@ -496,6 +496,7 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	if (req.ischeck())
 	{
 		// 规则校验
+		roleCheck(msg->connectId,saveId,cimid);
 	}
 	else
 	{
@@ -609,4 +610,93 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& pass
 		}
 
 	}
+}
+
+
+void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim)
+{
+	vector<int> ruleList;
+	if (check1(saveid,unitcim))
+	{
+		ruleList.push_back(R_CHECK_1);
+	}
+	
+	if (check2(saveid,unitcim))
+	{
+		ruleList.push_back(R_CHECK_2);
+	}
+
+	// ...
+
+	// 把触发的规则，返回到客户端
+	sendRuleBack(connid,ruleList);
+
+}
+
+void TopoBizCmd::sendRuleBack(int connid,vector<int> ruleList)
+{
+	string ids;
+	for (int i = 0;i<ruleList.size();i++)
+	{
+		ids += i2str(ruleList.at(i));
+		ids += ",";
+	}
+	if (ids.length()>0)
+	{
+		ids = ids.substr(0,ids.length()-1);
+	}
+	else
+	{
+		return;
+	}
+	PBNS::OprationMsg_Response res;
+
+	// 查询规则列表
+	char * psql = "select id, name,AlarmLevel,Description from rules where id in(%s)";
+	string sql = App_Dba::instance()->formatSql(psql,ids);
+
+	LISTMAP mapList = App_Dba::instance()->getList(sql.c_str());
+	for(int i = 0;i<mapList.size();i++)
+	{
+		PBNS::RuleBean* bean = res.add_rulelist();
+
+		STRMAP ruleMap = mapList.at(i);
+		MAP_ITERATOR iter = ruleMap.find("id");
+		if (iter != ruleMap.end())
+		{
+			bean->set_id(str2i(iter->second));
+		}
+
+		iter = ruleMap.find("name");
+		if (iter != ruleMap.end())
+		{
+			bean->set_name(iter->second);
+		}
+
+		iter = ruleMap.find("AlarmLevel");
+		if (iter != ruleMap.end())
+		{
+			bean->set_alarmlevel(iter->second);
+		}
+
+		iter = ruleMap.find("Description");
+		if (iter != ruleMap.end())
+		{
+			bean->set_description(iter->second);
+		}
+
+	}
+
+	string data = res.SerializeAsString();
+	App_ClientMgr::instance()->sendData(connid,data,CMD_TRIGGER_RULES);
+}
+
+bool TopoBizCmd::check1(int saveid,string unitcim)
+{
+	return false;
+}
+
+bool TopoBizCmd::check2(int saveid,string unitcim)
+{
+	return false;
 }
