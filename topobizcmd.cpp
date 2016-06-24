@@ -412,11 +412,8 @@ void TopoBizCmd::updateIsGroundByUnitId(string saveid,string unitid,int state)
 	}
 }
 
-
 string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid)
 {
-
-
 	// 设备的cimid,带电状态 1带电，0不带电
 	vector<PBNS::StateBean>	rsltMap;
 
@@ -450,15 +447,11 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid)
 				iter = unitMap.find("VolValue");
 				if(iter != unitMap.end())
 				{
-					bean.set_iselectric(str2i(iter->second));
+					bean.set_volvalue(iter->second);
 				}
-				char temp[16];
-				ACE_OS::itoa(saveId,temp,10);
-				string saveid;
-				saveid.append(temp);
 
 				// 以该设备为起点进行拓扑分析
-				topoByUnitIdMem(bean,saveid,passedNodes,rsltMap);
+				topoByUnitIdMem(bean,i2str(saveId),cimid,passedNodes,rsltMap);
 			}
 		}
 	}
@@ -506,8 +499,7 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	}
 }
 
-
-void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap)
+void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap)
 {
 	string unitid = bean.cimid();
 	
@@ -564,7 +556,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& pass
 					etype = str2i(unitIter->second);
 
 					// 取电压等级值
-					unitIter = unitMap.find("	VolValue");
+					unitIter = unitMap.find("VolValue");
 					if (unitIter != unitMap.end())
 					{
 						cbean.set_volvalue(unitIter->second);
@@ -577,17 +569,25 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& pass
 						if (unitIter != unitMap.end())
 						{
 							int state = str2i(unitIter->second);
-							if (state == 0)
+
+							if (cbean.cimid() == cimid && state == 0)
+							{
+								cbean.set_state(1);
+								cbean.set_iselectric(1);
+								rsltMap.push_back(cbean);
+							}
+							else if (state == 1)
 							{
 								//  把该开关设备状态变为1，继续以该设备为起点进行拓扑，如果为0，则跳过这个设备
+								cbean.set_iselectric(1);
 								rsltMap.push_back(cbean);
-
 							}
 							else
 							{
 								// 标记为不需要进行拓扑
 								flag = 1;
 							}
+
 						}
 
 					}
@@ -602,7 +602,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& pass
 				if (flag != 1)
 				{
 					// 递归，以该元件为起点进行重新遍历
-					topoByUnitIdMem(cbean,saveid,passNodes,rsltMap);
+					topoByUnitIdMem(cbean,saveid,cimid,passNodes,rsltMap);
 				}
 			
 			}
@@ -611,7 +611,6 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& pass
 
 	}
 }
-
 
 void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim)
 {
@@ -693,6 +692,7 @@ void TopoBizCmd::sendRuleBack(int connid,vector<int> ruleList)
 
 bool TopoBizCmd::check1(int saveid,string unitcim)
 {
+
 	return false;
 }
 

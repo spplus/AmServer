@@ -50,7 +50,7 @@ private:
 	void		topoOnBreakerChange(sClientMsg *msg);
 
 	// 根据元件CIMID进行拓扑，不更新数据库版本
-	void		topoByUnitIdMem(PBNS::StateBean bean,string saveid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap);
+	void		topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap);
 
 	// 执行开关变位拓扑
 	string	execTopoOnBreakerChange(int saveid,string unitcim);
