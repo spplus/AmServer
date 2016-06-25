@@ -68,6 +68,12 @@ const short		FRAME_TAG_END = 	0x88;
 // 日志对象简化
 #define		LOG		App_Logger::instance()	
 
+// 公共方法
+#define		COM		App_Com::instance()
+
+// 数据库对象
+#define		DBA		App_Dba::instance()
+
 #define		PBNS	com::spplus::buff
 //
 //// 重定义查询结果数据类型

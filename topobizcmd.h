@@ -53,11 +53,11 @@ private:
 	void		topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap);
 
 	// 执行开关变位拓扑
-	string	execTopoOnBreakerChange(int saveid,string unitcim);
+	string	execTopoOnBreakerChange(int saveid,string unitcim,int state);
 
 	// 规则检查
-	void		roleCheck(int connid,int saveid,string unitcim);
-	void		sendRuleBack(int connid,vector<int> ruleList);
+	void		roleCheck(int connid,int saveid,string unitcim,eDeviceType devType,int optype);
+	void		sendRuleBack(int connid,int optype,vector<int> ruleList);
 
 	bool		check1(int saveid,string unitcim);
 	bool		check2(int saveid,string unitcim);

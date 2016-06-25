@@ -1,4 +1,5 @@
 #include "topobizcmd.h"
+#include "rulebiz1.h"
 
 void TopoBizCmd::exec(sClientMsg* msg)
 {
@@ -412,7 +413,7 @@ void TopoBizCmd::updateIsGroundByUnitId(string saveid,string unitid,int state)
 	}
 }
 
-string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid)
+string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 {
 	// 设备的cimid,带电状态 1带电，0不带电
 	vector<PBNS::StateBean>	rsltMap;
@@ -457,17 +458,19 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid)
 	}
 
 	// 拓扑结果返回客户端
-	PBNS::DevStateMsg_Response res;
+	PBNS::OprationMsg_Response res;
 	vector<PBNS::StateBean>::iterator iter = rsltMap.begin();
 	for (int i=0;i<rsltMap.size();i++)
 	{
 		PBNS::StateBean* bean = res.add_devstate();
+		
 		// 查询该设备的电压等级
 		bean->CopyFrom(rsltMap.at(i));
 	}
-	
+	// 返回本次操作后的开关状态，用于客户端图形变位
+	res.set_optype(state);
+
 	return res.SerializeAsString();
-	//App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
 
 }
 
@@ -485,11 +488,13 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	req.ParseFromArray(msg->data,msg->length);
 	int saveId = req.saveid();
 	string cimid = req.unitcim();
+	eDeviceType devtype = (eDeviceType)req.unittype();
+	int optype = req.type();
 
 	if (req.ischeck())
 	{
 		// 规则校验
-		roleCheck(msg->connectId,saveId,cimid);
+		roleCheck(msg->connectId,saveId,cimid,devtype,optype);
 	}
 	else
 	{
@@ -544,6 +549,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 
 				// 查询元件类型
 				unitIter = unitMap.find("UnitType");
+				cbean.set_unittype(COM->str2i(unitIter->second));
 
 				// 设备类型
 				int etype ;
@@ -569,6 +575,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 						if (unitIter != unitMap.end())
 						{
 							int state = str2i(unitIter->second);
+							cbean.set_state(state);
 
 							if (cbean.cimid() == cimid && state == 0)
 							{
@@ -612,27 +619,54 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 	}
 }
 
-void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim)
+void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devtype,int optype)
 {
+	// 触发的规则列表
 	vector<int> ruleList;
-	if (check1(saveid,unitcim))
+
+	switch (devtype)
 	{
-		ruleList.push_back(R_CHECK_1);
+	case eBREAKER:
+
+		// 开关闭合
+		if (optype == 1)
+		{
+			if (check1(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_1);
+			}
+		}
+
+		// 开关断开
+		else
+		{
+
+			if (check2(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_2);
+			}
+		}
+		
+
+		break;
+	case eSWITCH:
+		break;
+	case eGROUNDSWITCH:
+		break;
+	default:
+		break;
 	}
+
 	
-	if (check2(saveid,unitcim))
-	{
-		ruleList.push_back(R_CHECK_2);
-	}
 
 	// ...
 
 	// 把触发的规则，返回到客户端
-	sendRuleBack(connid,ruleList);
+	sendRuleBack(connid,optype,ruleList);
 
 }
 
-void TopoBizCmd::sendRuleBack(int connid,vector<int> ruleList)
+void TopoBizCmd::sendRuleBack(int connid,int optype,vector<int> ruleList)
 {
 	string ids;
 	for (int i = 0;i<ruleList.size();i++)
@@ -685,18 +719,31 @@ void TopoBizCmd::sendRuleBack(int connid,vector<int> ruleList)
 		}
 
 	}
-
+	res.set_optype(optype);
 	string data = res.SerializeAsString();
 	App_ClientMgr::instance()->sendData(connid,data,CMD_TRIGGER_RULES);
 }
 
 bool TopoBizCmd::check1(int saveid,string unitcim)
 {
+	STRMAP passedNodes;
+	RuleBiz1 r1;
+	vector<int> ruleList;
 
-	return false;
+	// 两个条件
+	ruleList.push_back(1);
+	ruleList.push_back(2);
+	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleList);
 }
 
 bool TopoBizCmd::check2(int saveid,string unitcim)
 {
-	return false;
+	STRMAP passedNodes;
+	RuleBiz1 r1;
+	vector<int> ruleList;
+
+	// 两个条件
+	ruleList.push_back(1);
+	ruleList.push_back(2);
+	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleList);
 }

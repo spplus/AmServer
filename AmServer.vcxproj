@@ -73,6 +73,7 @@
     <ClCompile Include="bizbase.cpp" />
     <ClCompile Include="clienthandler.cpp" />
     <ClCompile Include="clientmgr.cpp" />
+    <ClCompile Include="comutils.cpp" />
     <ClCompile Include="confmgr.cpp" />
     <ClCompile Include="dbaccess.cpp" />
     <ClCompile Include="devstatecmd.cpp" />
@@ -83,11 +84,13 @@
     <ClCompile Include="packetparser.cpp" />
     <ClCompile Include="clientmsgservice.cpp" />
     <ClCompile Include="recvTask.cpp" />
+    <ClCompile Include="rulebiz1.cpp" />
     <ClCompile Include="scadahandler.cpp" />
     <ClCompile Include="stationmgrcmd.cpp" />
     <ClCompile Include="tcpClient.cpp" />
     <ClCompile Include="scadaclientmgr.cpp" />
     <ClCompile Include="tcpservermgr.cpp" />
+    <ClCompile Include="topobase.cpp" />
     <ClCompile Include="topobizcmd.cpp" />
     <ClCompile Include="usermgrlistcmd.cpp" />
   </ItemGroup>
@@ -99,6 +102,7 @@
     <ClInclude Include="clienthandler.h" />
     <ClInclude Include="clientmgr.h" />
     <ClInclude Include="cmdbase.h" />
+    <ClInclude Include="comutils.h" />
     <ClInclude Include="confmgr.h" />
     <ClInclude Include="dbaccess.h" />
     <ClInclude Include="defines.h" />
@@ -109,12 +113,14 @@
     <ClInclude Include="packetparser.h" />
     <ClInclude Include="clientmsgservice.h" />
     <ClInclude Include="recvTask.h" />
+    <ClInclude Include="rulebiz1.h" />
     <ClInclude Include="scadahandler.h" />
     <ClInclude Include="stationmgrcmd.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="tcpClient.h" />
     <ClInclude Include="ScadaClientMgr.h" />
     <ClInclude Include="tcpservermgr.h" />
+    <ClInclude Include="topobase.h" />
     <ClInclude Include="topobizcmd.h" />
     <ClInclude Include="usermgrlistcmd.h" />
   </ItemGroup>
