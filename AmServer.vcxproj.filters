@@ -114,6 +114,12 @@
     <ClCompile Include="topobase.cpp">
       <Filter>biz\rules</Filter>
     </ClCompile>
+    <ClCompile Include="rulebiz4.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz5.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -198,6 +204,12 @@
       <Filter>biz\rules</Filter>
     </ClInclude>
     <ClInclude Include="topobase.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz4.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz5.h">
       <Filter>biz\rules</Filter>
     </ClInclude>
   </ItemGroup>

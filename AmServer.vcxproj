@@ -85,6 +85,8 @@
     <ClCompile Include="clientmsgservice.cpp" />
     <ClCompile Include="recvTask.cpp" />
     <ClCompile Include="rulebiz1.cpp" />
+    <ClCompile Include="rulebiz4.cpp" />
+    <ClCompile Include="rulebiz5.cpp" />
     <ClCompile Include="scadahandler.cpp" />
     <ClCompile Include="stationmgrcmd.cpp" />
     <ClCompile Include="tcpClient.cpp" />
@@ -114,6 +116,8 @@
     <ClInclude Include="clientmsgservice.h" />
     <ClInclude Include="recvTask.h" />
     <ClInclude Include="rulebiz1.h" />
+    <ClInclude Include="rulebiz4.h" />
+    <ClInclude Include="rulebiz5.h" />
     <ClInclude Include="scadahandler.h" />
     <ClInclude Include="stationmgrcmd.h" />
     <ClInclude Include="structs.h" />

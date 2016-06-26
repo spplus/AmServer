@@ -1,6 +1,6 @@
 #include "topobizcmd.h"
 #include "rulebiz1.h"
-
+#include "rulebiz4.h"
 void TopoBizCmd::exec(sClientMsg* msg)
 {
 	switch (msg->type)
@@ -498,7 +498,7 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	}
 	else
 	{
-		string data = execTopoOnBreakerChange(saveId,cimid);
+		string data = execTopoOnBreakerChange(saveId,cimid,optype);
 
 		App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
 	}
@@ -635,6 +635,13 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 			{
 				ruleList.push_back(R_CHECK_1);
 			}
+
+			// 规则4是满足条件两次，规则不触发，满足低于两次，规则触发，这个返回值和规则一相反
+			if (!check4(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_4);
+			}
+
 		}
 
 		// 开关断开
@@ -746,4 +753,16 @@ bool TopoBizCmd::check2(int saveid,string unitcim)
 	ruleList.push_back(1);
 	ruleList.push_back(2);
 	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleList);
+}
+
+bool TopoBizCmd::check4(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz1 r4;
+	vector<int> ruleList;
+
+	// 两个条件
+	ruleList.push_back(1);
+	ruleList.push_back(2);
+	return r4.topoByUnit(saveid,unitcim,passedNodes,ruleList);
 }
