@@ -85,6 +85,8 @@
     <ClCompile Include="clientmsgservice.cpp" />
     <ClCompile Include="recvTask.cpp" />
     <ClCompile Include="rulebiz1.cpp" />
+    <ClCompile Include="rulebiz12.cpp" />
+    <ClCompile Include="rulebiz16.cpp" />
     <ClCompile Include="rulebiz4.cpp" />
     <ClCompile Include="rulebiz5-1.cpp" />
     <ClCompile Include="rulebiz5-2.cpp" />
@@ -118,6 +120,8 @@
     <ClInclude Include="clientmsgservice.h" />
     <ClInclude Include="recvTask.h" />
     <ClInclude Include="rulebiz1.h" />
+    <ClInclude Include="rulebiz12.h" />
+    <ClInclude Include="rulebiz16.h" />
     <ClInclude Include="rulebiz4.h" />
     <ClInclude Include="rulebiz5-1.h" />
     <ClInclude Include="rulebiz5-2.h" />

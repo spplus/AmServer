@@ -126,6 +126,12 @@
     <ClCompile Include="rulebiz5-2.cpp">
       <Filter>biz\rules</Filter>
     </ClCompile>
+    <ClCompile Include="rulebiz12.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz16.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -222,6 +228,12 @@
       <Filter>biz\rules</Filter>
     </ClInclude>
     <ClInclude Include="rulebiz5-2.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz12.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz16.h">
       <Filter>biz\rules</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,6 @@
-#include "rulebiz4.h"
+#include "rulebiz12.h"
 
-bool RuleBiz4::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
+bool RuleBiz12::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
@@ -33,6 +33,7 @@ bool RuleBiz4::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 		{
 			COM->triggerRule(ruleMap,1);
 		}
+		
 	}
 
 	// 判断条件是否全部触发，如果是则返回，规则触发

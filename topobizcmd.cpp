@@ -2,6 +2,9 @@
 #include "rulebiz1.h"
 #include "rulebiz4.h"
 #include "rulebiz5.h"
+#include "rulebiz12.h"
+#include "rulebiz16.h"
+
 void TopoBizCmd::exec(sClientMsg* msg)
 {
 	switch (msg->type)
@@ -667,10 +670,17 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 		}
 		else
 		{
-
+			if (check12(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_12);
+			}
 		}
 		break;
 	case eGROUNDSWITCH:
+		if (check16(saveid,unitcim))
+		{
+			ruleList.push_back(R_CHECK_16);
+		}
 		break;
 	default:
 		break;
@@ -792,5 +802,27 @@ bool TopoBizCmd::check5(int saveid,string unitcim)
 	ruleMap.insert(RVAL(3,3));
 	ruleMap.insert(RVAL(4,4));
 	ruleMap.insert(RVAL(5,5));
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check12(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz12 r;
+	RMAP ruleMap;
+
+	// 两个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+bool TopoBizCmd::check16(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz16 r;
+	RMAP ruleMap;
+
+	// 1个条件
+	ruleMap.insert(RVAL(1,1));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
