@@ -62,6 +62,7 @@ private:
 	bool		check1(int saveid,string unitcim);
 	bool		check2(int saveid,string unitcim);
 	bool		check4(int saveid,string unitcim);
+	bool		check5(int saveid,string unitcim);
 };
 
 #endif

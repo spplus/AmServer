@@ -657,6 +657,17 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 
 		break;
 	case eSWITCH:
+		if (optype == 1)
+		{
+			if (check5(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_5);
+			}
+		}
+		else
+		{
+
+		}
 		break;
 	case eGROUNDSWITCH:
 		break;
@@ -766,4 +777,19 @@ bool TopoBizCmd::check4(int saveid,string unitcim)
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	return r4.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check5(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz5 r;
+	RMAP ruleMap;
+
+	// 两个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+	ruleMap.insert(RVAL(3,3));
+	ruleMap.insert(RVAL(4,4));
+	ruleMap.insert(RVAL(5,5));
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }

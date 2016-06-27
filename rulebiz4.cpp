@@ -24,12 +24,7 @@ bool RuleBiz4::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 	else
 	{
 		// 如果为非开关、刀闸、地刀的任何元件，条件一成立
-		R_ITERATOR iter1 = ruleMap.find(1);
-		if (iter1 != ruleMap.end())
-		{
-			ruleMap.erase(iter1);
-		}
-		
+		COM->triggerRule(ruleMap,1);
 	}
 
 	// 判断条件是否全部触发，如果是则返回，规则触发

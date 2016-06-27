@@ -26,3 +26,12 @@ string ComUtils::getVal(STRMAP &smap,string key)
 		return "";
 	}
 }
+
+void ComUtils::triggerRule(RMAP &ruleMap,int rid)
+{
+	R_ITERATOR iter = ruleMap.find(rid);
+	if (iter != ruleMap.end())
+	{
+		ruleMap.erase(iter);
+	}
+}
