@@ -1,6 +1,7 @@
 #include "topobizcmd.h"
 #include "rulebiz1.h"
 #include "rulebiz4.h"
+#include "rulebiz5.h"
 void TopoBizCmd::exec(sClientMsg* msg)
 {
 	switch (msg->type)
