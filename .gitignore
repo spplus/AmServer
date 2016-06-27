@@ -93,3 +93,4 @@ $RECYCLE.BIN/
 *.vsp
 
 *.unsuccessfulbuild
+*.tmp

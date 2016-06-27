@@ -79,9 +79,11 @@ const short		FRAME_TAG_END = 	0x88;
 //// 重定义查询结果数据类型
 typedef		map<string,string>				STRMAP;
 typedef		STRMAP::value_type				MAPVAL;
-typedef		STRMAP::iterator				MAP_ITERATOR;
+typedef		STRMAP::iterator					MAP_ITERATOR;
 typedef   	vector<STRMAP>					LISTMAP	;		
-
+typedef		map<int,int>						RMAP;
+typedef		RMAP::value_type					RVAL;
+typedef		RMAP::iterator					R_ITERATOR;
 
 // 定义设备类型
 //enum eUnitType{eBreaker,eSwitch,eBus,eCapacitor,eLoad,eGenerator,ePt,eTransformer,eLine};

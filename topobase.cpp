@@ -1,7 +1,7 @@
 #include "topobase.h"
 
 
-bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,vector<int>& ruleList)
+bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
 {
 	// 把当前元件加入到已分析列表
 	passNodes.insert(MAPVAL(unitcim,unitcim));
@@ -38,14 +38,14 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,vector<int
 				unitId = unitIter->second;
 
 				// 本轮拓扑的业务处理，具体子类实现
-				if (topoBiz(saveid,unitId,ruleList))
+				if (topoBiz(saveid,unitId,ruleMap))
 				{
 					// 递归，以该元件为起点进行重新遍历
-					topoByUnit(saveid,unitId,passNodes,ruleList);
+					topoByUnit(saveid,unitId,passNodes,ruleMap);
 				}
 
 				// 判断是否规则触发
-				if (ruleList.size() == 0)
+				if (ruleMap.size() == 0)
 				{
 					return true;
 				}

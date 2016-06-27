@@ -735,34 +735,35 @@ bool TopoBizCmd::check1(int saveid,string unitcim)
 {
 	STRMAP passedNodes;
 	RuleBiz1 r1;
-	vector<int> ruleList;
+	RMAP ruleMap;
 
 	// 两个条件
-	ruleList.push_back(1);
-	ruleList.push_back(2);
-	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleList);
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+
+	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
 bool TopoBizCmd::check2(int saveid,string unitcim)
 {
 	STRMAP passedNodes;
 	RuleBiz1 r1;
-	vector<int> ruleList;
+	RMAP ruleMap;
 
 	// 两个条件
-	ruleList.push_back(1);
-	ruleList.push_back(2);
-	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleList);
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
 bool TopoBizCmd::check4(int saveid,string unitcim)
 {
 	STRMAP passedNodes;
-	RuleBiz1 r4;
-	vector<int> ruleList;
+	RuleBiz4 r4;
+	RMAP ruleMap;
 
 	// 两个条件
-	ruleList.push_back(1);
-	ruleList.push_back(2);
-	return r4.topoByUnit(saveid,unitcim,passedNodes,ruleList);
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+	return r4.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }

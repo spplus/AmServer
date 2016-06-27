@@ -19,10 +19,10 @@ class TopoBase
 public:
 
 	// 拓扑分析框架算法
-	bool				topoByUnit(int saveid,string unitcim,STRMAP& passNodes,vector<int>& ruleList);
+	bool				topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
 
 	// 执行具体的业务逻辑
-	virtual bool		topoBiz(int saveid,string unitcim,vector<int>& ruleList) = 0;
+	virtual bool		topoBiz(int saveid,string unitcim,RMAP& ruleMap) = 0;
 
 protected:
 	// 通过cimid获取unit信息
