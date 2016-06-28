@@ -14,7 +14,7 @@
 class RuleBiz1		:public TopoBase
 {
 private:
-	virtual bool		topoBiz(int saveid,string unitcim,map<int,int>& ruleMap);
+	virtual int		topoBiz(int saveid,string unitcim,map<int,int>& ruleMap,string stationcim="");
 };
 
 #endif

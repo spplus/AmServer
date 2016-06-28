@@ -1,13 +1,13 @@
 #include "rulebiz16.h"
 
-bool RuleBiz16::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
+int RuleBiz16::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
 	// 1.如果为开关（无论断开闭合），仍然往下遍历
 	if (bean.unittype() == eBREAKER )
 	{
-		return true;
+		return 1;
 
 	}
 	else if (bean.unittype() == eSWITCH)
@@ -18,16 +18,16 @@ bool RuleBiz16::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 			COM->triggerRule(ruleMap,1);
 
 			// 返回，停止拓扑
-			return false;
+			return 0;
 		}
 		else
 		{
-			return false;
+			return 0;
 		}
 	}
 	else if (bean.unittype() == eGROUNDSWITCH)
 	{
-		return false;
+		return 0;
 	}
 	else
 	{
@@ -38,10 +38,10 @@ bool RuleBiz16::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 	// 判断条件是否全部触发，如果是则返回，规则触发
 	if (ruleMap.size()>0)
 	{
-		return true;
+		return 1;
 	}
 	else
 	{
-		return false;
+		return 0;
 	}
 }

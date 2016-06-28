@@ -2,7 +2,7 @@
 #include "rulebiz5-1.h"
 #include "rulebiz5-2.h"
 
-bool RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
+int RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
@@ -42,7 +42,7 @@ bool RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 				// 为了便于检查规则的触发边界，再次把条件5也弹出
 				COM->triggerRule(ruleMap,5);
 
-				return false;
+				return 0;
 			}
 			else
 			{
@@ -63,7 +63,7 @@ bool RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 					COM->triggerRule(ruleMap,4);
 
 					// 停止拓扑
-					return false;
+					return 0;
 				}
 			}
 		}
@@ -90,10 +90,10 @@ bool RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 	// 判断条件是否全部触发，如果是则返回，规则触发
 	if (ruleMap.size()>0)
 	{
-		return true;
+		return 1;
 	}
 	else
 	{
-		return false;
+		return 0;
 	}
 }

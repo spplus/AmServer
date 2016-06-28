@@ -21,8 +21,11 @@ public:
 	// 拓扑分析框架算法
 	bool				topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
 
-	// 执行具体的业务逻辑
-	virtual bool		topoBiz(int saveid,string unitcim,RMAP& ruleMap) = 0;
+	// 执行具体的业务逻辑 
+	/*
+	返回值说明：1 继续拓扑 ，0 不用递归拓扑，2 直接退出，规则不会被触发
+	*/
+	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim="") = 0;
 
 protected:
 	// 通过cimid获取unit信息

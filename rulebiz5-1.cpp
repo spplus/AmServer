@@ -1,6 +1,6 @@
 #include "rulebiz5-1.h"
 
-bool RuleBiz5_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
+int RuleBiz5_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
@@ -10,11 +10,11 @@ bool RuleBiz5_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 		COM->triggerRule(ruleMap,3);
 
 		// ·µ»Øfalse£¬Í£Ö¹¼ÌĞøÍØÆË
-		return false;
+		return 0;
 	}
 	else
 	{
 		// ·µ»Øtrue£¬¼ÌĞøÍØÆË
-		return true;
+		return 1;
 	}
 }

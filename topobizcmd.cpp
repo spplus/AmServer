@@ -4,7 +4,8 @@
 #include "rulebiz5.h"
 #include "rulebiz12.h"
 #include "rulebiz16.h"
-
+#include "rulebiz18.h"
+#include "rulebiz20.h"
 void TopoBizCmd::exec(sClientMsg* msg)
 {
 	switch (msg->type)
@@ -646,6 +647,11 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 				ruleList.push_back(R_CHECK_4);
 			}
 
+			if (check20(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_20);
+			}
+
 		}
 
 		// 开关断开
@@ -680,6 +686,13 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 		if (check16(saveid,unitcim))
 		{
 			ruleList.push_back(R_CHECK_16);
+		}
+		if (optype == 1)
+		{
+			if (check18(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_18);
+			}
 		}
 		break;
 	default:
@@ -824,5 +837,28 @@ bool TopoBizCmd::check16(int saveid,string unitcim)
 
 	// 1个条件
 	ruleMap.insert(RVAL(1,1));
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check18(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz18 r;
+	RMAP ruleMap;
+
+	// 1个条件
+	ruleMap.insert(RVAL(1,1));
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check20(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz18 r;
+	RMAP ruleMap;
+
+	// 2个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }

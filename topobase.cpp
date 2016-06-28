@@ -3,6 +3,8 @@
 
 bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
 {
+	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
+
 	// 把当前元件加入到已分析列表
 	passNodes.insert(MAPVAL(unitcim,unitcim));
 
@@ -38,16 +40,28 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 				unitId = unitIter->second;
 
 				// 本轮拓扑的业务处理，具体子类实现
-				if (topoBiz(saveid,unitId,ruleMap))
+				int topoRst = topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
+				bool ret = false;
+
+				if (topoRst == 1)
 				{
 					// 递归，以该元件为起点进行重新遍历
-					topoByUnit(saveid,unitId,passNodes,ruleMap);
+					ret = topoByUnit(saveid,unitId,passNodes,ruleMap);
+				}
+				// 判断是否直接退出
+				else if (topoRst == 2)
+				{
+					return false;
 				}
 
 				// 判断是否规则触发
 				if (ruleMap.size() == 0)
 				{
 					return true;
+				}
+				else
+				{
+					return ret;
 				}
 			}
 
@@ -60,7 +74,7 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 {
 	PBNS::StateBean bean;
-	char* psql = "select b.State,a.UnitType,a.StationCim,b.IsElectric " \
+	char* psql = "select b.State,a.UnitType,a.StationCim,b.IsElectric,b.IsPower " \
 		"from units a left join " \
 		"unit_status b on a.CimId=b.UnitCim and b.SaveId=%d " \
 		"where a.CimId='%s'";
@@ -85,6 +99,12 @@ PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 		if (strval.length()>0)
 		{
 			bean.set_iselectric(COM->str2i(strval));
+		}
+
+		strval = COM->getVal(unitMap,"IsPower");
+		if (strval.length()>0)
+		{
+			bean.set_ispower(COM->str2i(strval));
 		}
 
 	}

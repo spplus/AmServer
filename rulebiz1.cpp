@@ -1,6 +1,6 @@
 #include "rulebiz1.h"
 
-bool RuleBiz1::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
+int RuleBiz1::topoBiz(int saveid,string unitcim,map<int,int>& ruleMap,string stationcim/* ="" */)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
@@ -9,23 +9,22 @@ bool RuleBiz1::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 	{
 		if (bean.state() == 1)
 		{
-			return true;
+			return 1;
 		}
 		else
 		{
-			return false;
+			return 0;
 		}
 
 	}
 	else if (bean.unittype() == eGROUNDSWITCH)
 	{
-		return false;
+		return 0;
 	}
 	else if (bean.unittype() == eGENERATOR)
 	{
 		// 如果为发电机，条件一成立
 		COM->triggerRule(ruleMap,1);
-	
 	}
 	else
 	{
@@ -36,10 +35,10 @@ bool RuleBiz1::topoBiz(int saveid,string unitcim,RMAP& ruleMap)
 	// 判断条件是否全部触发，如果是则返回，规则触发
 	if (ruleMap.size()>0)
 	{
-		return true;
+		return 1;
 	}
 	else
 	{
-		return false;
+		return 0;
 	}
 }

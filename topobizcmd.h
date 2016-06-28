@@ -65,6 +65,8 @@ private:
 	bool		check5(int saveid,string unitcim);
 	bool		check12(int saveid,string unitcim);
 	bool		check16(int saveid,string unitcim);
+	bool		check18(int saveid,string unitcim);
+	bool		check20(int saveid,string unitcim);
 };
 
 #endif
