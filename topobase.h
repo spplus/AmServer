@@ -19,7 +19,7 @@ class TopoBase
 public:
 
 	// 拓扑分析框架算法
-	bool				topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
+	virtual	bool		topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
 
 	// 执行具体的业务逻辑 
 	/*
@@ -30,8 +30,6 @@ public:
 protected:
 	// 通过cimid获取unit信息
 	PBNS::StateBean getUnitByCim(int saveid,string unitcim);
-
-private:
 
 	// 根据元件ID查找对应的连接点
 	LISTMAP			getConnIdByUnitsId(string unitid);
