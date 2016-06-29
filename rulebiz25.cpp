@@ -1,11 +1,19 @@
-#include "rulebiz21.h"
-#include "rulebiz21-1.h"
+#include "rulebiz25.h"
 
-RuleBiz21::RuleBiz21()
+
+RuleBiz25::RuleBiz25()
 {
-	m_breakerCim = "";
+	m_hasSwitch = false;
+	m_hasSwitchState = 1;
+	m_optype = 1;
+	m_hasBus = false;
+	m_switchCim = "";
 }
-bool RuleBiz21::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
+void RuleBiz25::setOptype(int optype)
+{
+	m_optype = optype;
+}
+bool RuleBiz25::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
 {
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
@@ -53,15 +61,38 @@ bool RuleBiz21::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				}
 
 			}
-			// 如果结果原件不包含母线，满足条件二；如果包含母线，则在上面一层循环，将退出，不会到这里
-			COM->triggerRule(ruleMap,2);
-
-			// 当条件一、条件二满足时，以开关为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含刀闸且断开，满足条件三。
-			if (m_breakerCim.length() > 0)
+			// 如果不包含刀闸，满足条件二
+			if (!m_hasSwitch)
 			{
-				RuleBiz21_1 r;
-				STRMAP passedNodes;
-				r.topoByUnit(saveid,m_breakerCim,passedNodes,ruleMap);
+				COM->triggerRule(ruleMap,2);
+			}
+			
+			R_ITERATOR iter1 = ruleMap.find(1);
+			R_ITERATOR iter2 = ruleMap.find(2);
+
+			// 条件一二同时满足时，触发规则
+			if (iter1 == ruleMap.end() && iter2 == ruleMap.end())
+			{
+				return true;
+			}
+			
+			// 如果包含刀闸，进入分支逻辑
+			if (m_hasSwitch)
+			{
+				// 起始条件为客户端断开刀闸，否则直接跳出
+				if (m_optype == 0)
+				{
+					return false;
+				}
+
+				// 如果包含的刀闸为断开，满足条件三
+				if (m_hasSwitchState == 0)
+				{
+					COM->triggerRule(ruleMap,3);
+				}
+
+				//  以条件三中断开刀闸为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含母线，满足条件五；
+
 			}
 
 			// 判断是否触发规则
@@ -80,23 +111,35 @@ bool RuleBiz21::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 }
 
 
-int RuleBiz21::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
+int RuleBiz25::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
 	// 1.如果为母线，不违背规则，直接跳出逻辑。
-	if (bean.unittype() == eBUS )
+	if (bean.unittype() == eSWITCH)
 	{
-		return 2;
+		m_hasSwitch = true;
+		m_hasSwitchState = bean.state();
+		m_switchCim = bean.cimid();
+	}
+	else if (bean.unittype() == eBUS)
+	{
+		m_hasBus = true;
+
+		// 如果结果包含母线，满足条件四
+		COM->triggerRule(ruleMap,4);
 	}
 	else if (bean.unittype() == eBREAKER)
 	{
-		// 如果为开关且断开，满足条件一
-		if (bean.state() == 0)
+		// 如果为开关且闭合，满足条件一
+		if (bean.state() == 1)
 		{
 			COM->triggerRule(ruleMap,1);
-			m_breakerCim = bean.cimid();
+		}
+		else
+		{
+			return 2;
 		}
 	}
-	return 1;
+	return 0;
 }
