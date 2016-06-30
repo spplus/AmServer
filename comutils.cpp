@@ -14,6 +14,11 @@ string	ComUtils::i2str(int val)
 	return strval;
 }
 
+int ComUtils::getIval(STRMAP &smap,string key)
+{
+	return str2i(getVal(smap,key));
+}
+
 string ComUtils::getVal(STRMAP &smap,string key)
 {
 	MAP_ITERATOR iter = smap.find(key);

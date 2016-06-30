@@ -22,6 +22,7 @@ public:
 	int		str2i(string val);
 	string	i2str(int val);
 	string	getVal(STRMAP &smap,string key);
+	int		getIval(STRMAP &smap,string key);
 	void		triggerRule(RMAP &ruleMap,int rid);
 };
 
