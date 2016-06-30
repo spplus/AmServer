@@ -1,5 +1,5 @@
 #include "rulebiz25.h"
-
+#include "rulebiz25-1.h"
 
 RuleBiz25::RuleBiz25()
 {
@@ -92,11 +92,15 @@ bool RuleBiz25::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				}
 
 				//  以条件三中断开刀闸为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含母线，满足条件五；
+				RuleBiz25_1 r;
+				STRMAP passedNodes;
+				r.topoByUnit(saveid,m_switchCim,passedNodes,ruleMap);
 
 			}
 
-			// 判断是否触发规则
-			if (ruleMap.size() == 0)
+			// 当条件一、条件三、条件四、条件五满足时触发规则。
+			iter2 = ruleMap.find(2);
+			if (ruleMap.size() == 4 && iter2 != ruleMap.end())
 			{
 				return true;
 			}

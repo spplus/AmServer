@@ -67,9 +67,9 @@ private:
 	bool		check16(int saveid,string unitcim);
 	bool		check18(int saveid,string unitcim);
 	bool		check20(int saveid,string unitcim);
-	bool		check21(int saveid,string unitcim);	// wait
+	bool		check21(int saveid,string unitcim);
 	bool		check22(int saveid,string unitcim);
-
+	bool		check25(int saveid,string unitcim,int optype);
 };
 
 #endif

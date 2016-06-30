@@ -92,6 +92,7 @@
     <ClCompile Include="rulebiz21-1.cpp" />
     <ClCompile Include="rulebiz21.cpp" />
     <ClCompile Include="rulebiz22.cpp" />
+    <ClCompile Include="rulebiz25-1.cpp" />
     <ClCompile Include="rulebiz25.cpp" />
     <ClCompile Include="rulebiz4.cpp" />
     <ClCompile Include="rulebiz5-1.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="rulebiz21-1.h" />
     <ClInclude Include="rulebiz21.h" />
     <ClInclude Include="rulebiz22.h" />
+    <ClInclude Include="rulebiz25-1.h" />
     <ClInclude Include="rulebiz25.h" />
     <ClInclude Include="rulebiz4.h" />
     <ClInclude Include="rulebiz5-1.h" />
