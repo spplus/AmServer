@@ -153,6 +153,12 @@
     <ClCompile Include="rulebiz25-1.cpp">
       <Filter>biz\rules</Filter>
     </ClCompile>
+    <ClCompile Include="rulebiz26.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz26-1.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -276,6 +282,12 @@
       <Filter>biz\rules</Filter>
     </ClInclude>
     <ClInclude Include="rulebiz25-1.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz26.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz26-1.h">
       <Filter>biz\rules</Filter>
     </ClInclude>
   </ItemGroup>
