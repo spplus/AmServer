@@ -702,6 +702,10 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 			{
 				ruleList.push_back(R_CHECK_12);
 			}
+			if (check27(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_27);
+			}
 		}
 		if (check25(saveid,unitcim,optype))
 		{
@@ -934,6 +938,19 @@ bool TopoBizCmd::check26(int saveid,string unitcim)
 {
 	STRMAP passedNodes;
 	RuleBiz26 r;
+	RMAP ruleMap;
+
+	// 3个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+	ruleMap.insert(RVAL(3,3));
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check27(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz27 r;
 	RMAP ruleMap;
 
 	// 3个条件
