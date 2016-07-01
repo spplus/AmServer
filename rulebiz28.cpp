@@ -1,6 +1,6 @@
 #include "rulebiz28.h"
 
-void RuleBiz28::RuleBiz28()
+ RuleBiz28::RuleBiz28()
 {
 	m_isFirst = true;
 }
