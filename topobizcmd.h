@@ -76,6 +76,9 @@ private:
 	bool		check29(int saveid,string unitcim);
 	bool		check32(int saveid,string unitcim);
 	bool		check33(int saveid,string unitcim);
+	bool		check34(int saveid,string unitcim);
+	bool		check35(int saveid,string unitcim);
+	bool		check38(int saveid,string unitcim);
 };
 
 #endif

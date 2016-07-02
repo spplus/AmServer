@@ -14,7 +14,9 @@
 #include "rulebiz28.h"
 #include "rulebiz32.h"
 #include "rulebiz33.h"
-
+#include "rulebiz34.h"
+#include "rulebiz35.h"
+#include "rulebiz38.h"
 void TopoBizCmd::exec(sClientMsg* msg)
 {
 	switch (msg->type)
@@ -678,6 +680,16 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 			{
 				ruleList.push_back(R_CHECK_33);
 			}
+
+			if (check34(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_34);
+			}
+
+			if (check35(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_35);
+			}
 		}
 
 		// 开关断开
@@ -743,6 +755,10 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 			if (check28(saveid,unitcim))
 			{
 				ruleList.push_back(R_CHECK_28);
+			}
+			if (check38(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_38);
 			}
 		}
 		if (check25(saveid,unitcim,optype))
@@ -1037,5 +1053,47 @@ bool TopoBizCmd::check33(int saveid,string unitcim)
 	// 2个条件
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check34(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz34 r;
+	RMAP ruleMap;
+
+	// 3个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+	ruleMap.insert(RVAL(3,3));
+
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check35(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz35 r;
+	RMAP ruleMap;
+
+	// 3个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+	ruleMap.insert(RVAL(3,3));
+	ruleMap.insert(RVAL(4,4));
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check38(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz38 r;
+	RMAP ruleMap;
+
+	// 3个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+	ruleMap.insert(RVAL(3,3));
+
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
