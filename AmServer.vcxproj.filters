@@ -192,6 +192,30 @@
     <ClCompile Include="rulebiz38-1.cpp">
       <Filter>biz\rules</Filter>
     </ClCompile>
+    <ClCompile Include="rulebiz39.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz39-1.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz43.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz44.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz45.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz46.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz47.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
+    <ClCompile Include="rulebiz48.cpp">
+      <Filter>biz\rules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -354,6 +378,30 @@
       <Filter>biz\rules</Filter>
     </ClInclude>
     <ClInclude Include="rulebiz38-1.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz39.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz39-1.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz43.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz44.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz45.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz46.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz47.h">
+      <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="rulebiz48.h">
       <Filter>biz\rules</Filter>
     </ClInclude>
   </ItemGroup>

@@ -17,6 +17,14 @@
 #include "rulebiz34.h"
 #include "rulebiz35.h"
 #include "rulebiz38.h"
+#include "rulebiz39.h"
+#include "rulebiz43.h"
+#include "rulebiz45.h"
+#include "rulebiz46.h"
+#include "rulebiz47.h"
+#include "rulebiz48.h"
+
+
 void TopoBizCmd::exec(sClientMsg* msg)
 {
 	switch (msg->type)
@@ -690,6 +698,20 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 			{
 				ruleList.push_back(R_CHECK_35);
 			}
+
+			if (check39(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_39);
+			}
+			if (check45(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_45);
+			}
+
+			if (check46(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_46);
+			}
 		}
 
 		// 开关断开
@@ -705,9 +727,20 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 			{
 				ruleList.push_back(R_CHECK_28);
 			}
+			if (check47(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_47);
+			}
+			if (check48(saveid,unitcim))
+			{
+				ruleList.push_back(R_CHECK_48);
+			}
 		}
 		
-
+		if (check43(saveid,unitcim))
+		{
+			ruleList.push_back(R_CHECK_43);
+		}
 		break;
 	case eSWITCH:
 		if (optype == 1)
@@ -764,6 +797,11 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 		if (check25(saveid,unitcim,optype))
 		{
 			ruleList.push_back(R_CHECK_25);
+		}
+
+		if (check43(saveid,unitcim))
+		{
+			ruleList.push_back(R_CHECK_43);
 		}
 		break;
 	case eGROUNDSWITCH:
@@ -1094,6 +1132,81 @@ bool TopoBizCmd::check38(int saveid,string unitcim)
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
+
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+bool TopoBizCmd::check39(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz39 r;
+	RMAP ruleMap;
+
+	// 2个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check43(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz43 r;
+	RMAP ruleMap;
+
+	// 2个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check45(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz45 r;
+	RMAP ruleMap;
+
+	// 2个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+bool TopoBizCmd::check46(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz46 r;
+	RMAP ruleMap;
+
+	// 2个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+bool TopoBizCmd::check47(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz47 r;
+	RMAP ruleMap;
+
+	// 2个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
+
+	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
+}
+
+bool TopoBizCmd::check48(int saveid,string unitcim)
+{
+	STRMAP passedNodes;
+	RuleBiz48 r;
+	RMAP ruleMap;
+
+	// 2个条件
+	ruleMap.insert(RVAL(1,1));
+	ruleMap.insert(RVAL(2,2));
 
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
