@@ -59,6 +59,9 @@ private:
 	void		roleCheck(int connid,int saveid,string unitcim,eDeviceType devType,int optype);
 	void		sendRuleBack(int connid,int optype,vector<int> ruleList);
 
+	// 检测规则是否生效
+	bool		checkRuleIsUse(string cimid,int ruleid);
+
 	bool		check1(int saveid,string unitcim);
 	bool		check2(int saveid,string unitcim);
 	bool		check4(int saveid,string unitcim);

@@ -643,6 +643,26 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 	}
 }
 
+bool TopoBizCmd::checkRuleIsUse(string cimid,int ruleid)
+{
+	char *psql = "select count(*) as count from station_rule a " \
+						"where a.IsUse=1 and a.RuleId=%d  " \
+						"and a.StationId=(select c.ID from units b left join " \
+						"stations c on b.StationCim=c.CimId where b.CimId='%s');";
+	string sql = DBA->formatSql(psql,ruleid,cimid);
+	LISTMAP ruleList = DBA->getList(sql.c_str());
+	if (ruleList.size()>0)
+	{
+		STRMAP ruleMap = ruleList.at(0);
+		int count = COM->getIval(ruleMap,"count");
+		if (count>0)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devtype,int optype)
 {
 	// 触发的规则列表
@@ -890,6 +910,10 @@ void TopoBizCmd::sendRuleBack(int connid,int optype,vector<int> ruleList)
 
 bool TopoBizCmd::check1(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_1))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz1 r1;
 	RMAP ruleMap;
@@ -903,6 +927,10 @@ bool TopoBizCmd::check1(int saveid,string unitcim)
 
 bool TopoBizCmd::check2(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_2))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz1 r1;
 	RMAP ruleMap;
@@ -915,6 +943,10 @@ bool TopoBizCmd::check2(int saveid,string unitcim)
 
 bool TopoBizCmd::check4(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_4))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz4 r4;
 	RMAP ruleMap;
@@ -927,6 +959,10 @@ bool TopoBizCmd::check4(int saveid,string unitcim)
 
 bool TopoBizCmd::check5(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_5))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz5 r;
 	RMAP ruleMap;
@@ -942,6 +978,10 @@ bool TopoBizCmd::check5(int saveid,string unitcim)
 
 bool TopoBizCmd::check12(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_12))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz12 r;
 	RMAP ruleMap;
@@ -953,6 +993,10 @@ bool TopoBizCmd::check12(int saveid,string unitcim)
 }
 bool TopoBizCmd::check16(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_16))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz16 r;
 	RMAP ruleMap;
@@ -964,6 +1008,10 @@ bool TopoBizCmd::check16(int saveid,string unitcim)
 
 bool TopoBizCmd::check18(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_18))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz18 r;
 	RMAP ruleMap;
@@ -975,6 +1023,10 @@ bool TopoBizCmd::check18(int saveid,string unitcim)
 
 bool TopoBizCmd::check20(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_20))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz20 r;
 	RMAP ruleMap;
@@ -987,6 +1039,10 @@ bool TopoBizCmd::check20(int saveid,string unitcim)
 
 bool TopoBizCmd::check21(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_21))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz21 r;
 	RMAP ruleMap;
@@ -1001,6 +1057,10 @@ bool TopoBizCmd::check21(int saveid,string unitcim)
 
 bool TopoBizCmd::check22(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_22))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz22 r;
 	RMAP ruleMap;
@@ -1012,6 +1072,10 @@ bool TopoBizCmd::check22(int saveid,string unitcim)
 
 bool TopoBizCmd::check25(int saveid,string unitcim,int optype)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_25))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz25 r;
 	RMAP ruleMap;
@@ -1028,6 +1092,10 @@ bool TopoBizCmd::check25(int saveid,string unitcim,int optype)
 
 bool TopoBizCmd::check26(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_26))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz26 r;
 	RMAP ruleMap;
@@ -1041,6 +1109,10 @@ bool TopoBizCmd::check26(int saveid,string unitcim)
 
 bool TopoBizCmd::check27(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_27))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz27 r;
 	RMAP ruleMap;
@@ -1055,6 +1127,10 @@ bool TopoBizCmd::check27(int saveid,string unitcim)
 // 28,29 逻辑相同
 bool TopoBizCmd::check28(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_28))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz28 r;
 	r.setBeginCim(unitcim);
@@ -1067,11 +1143,19 @@ bool TopoBizCmd::check28(int saveid,string unitcim)
 
 bool TopoBizCmd::check29(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_29))
+	{
+		return false;
+	}
 	return check28(saveid,unitcim);
 }
 
 bool TopoBizCmd::check32(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_32))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz32 r;
 	RMAP ruleMap;
@@ -1084,6 +1168,10 @@ bool TopoBizCmd::check32(int saveid,string unitcim)
 
 bool TopoBizCmd::check33(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_33))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz33 r;
 	RMAP ruleMap;
@@ -1096,6 +1184,10 @@ bool TopoBizCmd::check33(int saveid,string unitcim)
 
 bool TopoBizCmd::check34(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_34))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz34 r;
 	RMAP ruleMap;
@@ -1110,6 +1202,10 @@ bool TopoBizCmd::check34(int saveid,string unitcim)
 
 bool TopoBizCmd::check35(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_35))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz35 r;
 	RMAP ruleMap;
@@ -1124,6 +1220,10 @@ bool TopoBizCmd::check35(int saveid,string unitcim)
 
 bool TopoBizCmd::check38(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_38))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz38 r;
 	RMAP ruleMap;
@@ -1137,6 +1237,10 @@ bool TopoBizCmd::check38(int saveid,string unitcim)
 }
 bool TopoBizCmd::check39(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_39))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz39 r;
 	RMAP ruleMap;
@@ -1150,6 +1254,10 @@ bool TopoBizCmd::check39(int saveid,string unitcim)
 
 bool TopoBizCmd::check43(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_43))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz43 r;
 	RMAP ruleMap;
@@ -1163,6 +1271,10 @@ bool TopoBizCmd::check43(int saveid,string unitcim)
 
 bool TopoBizCmd::check45(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_45))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz45 r;
 	RMAP ruleMap;
@@ -1175,6 +1287,10 @@ bool TopoBizCmd::check45(int saveid,string unitcim)
 }
 bool TopoBizCmd::check46(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_46))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz46 r;
 	RMAP ruleMap;
@@ -1187,6 +1303,10 @@ bool TopoBizCmd::check46(int saveid,string unitcim)
 }
 bool TopoBizCmd::check47(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_47))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz47 r;
 	RMAP ruleMap;
@@ -1200,6 +1320,10 @@ bool TopoBizCmd::check47(int saveid,string unitcim)
 
 bool TopoBizCmd::check48(int saveid,string unitcim)
 {
+	if (!checkRuleIsUse(unitcim,R_CHECK_48))
+	{
+		return false;
+	}
 	STRMAP passedNodes;
 	RuleBiz48 r;
 	RMAP ruleMap;
