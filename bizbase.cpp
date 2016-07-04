@@ -44,7 +44,9 @@ void BizBase::exec(sClientMsg* msg)
 		pbase = new DevStateCmd;
 		break;
 
-	case CMD_TOPO_ENTIRE:
+	case CMD_TOPO_BREAKER_CHANGE:		// 开关变位
+	case CMD_CHECK_PASS:								// 规则校验通过
+	case CMD_TOPO_ENTIRE:							// 整站拓扑
 		pbase = new TopoBizCmd;
 		break;
 	default:

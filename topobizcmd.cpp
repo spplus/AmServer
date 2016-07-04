@@ -132,7 +132,7 @@ void TopoBizCmd::topoEntire()
 LISTMAP TopoBizCmd::getConnIdByUnitsId(string unitid)
 {
 	LISTMAP connList ;
-	char* psql = "select ConnCim as connId from Relations where UnitCim=%s";
+	char* psql = "select ConnCim as connId from Relations where UnitCim='%s'";
 	string sql = App_Dba::instance()->formatSql(psql,unitid.c_str());
 	connList = App_Dba::instance()->getList(sql.c_str());
 	return connList;
@@ -141,7 +141,7 @@ LISTMAP TopoBizCmd::getConnIdByUnitsId(string unitid)
 LISTMAP TopoBizCmd::getStationIdByLineId(string unitid,string stationid)
 {
 	LISTMAP stationList;
-	char* psql = "select StationCim from related_line where UnitCim=%s and StationCim=%s";
+	char* psql = "select StationCim from related_line where UnitCim='%s' and StationCim='%s'";
 	string sql = App_Dba::instance()->formatSql(psql,unitid.c_str(),stationid.c_str());
 	stationList = App_Dba::instance()->getList(sql.c_str());
 	return stationList;
@@ -156,7 +156,7 @@ LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 		"from Relations a left join Units b on a.UnitCim=b.CimId  "\
 		"left join unit_status c on b.UnitCim=b.cimid " \
 		"left join voltages d on d.CimId=b.VolCim " \
-		"where a.ConnCim=%s and c.saveid=%s";
+		"where a.ConnCim='%s' and c.saveid=%s";
 	string sql = App_Dba::instance()->formatSql(psql,connid.c_str(),saveid.c_str());
 	unitsList = App_Dba::instance()->getList(sql.c_str());
 	return unitsList;
@@ -393,7 +393,7 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 
 void TopoBizCmd::updateIsPowerByUnitId(string unitid,string stationid,string saveid)
 {
-	char* psql = "update unit_status set IsPower=1 where UnitCim=%s and StationCim=%s and SaveId=%s";
+	char* psql = "update unit_status set IsPower=1 where UnitCim='%s' and StationCim='%s' and SaveId='%s' ";
 	string sql = App_Dba::instance()->formatSql(psql,unitid.c_str(),stationid.c_str(),saveid.c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());
 	if (ret>0)
@@ -409,7 +409,7 @@ void TopoBizCmd::updateIsPowerByUnitId(string unitid,string stationid,string sav
 
 void TopoBizCmd::updateIsElectricByUnitId(string saveid,string unitid,int state)
 {
-	char* psql = "update unit_status set IsElectric=%d where UnitCim=%s and saveid=%s";
+	char* psql = "update unit_status set IsElectric=%d where UnitCim='%s' and saveid=%s";
 	string sql = App_Dba::instance()->formatSql(psql,state,unitid.c_str(),saveid.c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());
 	if (ret>0)
@@ -424,7 +424,7 @@ void TopoBizCmd::updateIsElectricByUnitId(string saveid,string unitid,int state)
 
 void TopoBizCmd::updateIsGroundByUnitId(string saveid,string unitid,int state)
 {
-	char* psql = "update unit_status set IsGround=%d where UnitCim=%s and saveid=%s";
+	char* psql = "update unit_status set IsGround=%d where UnitCim='%s' and saveid=%s";
 	string sql = App_Dba::instance()->formatSql(psql,state,unitid.c_str(),saveid.c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());
 	if (ret>0)
@@ -450,7 +450,7 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 		"from unit_status a " \
 		"left join units b on a.UnitCim=b.CimId " \
 		"left join voltages c on c.CimId = b.VolCim " \
-		"where a.SaveId=%d and a.StationCim in (select d.StationCim from units d where CimId=%s)";
+		"where a.SaveId=%d and a.StationCim in (select d.StationCim from units d where CimId='%s')";
 	string sql = App_Dba::instance()->formatSql(psql,saveId,cimid.c_str());
 
 	LISTMAP unitList = App_Dba::instance()->getList(sql.c_str());
@@ -647,9 +647,8 @@ bool TopoBizCmd::checkRuleIsUse(string cimid,int ruleid)
 {
 	char *psql = "select count(*) as count from station_rule a " \
 						"where a.IsUse=1 and a.RuleId=%d  " \
-						"and a.StationId=(select c.ID from units b left join " \
-						"stations c on b.StationCim=c.CimId where b.CimId='%s');";
-	string sql = DBA->formatSql(psql,ruleid,cimid);
+						"and a.StationId=(select b.StationCim from units b where b.CimId='%s');";
+	string sql = DBA->formatSql(psql,ruleid,cimid.c_str());
 	LISTMAP ruleList = DBA->getList(sql.c_str());
 	if (ruleList.size()>0)
 	{
@@ -841,13 +840,17 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 		break;
 	}
 
-	
-
-	// ...
-
-	// 把触发的规则，返回到客户端
-	sendRuleBack(connid,optype,ruleList);
-
+	// 如果没有触发规则，则返回客户端执行变位操作
+	if (ruleList.size() == 0)
+	{
+		string data = execTopoOnBreakerChange(saveid,unitcim,optype);
+		App_ClientMgr::instance()->sendData(connid,data,CMD_TOPO_BREAKER_CHANGE);
+	}
+	else
+	{
+		// 把触发的规则，返回到客户端
+		sendRuleBack(connid,optype,ruleList);
+	}
 }
 
 void TopoBizCmd::sendRuleBack(int connid,int optype,vector<int> ruleList)
@@ -945,7 +948,7 @@ bool TopoBizCmd::check4(int saveid,string unitcim)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_4))
 	{
-		return false;
+		return true;
 	}
 	STRMAP passedNodes;
 	RuleBiz4 r4;
