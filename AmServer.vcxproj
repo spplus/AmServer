@@ -83,6 +83,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="packetparser.cpp" />
     <ClCompile Include="clientmsgservice.cpp" />
+    <ClCompile Include="querymgrcmd.cpp" />
     <ClCompile Include="recvTask.cpp" />
     <ClCompile Include="rulebiz1.cpp" />
     <ClCompile Include="rulebiz12.cpp" />
@@ -119,6 +120,7 @@
     <ClCompile Include="rulebiz5-1.cpp" />
     <ClCompile Include="rulebiz5-2.cpp" />
     <ClCompile Include="rulebiz5.cpp" />
+    <ClCompile Include="rulemgrcmd.cpp" />
     <ClCompile Include="scadahandler.cpp" />
     <ClCompile Include="stationmgrcmd.cpp" />
     <ClCompile Include="tcpClient.cpp" />
@@ -146,6 +148,7 @@
     <ClInclude Include="logincmd.h" />
     <ClInclude Include="packetparser.h" />
     <ClInclude Include="clientmsgservice.h" />
+    <ClInclude Include="querymgrcmd.h" />
     <ClInclude Include="recvTask.h" />
     <ClInclude Include="rulebiz1.h" />
     <ClInclude Include="rulebiz12.h" />
@@ -182,6 +185,7 @@
     <ClInclude Include="rulebiz5-1.h" />
     <ClInclude Include="rulebiz5-2.h" />
     <ClInclude Include="rulebiz5.h" />
+    <ClInclude Include="rulemgrcmd.h" />
     <ClInclude Include="scadahandler.h" />
     <ClInclude Include="stationmgrcmd.h" />
     <ClInclude Include="structs.h" />

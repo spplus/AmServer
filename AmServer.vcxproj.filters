@@ -216,6 +216,12 @@
     <ClCompile Include="rulebiz48.cpp">
       <Filter>biz\rules</Filter>
     </ClCompile>
+    <ClCompile Include="querymgrcmd.cpp">
+      <Filter>biz</Filter>
+    </ClCompile>
+    <ClCompile Include="rulemgrcmd.cpp">
+      <Filter>biz</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -403,6 +409,12 @@
     </ClInclude>
     <ClInclude Include="rulebiz48.h">
       <Filter>biz\rules</Filter>
+    </ClInclude>
+    <ClInclude Include="querymgrcmd.h">
+      <Filter>biz</Filter>
+    </ClInclude>
+    <ClInclude Include="rulemgrcmd.h">
+      <Filter>biz</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

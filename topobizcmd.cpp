@@ -647,7 +647,7 @@ bool TopoBizCmd::checkRuleIsUse(string cimid,int ruleid)
 {
 	char *psql = "select count(*) as count from station_rule a " \
 						"where a.IsUse=1 and a.RuleId=%d  " \
-						"and a.StationId=(select b.StationCim from units b where b.CimId='%s');";
+						"and a.StationCim=(select b.StationCim from units b where b.CimId='%s');";
 	string sql = DBA->formatSql(psql,ruleid,cimid.c_str());
 	LISTMAP ruleList = DBA->getList(sql.c_str());
 	if (ruleList.size()>0)

@@ -19,6 +19,7 @@ public:
 private:
 	void	getStationTypeList(sClientMsg* msg);
 	void	stationTypeManager(sClientMsg* msg);
+	void	getStationList(sClientMsg* msg);
 	void	stationManager(sClientMsg* msg);
 };
 

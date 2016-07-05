@@ -13,6 +13,9 @@ void StationMgrcmd::exec(sClientMsg* msg)
 	case CMD_STATION_TYPE_LIST:
 		getStationTypeList(msg);
 		break;
+	case CMD_STATION_LIST:
+		getStationList(msg);
+		break;
 	case CMD_STATION_MANAGER:
 		stationManager(msg);
 		break;
@@ -22,7 +25,7 @@ void StationMgrcmd::exec(sClientMsg* msg)
 
 void StationMgrcmd::getStationTypeList(sClientMsg* msg)
 {
-	string sql = "select id,OrderNum, Name from station_category order by OrderNum ";
+	string sql = "select id,OrderNum, Name from station_category order by OrderNum ;";
 
 	LISTMAP staList;
 
@@ -84,6 +87,67 @@ void StationMgrcmd::stationTypeManager(sClientMsg* msg)
 	return;
 }
 
+void StationMgrcmd::getStationList(sClientMsg* msg)
+{
+	// 查询厂站列表
+	string sql = "select id, CategoryId, CimId,Name,CurrentName,Path from stations;" ;
+
+	LISTMAP stateList;
+	stateList = App_Dba::instance()->getList(sql.c_str());
+
+	PBNS::StationListMsg_Response resp;
+	// 把vector转buff
+	for (int i=0;i<stateList.size();i++)
+	{
+		STRMAP record = stateList.at(i);
+		MAP_ITERATOR iter;
+		PBNS::StationBean* bean = resp.add_stationlist();
+
+		iter = record.find("id");
+		if (iter != record.end())
+		{
+			bean->set_id(ACE_OS::atoi(iter->second.c_str()));
+		}
+
+		iter = record.find("CategoryId");
+		if (iter != record.end())
+		{
+			bean->set_categoryid(ACE_OS::atoi(iter->second.c_str()));
+		}
+
+		iter = record.find("CimId");
+		if (iter != record.end())
+		{
+			bean->set_cimid(iter->second);
+		}
+
+		iter = record.find("Name");
+		if (iter != record.end())
+		{
+			bean->set_name(iter->second);
+		}
+
+		iter = record.find("CurrentName");
+		if (iter != record.end())
+		{
+			bean->set_currentname(iter->second);
+		}
+
+		iter = record.find("Path");
+		if (iter != record.end())
+		{
+			bean->set_path(iter->second);
+		}
+	}
+
+	// 返回到客户端
+	string data;
+	resp.SerializeToString(&data);
+	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+
+	return;
+}
+
 void StationMgrcmd::stationManager(sClientMsg* msg)
 {
 	PBNS::StationMgrMsg_Request req;
@@ -96,12 +160,12 @@ void StationMgrcmd::stationManager(sClientMsg* msg)
 		PBNS::StationBean stabean = req.stationlist(i);
 		
 		string sql ;
-		char *psql = "UPDATE stations SET CategoryId=%d , CurrentName='%s' , Path='%s' WHERE ID=%d ";
+		char *psql = "UPDATE stations SET CategoryId=%d , CurrentName='%s' , Path='%s' WHERE ID=%d ;";
 		sql = App_Dba::instance()->formatSql(psql,stabean.categoryid(),stabean.currentname().c_str(),stabean.path().c_str(),stabean.id());
 
 		int nret = App_Dba::instance()->execSql(sql.c_str());
 
-		nsuccess = nsuccess || nret;
+		nsuccess = nret;
 
 	}
 

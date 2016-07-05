@@ -117,7 +117,7 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 void DevStateCmd::getStationType(sClientMsg* msg)
 {
 
-	string sql = "select id, Name from station_category order by OrderNum ";
+	string sql = "select id,OrderNum,Name from station_category order by OrderNum ";
 	
 	LISTMAP stateList;
 
@@ -135,6 +135,12 @@ void DevStateCmd::getStationType(sClientMsg* msg)
 		if (iter != record.end())
 		{
 			bean->set_id(str2i(iter->second));
+		}
+
+		iter = record.find("OrderNum");
+		if (iter != record.end())
+		{
+			bean->set_ordernum(str2i(iter->second));
 		}
 
 		iter = record.find("Name");
