@@ -96,7 +96,7 @@ int RuleBiz44::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 		bool state = bean.state()==1?true:false;
 
 		// 刀闸状态进行与操作，如果有一个为false，则为false
-		m_switchState =& state;
+		m_switchState &= state;
 
 		// 结果元件中只要有一个刀闸断开，条件一成立
 		if (state == false)
