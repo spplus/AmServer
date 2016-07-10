@@ -21,7 +21,7 @@ private:
 	void	querySignList(sClientMsg* msg);
 	void	queryGSwitchList(sClientMsg* msg);
 	void	queryMsetList(sClientMsg* msg);
-	void	queryEvnetList(sClientMsg* msg);
+	void	queryEventList(sClientMsg* msg);
 
 };
 

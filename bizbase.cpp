@@ -8,6 +8,7 @@
 #include "devstatecmd.h"
 #include "topobizcmd.h"
 #include "querymgrcmd.h"
+#include "ticketmsionmgrcmd.h"
 
 void BizBase::exec(sClientMsg* msg)
 {
@@ -70,6 +71,15 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_CHECK_PASS:								// 规则校验通过
 	case CMD_TOPO_ENTIRE:							// 整站拓扑
 		pbase = new TopoBizCmd;
+		break;
+	case CMD_TICKETMS_LIST:
+	case CMD_TICKETMS_MANAGER:
+	case CMD_TICKETMS_ADD:
+	case CMD_TICKETMS_DEL:
+	case CMD_TICKETMS_MODIFY:
+	case CMD_ROLE_USER_LIST:
+		//对应操作票管理涉及的用户列表、角色、增加、删除、修改业务处理命令
+		pbase = new TicketMsionMgrCmd;
 		break;
 	default:
 		break;

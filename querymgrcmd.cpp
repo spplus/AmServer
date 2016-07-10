@@ -18,7 +18,7 @@ void QueryMgrCmd::exec(sClientMsg* msg)
 		queryMsetList(msg);
 		break;
 	case CMD_QUERY_EVENT_LIST:
-		queryEvnetList(msg);
+		queryEventList(msg);
 		break;
 	}
 
@@ -166,9 +166,23 @@ void QueryMgrCmd::queryMsetList(sClientMsg* msg)
 
 }
 
-void QueryMgrCmd::queryEvnetList(sClientMsg* msg)
+void QueryMgrCmd::queryEventList(sClientMsg* msg)
 {
+	PBNS::EventListMsg_Request req;
+	req.ParseFromArray(msg->data,msg->length);
 
+	string rd = req.reqdate();
+
+	
+	PBNS::EventListMsg_Response resp;
+	
+
+	// 返回到客户端
+	string data;
+	resp.SerializeToString(&data);
+	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+
+	return;
 }
 
 
