@@ -52,6 +52,10 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 	PBNS::DevStateMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);	
 
+	if (req.stationcim().length() <=0 )
+	{
+		return;
+	}
 	// 通过数据库进行查询元件状态
 	string sql ;
 	char * p = "select b.CimId, State,IsElectric,IsBoard ,c.VolValue,b.unitType " \
