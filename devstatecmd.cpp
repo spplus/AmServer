@@ -62,7 +62,7 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 		"from Unit_Status a " \
 		"left join Units b on a.UnitCim=b.CimId  " \
 		"left join voltages c on c.CimId = b.VolCim " \
-		"where a.SaveId=%d and a.StationCim=%s";
+		"where a.SaveId=%d and a.StationCim='%s'";
 	sql = App_Dba::instance()->formatSql(p,req.saveid(),req.stationcim().c_str());
 	LISTMAP stateList;
 
