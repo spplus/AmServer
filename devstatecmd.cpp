@@ -52,7 +52,7 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 	PBNS::DevStateMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);	
 
-	if (req.stationcim().length() <=0 )
+	if (req.stationcim().length() <=0 || req.saveid() < 0)
 	{
 		return;
 	}
@@ -223,6 +223,11 @@ void DevStateCmd::getStationList(sClientMsg* msg)
 	PBNS::StationListMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);	
 
+	if (req.stationid() <= 0 )
+	{
+		return;
+	}
+
 	// 通过数据库进行查询元件状态
 	string sql ;
 	char * p = "select id, CategoryId, CimId,Name,CurrentName,Path from stations where CategoryId=%d";
@@ -287,6 +292,11 @@ void DevStateCmd::updateIsBoard(sClientMsg* msg)
 {
 	PBNS::TagMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);
+
+	if (req.saveid() <= 0 || req.unitcim().length()<= 0)
+	{
+		return;
+	}
 
 	int tag ;
 	if (req.type() == 1)
@@ -355,6 +365,12 @@ void DevStateCmd::updateIsLine(sClientMsg* msg)
 
 	PBNS::LineSetMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);
+	if (req.unitcim().length()<=0 
+		|| req.stationonecim().length()<0 
+		|| req.stationothercim().length() <= 0)
+	{
+		return;
+	}
 
 	// 1.删除 related_line表中 unitcim等于该cimid的记录
 	char * psql = "delete from related_line where UnitCim='%s'";
@@ -391,6 +407,11 @@ void DevStateCmd::updateIsPower(sClientMsg* msg)
 {
 	PBNS::PowerSetMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);
+
+	if (req.unitcim().length()<=0 || req.stationcim().length()<=0)
+	{
+		return;
+	}
 
 	// 更新RelatedLine表UnitCim字段等于CimId，StationCim等于StationId的IsPower字段；
 	char* psql = "update related_line set IsPower=1 where UnitCim='%s' and StationCim='%s'";
@@ -450,6 +471,11 @@ void DevStateCmd::writeSaving(sClientMsg* msg)
 	PBNS::WriteSavingMsg_Response res;
 	req.ParseFromArray(msg->data,msg->length);
 	
+	if (req.saveid() <= 0 || req.savename().length() <= 0)
+	{
+		return;
+	}
+
 	char *psql = "insert into virtual_saves(name,savetime) values('%s',now())";
 	string sql = App_Dba::instance()->formatSql(psql,req.savename().c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());

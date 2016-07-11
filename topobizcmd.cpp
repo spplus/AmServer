@@ -45,6 +45,10 @@ void TopoBizCmd::exec(sClientMsg* msg)
 
 void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 {
+	if (saveid.length() <= 0 || unittype <= 0)
+	{
+		return;
+	}
 	// 已经做个起点分析的设备ID集合
 	STRMAP passedNodes;
 
@@ -512,6 +516,10 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	req.ParseFromArray(msg->data,msg->length);
 	int saveId = req.saveid();
 	string cimid = req.unitcim();
+	if (saveId < 0 || cimid.length()<=0)
+	{
+		return;
+	}
 	eDeviceType devtype = (eDeviceType)req.unittype();
 	int optype = req.type();
 
@@ -645,6 +653,10 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 
 bool TopoBizCmd::checkRuleIsUse(string cimid,int ruleid)
 {
+	if (cimid.length()<=0 || ruleid<= 0)
+	{
+		return false;
+	}
 	char *psql = "select count(*) as count from station_rule a " \
 						"where a.IsUse=1 and a.RuleId=%d  " \
 						"and a.StationCim=(select b.StationCim from units b where b.CimId='%s');";
