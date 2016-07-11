@@ -75,6 +75,10 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 		STRMAP record = stateList.at(i);
 		MAP_ITERATOR iter;
 		PBNS::StateBean* bean = res.add_devstate();
+
+		// ÉèÖÃÕ¾µãCIM
+		bean->set_stationcim(req.stationcim());
+
 		iter = record.find("CimId");
 		if (iter != record.end())
 		{
