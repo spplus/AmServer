@@ -16,7 +16,7 @@
 #include "dbaccess.h"
 #include "clientmgr.h"
 #include "include/commands.h"
-
+#include "comutils.h"
 
 class CmdBase
 {

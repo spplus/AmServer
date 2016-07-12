@@ -156,7 +156,7 @@ LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 
 	// 问题：关联查询设备状态的时候，不用考虑saveid么？unit_status表中，同一个unit可能会有多条记录，以哪天记录为准呢？
 	LISTMAP unitsList ;
-	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,c.State,d.VolValue " \
+	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,c.State,d.VolValue,d.Color " \
 		"from Relations a left join Units b on a.UnitCim=b.CimId  "\
 		"left join unit_status c on b.UnitCim=b.cimid " \
 		"left join voltages d on d.CimId=b.VolCim " \
@@ -450,7 +450,7 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 	STRMAP passedNodes;
 
 	// 1. 查询指定saveid，指定unit对应站点下面的设备状态集合；
-	char * psql = "select a.UnitCim,a.StationCim,IsElectric,IsPower,VolValue " \
+	char * psql = "select a.UnitCim,a.StationCim,IsElectric,IsPower,c.Color " \
 		"from unit_status a " \
 		"left join units b on a.UnitCim=b.CimId " \
 		"left join voltages c on c.CimId = b.VolCim " \
@@ -473,11 +473,9 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 			{
 				PBNS::StateBean bean;
 				bean.set_cimid(iter->second);
-				iter = unitMap.find("VolValue");
-				if(iter != unitMap.end())
-				{
-					bean.set_volvalue(iter->second);
-				}
+				
+				// 保存电压等级颜色
+				bean.set_volcolor(COM->getVal(unitMap,"Color"));
 
 				// 以该设备为起点进行拓扑分析
 				topoByUnitIdMem(bean,i2str(saveId),cimid,passedNodes,rsltMap);
@@ -593,12 +591,8 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 				{
 					etype = str2i(unitIter->second);
 
-					// 取电压等级值
-					unitIter = unitMap.find("VolValue");
-					if (unitIter != unitMap.end())
-					{
-						cbean.set_volvalue(unitIter->second);
-					}
+					// 取电压等级颜色
+					cbean.set_volcolor(COM->getVal(unitMap,"Color"));
 
 					if (etype == eBREAKER || etype == eSWITCH)
 					{

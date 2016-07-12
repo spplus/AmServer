@@ -58,7 +58,7 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 	}
 	// 通过数据库进行查询元件状态
 	string sql ;
-	char * p = "select b.CimId, State,IsElectric,IsBoard ,c.VolValue,b.unitType " \
+	char * p = "select b.CimId, State,IsElectric,IsBoard ,c.Color,b.unitType,a.IsGround " \
 		"from Unit_Status a " \
 		"left join Units b on a.UnitCim=b.CimId  " \
 		"left join voltages c on c.CimId = b.VolCim " \
@@ -79,41 +79,26 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 		// 设置站点CIM
 		bean->set_stationcim(req.stationcim());
 
-		iter = record.find("CimId");
-		if (iter != record.end())
-		{
-			bean->set_cimid(iter->second);
-		}
+		// 设备CIM
+		bean->set_cimid(COM->getVal(record,"CimId"));
 
-		iter = record.find("State");
-		if (iter != record.end())
-		{
-			bean->set_state(str2i(iter->second));
-		}
+		// 设备状态
+		bean->set_state(COM->getIval(record,"State"));
 
-		iter = record.find("IsElectric");
-		if (iter != record.end())
-		{
-			bean->set_iselectric(str2i(iter->second));
-		}
+		// 是否带电
+		bean->set_iselectric(COM->getIval(record,"IsElectric"));
+		
+		// 是否已挂牌
+		bean->set_isboard(COM->getIval(record,"IsBoard"));
+		
+		// 电压等级颜色
+		bean->set_volcolor(COM->getVal(record,"Color"));
 
-		iter = record.find("IsBoard");
-		if (iter != record.end())
-		{
-			bean->set_isboard(str2i(iter->second));
-		}
-
-		iter = record.find("VolValue");
-		if (iter != record.end())
-		{
-			bean->set_volvalue(iter->second);
-		}
-
-		iter = record.find("unitType");
-		if (iter != record.end())
-		{
-			bean->set_unittype(str2i(iter->second));
-		}
+		// 设备类型
+		bean->set_unittype(COM->getIval(record,"unitType"));
+		
+		// 是否接地
+		bean->set_isground(COM->getIval(record,"IsGround"));
 	}
 
 	// 返回到客户端
