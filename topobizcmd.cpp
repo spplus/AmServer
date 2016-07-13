@@ -158,7 +158,7 @@ LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 	LISTMAP unitsList ;
 	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,c.State,d.VolValue,d.Color " \
 		"from Relations a left join Units b on a.UnitCim=b.CimId  "\
-		"left join unit_status c on b.UnitCim=b.cimid " \
+		"left join unit_status c on c.UnitCim=b.cimid " \
 		"left join voltages d on d.CimId=b.VolCim " \
 		"where a.ConnCim='%s' and c.saveid=%s";
 	string sql = App_Dba::instance()->formatSql(psql,connid.c_str(),saveid.c_str());
