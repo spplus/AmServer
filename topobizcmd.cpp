@@ -496,6 +496,20 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 	// 返回本次操作后的开关状态，用于客户端图形变位
 	res.set_optype(state);
 
+	// 更新开关，刀闸状态
+	psql = "update unit_status set State=%d where SaveId=%d and UnitCim='%s' ";
+	sql = App_Dba::instance()->formatSql(psql,state,saveId,cimid.c_str());
+
+	int ret = App_Dba::instance()->execSql(sql.c_str());
+	if (ret > 0)
+	{
+		LOG->message("state change ok,cim:%s,new state:%d",cimid.c_str(),state);
+	}
+	else
+	{
+		LOG->message("state change failed,cim:%s,new state:%d",cimid.c_str(),state);
+	}
+
 	return res.SerializeAsString();
 
 }
@@ -608,12 +622,18 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 								cbean.set_state(1);
 								cbean.set_iselectric(1);
 								rsltMap.push_back(cbean);
+
+								// 更新数据库带电状态
+								updateIsElectric(saveid,cbean.cimid());
 							}
 							else if (state == 1)
 							{
 								//  把该开关设备状态变为1，继续以该设备为起点进行拓扑，如果为0，则跳过这个设备
 								cbean.set_iselectric(1);
 								rsltMap.push_back(cbean);
+
+								// 更新数据库带电状态
+								updateIsElectric(saveid,cbean.cimid());
 							}
 							else
 							{
@@ -628,6 +648,9 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 					{
 						// 5.如果该设备不是开关设备，则设置为带电；
 						rsltMap.push_back(cbean);
+
+						// 更新数据库带电状态
+						updateIsElectric(saveid,cbean.cimid());
 					}
 				}
 
@@ -642,6 +665,20 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 
 		}
 
+	}
+}
+
+void TopoBizCmd::updateIsElectric(string saveid,string unitcim)
+{
+	char* psql = "update unit_status set IsElectric=1 where UnitCim = '%s' and SaveId='%s' ";
+	string sql = App_Dba::instance()->formatSql(psql,unitcim.c_str(),saveid.c_str());
+	if(App_Dba::instance()->execSql(sql.c_str()) > 0)
+	{
+		LOG->message("update is electric ok :%s",unitcim.c_str());
+	}
+	else
+	{
+		LOG->message("update is electric failed :%s",unitcim.c_str());
 	}
 }
 

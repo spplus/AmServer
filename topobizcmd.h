@@ -59,6 +59,10 @@ private:
 	void		roleCheck(int connid,int saveid,string unitcim,eDeviceType devType,int optype);
 	void		sendRuleBack(int connid,int optype,vector<int> ruleList);
 
+	// 设置带电状态
+	void		updateIsElectric(string saveid,string unitcim);
+
+
 	// 检测规则是否生效
 	bool		checkRuleIsUse(string cimid,int ruleid);
 
