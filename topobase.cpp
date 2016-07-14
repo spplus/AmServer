@@ -74,7 +74,7 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 {
 	PBNS::StateBean bean;
-	char* psql = "select b.State,a.UnitType,a.StationCim,b.IsElectric,b.IsPower " \
+	char* psql = "select b.State,a.UnitType,a.StationCim,b.IsElectric,b.IsPower,b.IsBorad " \
 		"from units a left join " \
 		"unit_status b on a.CimId=b.UnitCim and b.SaveId=%d " \
 		"where a.CimId='%s'";
@@ -107,6 +107,8 @@ PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 			bean.set_ispower(COM->str2i(strval));
 		}
 
+		bean.set_isboard(COM->getIval(unitMap,"IsBoard"));
+		
 	}
 	else
 	{
@@ -123,9 +125,9 @@ LISTMAP TopoBase::getUnitsByConnId(string connid,string saveid)
 	LISTMAP unitsList ;
 	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,c.State,d.VolValue " \
 		"from Relations a left join Units b on a.UnitCim=b.CimId  "\
-		"left join unit_status c on b.UnitCim=b.cimid " \
+		"left join unit_status c on c.UnitCim=b.cimid " \
 		"left join voltages d on d.CimId=b.VolCim " \
-		"where a.ConnCim=%s and c.saveid=%s";
+		"where a.ConnCim='%s' and c.saveid=%s";
 	string sql = DBA->formatSql(psql,connid.c_str(),saveid.c_str());
 	unitsList = DBA->getList(sql.c_str());
 	return unitsList;
@@ -135,7 +137,7 @@ LISTMAP TopoBase::getUnitsByConnId(string connid,string saveid)
 LISTMAP TopoBase::getConnIdByUnitsId(string unitid)
 {
 	LISTMAP connList ;
-	char* psql = "select ConnCim as connId from Relations where UnitCim=%s";
+	char* psql = "select ConnCim as connId from Relations where UnitCim='%s'";
 	string sql = DBA->formatSql(psql,unitid.c_str());
 	connList = DBA->getList(sql.c_str());
 	return connList;

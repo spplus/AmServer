@@ -450,7 +450,7 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 	STRMAP passedNodes;
 
 	// 1. 查询指定saveid，指定unit对应站点下面的设备状态集合；
-	char * psql = "select a.UnitCim,a.StationCim,IsElectric,IsPower,c.Color " \
+	char * psql = "select a.UnitCim,a.StationCim,IsElectric,IsPower,c.Color,a.State " \
 		"from unit_status a " \
 		"left join units b on a.UnitCim=b.CimId " \
 		"left join voltages c on c.CimId = b.VolCim " \
@@ -478,38 +478,52 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 				bean.set_volcolor(COM->getVal(unitMap,"Color"));
 
 				// 以该设备为起点进行拓扑分析
-				topoByUnitIdMem(bean,i2str(saveId),cimid,passedNodes,rsltMap);
+				topoByUnitIdMem(bean,i2str(saveId),cimid,state,passedNodes,rsltMap);
 			}
 		}
 	}
 
 	// 拓扑结果返回客户端
 	PBNS::OprationMsg_Response res;
-	vector<PBNS::StateBean>::iterator iter = rsltMap.begin();
-	for (int i=0;i<rsltMap.size();i++)
+	for (int i = 0;i<unitList.size();i++)
 	{
-		PBNS::StateBean* bean = res.add_devstate();
-		
-		// 查询该设备的电压等级
-		bean->CopyFrom(rsltMap.at(i));
-	}
-	// 返回本次操作后的开关状态，用于客户端图形变位
-	res.set_optype(state);
+		// 把整站的设备默认带电状态设置为0
+		STRMAP unitMap = unitList.at(i);
+		PBNS::StateBean* pbean = res.add_devstate();
 
-	// 更新开关，刀闸状态
-	psql = "update unit_status set State=%d where SaveId=%d and UnitCim='%s' ";
-	sql = App_Dba::instance()->formatSql(psql,state,saveId,cimid.c_str());
+		// 保存CIM
+		pbean->set_cimid(COM->getVal(unitMap,"UnitCim"));
 
-	int ret = App_Dba::instance()->execSql(sql.c_str());
-	if (ret > 0)
-	{
-		LOG->message("state change ok,cim:%s,new state:%d",cimid.c_str(),state);
-	}
-	else
-	{
-		LOG->message("state change failed,cim:%s,new state:%d",cimid.c_str(),state);
-	}
+		// 如果为本次操作设备，则把状态更新为操作后的状态
+		if (pbean->cimid() == cimid)
+		{
+			// 返回设备的状态
+			pbean->set_state(state);
+		}
+		else
+		{
+			// 返回数据库设备的状态
+			pbean->set_state(COM->getIval(unitMap,"State"));
+		}
 
+		// 把整站的设备默认带电状态设置为0
+		pbean->set_iselectric(0);
+
+		// 返回设备的电压等级
+		pbean->set_volcolor(COM->getVal(unitMap,"Color"));
+
+	
+		// 遍历拓扑后带电的集合
+		for (int j = 0;j<rsltMap.size();j++)
+		{
+			PBNS::StateBean bean = rsltMap.at(j);
+			if (bean.cimid() == COM->getVal(unitMap,"UnitCim"))
+			{
+				pbean->set_iselectric(1);
+			}
+		}
+	}
+	
 	return res.SerializeAsString();
 
 }
@@ -548,7 +562,7 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	}
 }
 
-void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap)
+void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,int objState,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap)
 {
 	string unitid = bean.cimid();
 	
@@ -567,6 +581,17 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
+
+			// 判断是否已经查找过的连接点，如果是则跳出，不是则加入
+			if (passNodes.find(connIter->second) != passNodes.end())
+			{
+				continue;
+			}
+			else
+			{
+				passNodes.insert(MAPVAL(connIter->second,connIter->second));
+			}
+
 			// 根据连接点，查找该连接点关联的设备集合
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
 
@@ -582,6 +607,10 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
+					}
+					else
+					{
+						passNodes.insert(MAPVAL(unitIter->second,unitIter->second));
 					}
 				}
 
@@ -616,27 +645,36 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 						{
 							int state = str2i(unitIter->second);
 							cbean.set_state(state);
-
-							if (cbean.cimid() == cimid && state == 0)
+							
+							// 判断是否为本次操作设备，如果是，则根据本次操作的最终状态进行分析
+							if (cbean.cimid() == cimid)
 							{
-								cbean.set_state(1);
-								cbean.set_iselectric(1);
-								rsltMap.push_back(cbean);
-
-								// 更新数据库带电状态
-								updateIsElectric(saveid,cbean.cimid());
+								if (objState == 0)
+								{
+									cbean.set_iselectric(0);
+									cbean.set_state(0);
+									flag = 1;
+								}
+								else
+								{
+									cbean.set_iselectric(1);
+									cbean.set_state(1);
+									rsltMap.push_back(cbean);
+								}
 							}
-							else if (state == 1)
-							{
-								//  把该开关设备状态变为1，继续以该设备为起点进行拓扑，如果为0，则跳过这个设备
-								cbean.set_iselectric(1);
-								rsltMap.push_back(cbean);
 
-								// 更新数据库带电状态
-								updateIsElectric(saveid,cbean.cimid());
+							//  把该开关设备状态变为1，继续以该设备为起点进行拓扑，如果为0，则跳过这个设备
+							else if (state == 1 ) 
+							{
+								// 保持带电状态
+								cbean.set_iselectric(1);
+
+								rsltMap.push_back(cbean);
 							}
 							else
 							{
+								cbean.set_iselectric(0);
+
 								// 标记为不需要进行拓扑
 								flag = 1;
 							}
@@ -647,10 +685,9 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 					else
 					{
 						// 5.如果该设备不是开关设备，则设置为带电；
-						rsltMap.push_back(cbean);
+						cbean.set_iselectric(1);
 
-						// 更新数据库带电状态
-						updateIsElectric(saveid,cbean.cimid());
+						rsltMap.push_back(cbean);
 					}
 				}
 
@@ -658,7 +695,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 				if (flag != 1)
 				{
 					// 递归，以该元件为起点进行重新遍历
-					topoByUnitIdMem(cbean,saveid,cimid,passNodes,rsltMap);
+					topoByUnitIdMem(cbean,saveid,cimid,objState,passNodes,rsltMap);
 				}
 			
 			}
@@ -668,10 +705,10 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 	}
 }
 
-void TopoBizCmd::updateIsElectric(string saveid,string unitcim)
+void TopoBizCmd::updateIsElectric(string saveid,string unitcim,int state)
 {
-	char* psql = "update unit_status set IsElectric=1 where UnitCim = '%s' and SaveId='%s' ";
-	string sql = App_Dba::instance()->formatSql(psql,unitcim.c_str(),saveid.c_str());
+	char* psql = "update unit_status set IsElectric=%d where UnitCim = '%s' and SaveId='%s' ";
+	string sql = App_Dba::instance()->formatSql(psql,state,unitcim.c_str(),saveid.c_str());
 	if(App_Dba::instance()->execSql(sql.c_str()) > 0)
 	{
 		LOG->message("update is electric ok :%s",unitcim.c_str());
@@ -916,7 +953,7 @@ void TopoBizCmd::sendRuleBack(int connid,int optype,vector<int> ruleList)
 
 	// 查询规则列表
 	char * psql = "select id, name,AlarmLevel,Description from rules where id in(%s)";
-	string sql = App_Dba::instance()->formatSql(psql,ids);
+	string sql = App_Dba::instance()->formatSql(psql,ids.c_str());
 
 	LISTMAP mapList = App_Dba::instance()->getList(sql.c_str());
 	for(int i = 0;i<mapList.size();i++)

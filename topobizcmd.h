@@ -50,7 +50,7 @@ private:
 	void		topoOnBreakerChange(sClientMsg *msg);
 
 	// 根据元件CIMID进行拓扑，不更新数据库版本
-	void		topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap);
+	void		topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,int state,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap);
 
 	// 执行开关变位拓扑
 	string	execTopoOnBreakerChange(int saveid,string unitcim,int state);
@@ -60,7 +60,7 @@ private:
 	void		sendRuleBack(int connid,int optype,vector<int> ruleList);
 
 	// 设置带电状态
-	void		updateIsElectric(string saveid,string unitcim);
+	void		updateIsElectric(string saveid,string unitcim,int state);
 
 
 	// 检测规则是否生效

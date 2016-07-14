@@ -282,7 +282,7 @@ void DevStateCmd::updateIsBoard(sClientMsg* msg)
 	PBNS::TagMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);
 
-	if (req.saveid() <= 0 || req.unitcim().length()<= 0)
+	if (req.saveid() < 0 || req.unitcim().length()<= 0)
 	{
 		return;
 	}
@@ -313,7 +313,7 @@ void DevStateCmd::updateIsBoard(sClientMsg* msg)
 		if (iter != strMap.end())
 		{
 			// ÔÊÐí²Ù×÷
-			if (str2i(iter->second) ==0)
+			if (str2i(iter->second) ==1)
 			{
 				flag = 1;
 			}
