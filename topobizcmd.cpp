@@ -156,11 +156,11 @@ LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 
 	// 问题：关联查询设备状态的时候，不用考虑saveid么？unit_status表中，同一个unit可能会有多条记录，以哪天记录为准呢？
 	LISTMAP unitsList ;
-	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,c.State,d.VolValue,d.Color " \
-		"from Relations a left join Units b on a.UnitCim=b.CimId  "\
-		"left join unit_status c on c.UnitCim=b.cimid " \
-		"left join voltages d on d.CimId=b.VolCim " \
-		"where a.ConnCim='%s' and c.saveid=%s";
+	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,"\
+		"c.State,d.VolValue,d.Color from (select UnitCim from Relations where ConnCim='%s') a left join "\
+		"Units b on a.UnitCim=b.CimId  left join (select UnitCim, State from unit_status "\
+		"where saveId=%s) c on c.UnitCim=b.cimid left join voltages d on d.CimId=b.VolCim";
+
 	string sql = App_Dba::instance()->formatSql(psql,connid.c_str(),saveid.c_str());
 	unitsList = App_Dba::instance()->getList(sql.c_str());
 	return unitsList;
@@ -484,7 +484,7 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 		"from unit_status a " \
 		"left join units b on a.UnitCim=b.CimId " \
 		"left join voltages c on c.CimId = b.VolCim " \
-		"where a.SaveId=%d and a.StationCim in (select d.StationCim from units d where CimId='%s')";
+		"where a.SaveId=%d and a.StationCim ='%s'";
 	string sql = App_Dba::instance()->formatSql(psql,saveId,cimid.c_str());
 
 	LISTMAP unitList = App_Dba::instance()->getList(sql.c_str());
@@ -515,6 +515,8 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 
 	// 拓扑结果返回客户端
 	PBNS::OprationMsg_Response res;
+	res.set_optype(state);
+
 	for (int i = 0;i<unitList.size();i++)
 	{
 		// 把整站的设备默认带电状态设置为0

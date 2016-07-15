@@ -87,7 +87,17 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 
 PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 {
+	
 	PBNS::StateBean bean;
+	
+	if (unitcim.length()<=0)
+	{
+		LOG->warn("参数错误，cim不可以为空");
+		return bean;
+	}
+
+	bean.set_cimid(unitcim);
+
 	char* psql = "select b.State,a.UnitType,a.StationCim,b.IsElectric,b.IsPower,b.IsBoard " \
 		"from units a left join " \
 		"unit_status b on a.CimId=b.UnitCim and b.SaveId=%d " \
@@ -137,11 +147,11 @@ LISTMAP TopoBase::getUnitsByConnId(string connid,string saveid)
 
 	// 问题：关联查询设备状态的时候，不用考虑saveid么？unit_status表中，同一个unit可能会有多条记录，以哪天记录为准呢？
 	LISTMAP unitsList ;
-	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,c.State,d.VolValue " \
-		"from Relations a left join Units b on a.UnitCim=b.CimId  "\
-		"left join unit_status c on c.UnitCim=b.cimid " \
-		"left join voltages d on d.CimId=b.VolCim " \
-		"where a.ConnCim='%s' and c.saveid=%s";
+	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,"\
+		"c.State,d.VolValue from (select UnitCim from Relations where ConnCim='%s') a left join "\
+		"Units b on a.UnitCim=b.CimId  left join (select UnitCim, State from unit_status "\
+		"where saveId=%s) c on c.UnitCim=b.cimid left join voltages d on d.CimId=b.VolCim";
+
 	string sql = DBA->formatSql(psql,connid.c_str(),saveid.c_str());
 	unitsList = DBA->getList(sql.c_str());
 	return unitsList;
