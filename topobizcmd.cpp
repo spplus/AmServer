@@ -181,6 +181,17 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
+			// 判断是否已经查找过的连接点，如果是则跳出，不是则加入
+			if (passNodes.find(connIter->second) != passNodes.end())
+			{
+				continue;
+			}
+			else
+			{
+				passNodes.insert(MAPVAL(connIter->second,connIter->second));
+			}
+
+
 			// 根据连接点，查找该连接点关联的设备集合
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
 
@@ -196,6 +207,10 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
+					}
+					else
+					{
+						passNodes.insert(MAPVAL(unitIter->second,unitIter->second));
 					}
 				}
 
@@ -310,6 +325,17 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
+			// 判断是否已经查找过的连接点，如果是则跳出，不是则加入
+			if (passNodes.find(connIter->second) != passNodes.end())
+			{
+				continue;
+			}
+			else
+			{
+				passNodes.insert(MAPVAL(connIter->second,connIter->second));
+			}
+
+
 			// 根据连接点，查找该连接点关联的设备集合
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
 
@@ -325,6 +351,10 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
+					}
+					else
+					{
+						passNodes.insert(MAPVAL(unitIter->second,unitIter->second));
 					}
 				}
 
@@ -1072,6 +1102,7 @@ bool TopoBizCmd::check12(int saveid,string unitcim)
 	// 两个条件
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
+	ruleMap.insert(RVAL(3,3));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 bool TopoBizCmd::check16(int saveid,string unitcim)

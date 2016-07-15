@@ -18,6 +18,16 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
+			// 判断是否已经查找过的连接点，如果是则跳出，不是则加入
+			if (passNodes.find(connIter->second) != passNodes.end())
+			{
+				continue;
+			}
+			else
+			{
+				passNodes.insert(MAPVAL(connIter->second,connIter->second));
+			}
+
 			// 根据连接点，查找该连接点关联的设备集合
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,COM->i2str(saveid));
 
@@ -33,6 +43,10 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
+					}
+					else
+					{
+						passNodes.insert(MAPVAL(unitIter->second,unitIter->second));
 					}
 				}
 
@@ -74,7 +88,7 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 {
 	PBNS::StateBean bean;
-	char* psql = "select b.State,a.UnitType,a.StationCim,b.IsElectric,b.IsPower,b.IsBorad " \
+	char* psql = "select b.State,a.UnitType,a.StationCim,b.IsElectric,b.IsPower,b.IsBoard " \
 		"from units a left join " \
 		"unit_status b on a.CimId=b.UnitCim and b.SaveId=%d " \
 		"where a.CimId='%s'";

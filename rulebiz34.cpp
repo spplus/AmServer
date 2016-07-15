@@ -23,6 +23,16 @@ bool RuleBiz34::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
+			// 判断是否已经查找过的连接点，如果是则跳出，不是则加入
+			if (passNodes.find(connIter->second) != passNodes.end())
+			{
+				continue;
+			}
+			else
+			{
+				passNodes.insert(MAPVAL(connIter->second,connIter->second));
+			}
+
 			// 根据连接点，查找该连接点关联的设备集合
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,COM->i2str(saveid));
 
@@ -38,6 +48,10 @@ bool RuleBiz34::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
+					}
+					else
+					{
+						passNodes.insert(MAPVAL(unitIter->second,unitIter->second));
 					}
 				}
 
