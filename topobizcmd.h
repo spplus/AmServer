@@ -19,7 +19,7 @@ public:
 private:
 
 	// 整站拓扑
-	void		topoEntire();
+	void		topoEntire(sClientMsg *msg);
 
 	// 根据元件ID进行拓扑，更新数据库版本
 	void		topoByUnitId(string saveid,string unitid,string stationid,STRMAP& passNodes);

@@ -30,7 +30,7 @@ void TopoBizCmd::exec(sClientMsg* msg)
 	switch (msg->type)
 	{
 	case CMD_TOPO_ENTIRE:		// 整站拓扑
-		topoEntire();
+		topoEntire(msg);
 		break;
 	case CMD_TOPO_BREAKER_CHANGE:		// 开关变位
 		topoOnBreakerChange(msg);
@@ -54,7 +54,9 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 
 	// 1.查询所有发动机设备
 	string sql ;
-	char * p = "select Id,StationCim as StationId from units where UnitType=%d";
+	char * p = "select CimId,StationCim as StationId from units where UnitType=%d union all select "\
+		"UnitCim as CimId,StationCim as StationId  from related_line where IsPower=1";
+
 	sql = App_Dba::instance()->formatSql(p,unittype);
 
 	LISTMAP	 powerList;
@@ -92,7 +94,7 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 
 }
 
-void TopoBizCmd::topoEntire()
+void TopoBizCmd::topoEntire(sClientMsg *msg)
 {
 
 	// 检查状态表有没有ispower等于2的记录，如果有，则不执行拓扑分析
@@ -128,9 +130,12 @@ void TopoBizCmd::topoEntire()
 			topoBySaveId(iter->second,eGENERATOR);
 
 			// 拓扑接地状态
-			topoBySaveId(iter->second,eGROUNDSWITCH);
+			//topoBySaveId(iter->second,eGROUNDSWITCH);
 		}
 	}
+	PBNS::OprationMsg_Response res;
+	res.set_rescode(1);
+	App_ClientMgr::instance()->sendData(msg->connectId,res.SerializeAsString(),msg->type);
 }
 
 LISTMAP TopoBizCmd::getConnIdByUnitsId(string unitid)
