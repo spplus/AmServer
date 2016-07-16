@@ -42,8 +42,8 @@ int RuleBiz12::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 		R_ITERATOR iter = ruleMap.find(2);
 		if (iter == ruleMap.end())
 		{
-			// 如果条件二已经被触发，则触发条件三（作为条件二的第二次）
-			COM->triggerRule(ruleMap,3);
+			// 如果条件二已经被触发，再次触发条件二，则表示不违背规则，直接退出
+			return 2;
 		}
 		else
 		{
@@ -53,7 +53,7 @@ int RuleBiz12::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}
 
 	// 判断条件是否全部触发，如果是则返回，规则触发
-	if (ruleMap.size()>0)
+	if (ruleMap.size() >= 0)
 	{
 		return 1;
 	}

@@ -471,8 +471,12 @@ void TopoBizCmd::updateIsGroundByUnitId(string saveid,string unitid,int state)
 	}
 }
 
-string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
+string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 {
+	int saveId = req.saveid();
+	string cimid = req.unitcim();
+	int state = req.type();
+
 	// 设备的cimid,带电状态 1带电，0不带电
 	vector<PBNS::StateBean>	rsltMap;
 
@@ -484,7 +488,7 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 		"from unit_status a " \
 		"left join units b on a.UnitCim=b.CimId " \
 		"left join voltages c on c.CimId = b.VolCim " \
-		"where a.SaveId=%d and a.StationCim ='%s'";
+		"where a.SaveId=%d and a.StationCim =(select StationCim from units where CimId='%s')";
 	string sql = App_Dba::instance()->formatSql(psql,saveId,cimid.c_str());
 
 	LISTMAP unitList = App_Dba::instance()->getList(sql.c_str());
@@ -508,7 +512,7 @@ string TopoBizCmd::execTopoOnBreakerChange(int saveId,string cimid,int state)
 				bean.set_volcolor(COM->getVal(unitMap,"Color"));
 
 				// 以该设备为起点进行拓扑分析
-				topoByUnitIdMem(bean,i2str(saveId),cimid,state,passedNodes,rsltMap);
+				topoByUnitIdMem(bean,passedNodes,rsltMap,req);
 			}
 		}
 	}
@@ -578,24 +582,28 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	{
 		return;
 	}
-	eDeviceType devtype = (eDeviceType)req.unittype();
-	int optype = req.type();
+	/*eDeviceType devtype = (eDeviceType)req.unittype();
+	int optype = req.type();*/
 
 	if (req.ischeck())
 	{
 		// 规则校验
-		roleCheck(msg->connectId,saveId,cimid,devtype,optype);
+		roleCheck(msg->connectId,req);
 	}
 	else
 	{
-		string data = execTopoOnBreakerChange(saveId,cimid,optype);
+		string data = execTopoOnBreakerChange(req);
 
 		App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
 	}
 }
 
-void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,int objState,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap)
+void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap,PBNS::OprationMsg_Request req)
 {
+	string saveid = COM->i2str(req.saveid());
+	string cimid = req.unitcim();
+	int objState = req.type();
+
 	string unitid = bean.cimid();
 	
 	LOG->debug("topoByUnitIdMem,uinit cimid:%s",unitid.c_str());
@@ -676,6 +684,15 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 						if (unitIter != unitMap.end())
 						{
 							int state = str2i(unitIter->second);
+
+							// 判断是否在客户端操作列表中，如果在用客户端操作列表中的状态
+							PBNS::StateBean fbean;
+							int idx = findUnitByCim(cbean.cimid(),req,fbean);
+							if(idx >= 0)
+							{
+								state = fbean.state();
+							}
+
 							cbean.set_state(state);
 							
 							// 判断是否为本次操作设备，如果是，则根据本次操作的最终状态进行分析
@@ -727,7 +744,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 				if (flag != 1)
 				{
 					// 递归，以该元件为起点进行重新遍历
-					topoByUnitIdMem(cbean,saveid,cimid,objState,passNodes,rsltMap);
+					topoByUnitIdMem(cbean,passNodes,rsltMap,req);
 				}
 			
 			}
@@ -735,6 +752,19 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid
 		}
 
 	}
+}
+
+int TopoBizCmd::findUnitByCim(string cim,PBNS::OprationMsg_Request& req,PBNS::StateBean &bean)
+{
+	for (int i = 0;i<req.opdevlist_size();i++)
+	{
+		bean = req.opdevlist(i);
+		if (bean.cimid() == cim)
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
 void TopoBizCmd::updateIsElectric(string saveid,string unitcim,int state)
@@ -774,8 +804,14 @@ bool TopoBizCmd::checkRuleIsUse(string cimid,int ruleid)
 	return false;
 }
 
-void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devtype,int optype)
+void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 {
+	int saveid = req.saveid();
+		
+	string unitcim = req.unitcim();
+	eDeviceType devtype = (eDeviceType)req.unittype();
+	int optype = req.type();
+
 	// 触发的规则列表
 	vector<int> ruleList;
 
@@ -955,7 +991,7 @@ void TopoBizCmd::roleCheck(int connid,int saveid,string unitcim,eDeviceType devt
 	// 如果没有触发规则，则返回客户端执行变位操作
 	if (ruleList.size() == 0)
 	{
-		string data = execTopoOnBreakerChange(saveid,unitcim,optype);
+		string data = execTopoOnBreakerChange(req);
 		App_ClientMgr::instance()->sendData(connid,data,CMD_TOPO_BREAKER_CHANGE);
 	}
 	else
@@ -1104,7 +1140,7 @@ bool TopoBizCmd::check12(int saveid,string unitcim)
 	// 两个条件
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
-	ruleMap.insert(RVAL(3,3));
+
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 bool TopoBizCmd::check16(int saveid,string unitcim)

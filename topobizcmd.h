@@ -50,18 +50,20 @@ private:
 	void		topoOnBreakerChange(sClientMsg *msg);
 
 	// 根据元件CIMID进行拓扑，不更新数据库版本
-	void		topoByUnitIdMem(PBNS::StateBean bean,string saveid,string cimid,int state,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap);
+	void		topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap,PBNS::OprationMsg_Request req);
 
 	// 执行开关变位拓扑
-	string	execTopoOnBreakerChange(int saveid,string unitcim,int state);
+	string	execTopoOnBreakerChange(PBNS::OprationMsg_Request req);
 
 	// 规则检查
-	void		roleCheck(int connid,int saveid,string unitcim,eDeviceType devType,int optype);
+	void		roleCheck(int connid,PBNS::OprationMsg_Request req);
 	void		sendRuleBack(int connid,int optype,vector<int> ruleList);
 
 	// 设置带电状态
 	void		updateIsElectric(string saveid,string unitcim,int state);
 
+	// 从客户端操作列表中查找bean
+	int		findUnitByCim(string cim,PBNS::OprationMsg_Request& req,PBNS::StateBean &bean);
 
 	// 检测规则是否生效
 	bool		checkRuleIsUse(string cimid,int ruleid);
