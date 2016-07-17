@@ -126,6 +126,7 @@
     <ClCompile Include="tcpClient.cpp" />
     <ClCompile Include="scadaclientmgr.cpp" />
     <ClCompile Include="tcpservermgr.cpp" />
+    <ClCompile Include="ticketmgrcmd.cpp" />
     <ClCompile Include="ticketmsionmgrcmd.cpp" />
     <ClCompile Include="topobase.cpp" />
     <ClCompile Include="topobizcmd.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="tcpClient.h" />
     <ClInclude Include="ScadaClientMgr.h" />
     <ClInclude Include="tcpservermgr.h" />
+    <ClInclude Include="ticketmgrcmd.h" />
     <ClInclude Include="ticketmsionmgrcmd.h" />
     <ClInclude Include="topobase.h" />
     <ClInclude Include="topobizcmd.h" />

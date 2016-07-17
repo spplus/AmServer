@@ -49,10 +49,10 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 	{
 		return;
 	}
-	// 已经做个起点分析的设备ID集合
+	// 已经做过起点分析的设备ID集合
 	STRMAP passedNodes;
 
-	// 1.查询所有发动机设备
+	// 1.查询所有发电机设备
 	string sql ;
 	char * p = "select CimId,StationCim as StationId from units where UnitType=%d union all select "\
 		"UnitCim as CimId,StationCim as StationId  from related_line where IsPower=1";
@@ -97,7 +97,7 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 void TopoBizCmd::topoEntire(sClientMsg *msg)
 {
 
-	// 检查状态表有没有ispower等于2的记录，如果有，则不执行拓扑分析
+	// 检查状态表有没有ispower等于2的记录，如果没有说明尚未导入cim数据，则不执行拓扑分析
 	int count = 0;
 	char* psql = "select count(*) as count from unit_status where IsPower=2 ";
 	LISTMAP countList = App_Dba::instance()->getList(psql);
@@ -111,8 +111,8 @@ void TopoBizCmd::topoEntire(sClientMsg *msg)
 		}
 	}
 
-	// 如果有，则不执行拓扑分析
-	if (count>0)
+	// 如果没有，则不执行拓扑分析
+	if (count<=0)
 	{
 		return;
 	}

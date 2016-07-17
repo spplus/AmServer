@@ -409,6 +409,13 @@ void DevStateCmd::updateIsPower(sClientMsg* msg)
 	PBNS::PowerSetMsg_Response res;
 	if (ret == 1)
 	{
+		psql = "update unit_status set IsElectric=1, IsPower=1 where saveid=%d and UnitCim='%s'";
+		sql = App_Dba::instance()->formatSql(psql,req.saveid(),req.unitcim().c_str());
+		ret = App_Dba::instance()->execSql(sql.c_str());
+		if (ret != 1)
+		{
+			LOG->warn("更新unit_status 失败:%s",sql.c_str());
+		}
 		res.set_rescode(0);
 		LOG->message("设置电源点成功");
 	}

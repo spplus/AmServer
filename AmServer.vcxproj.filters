@@ -225,6 +225,9 @@
     <ClCompile Include="ticketmsionmgrcmd.cpp">
       <Filter>biz</Filter>
     </ClCompile>
+    <ClCompile Include="ticketmgrcmd.cpp">
+      <Filter>biz</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -420,6 +423,9 @@
       <Filter>biz</Filter>
     </ClInclude>
     <ClInclude Include="ticketmsionmgrcmd.h">
+      <Filter>biz</Filter>
+    </ClInclude>
+    <ClInclude Include="ticketmgrcmd.h">
       <Filter>biz</Filter>
     </ClInclude>
   </ItemGroup>

@@ -94,13 +94,27 @@ void TicketMsionMgrCmd::getTicketMsionList(sClientMsg* msg)
 	req.ParseFromArray(msg->data,msg->length);
 
 	int nUserid = req.userid();
+	int nRoleid = req.roleid();
 
 	string sql;
-	//查询用户列表
-	char *psql = "select tkm.ID,tkm.UserId,(select u.Name FROM users u WHERE tkm.UserId=u.ID) as Usernaem, \
-		          tkm.ActionUserId,(select u.Name FROM users u WHERE tkm.ActionUserId=u.ID) as Actuname,tkm.Name,tkm.PublishTime from ticket_missions tkm where tkm.UserId=%d ;";
 
-	sql = App_Dba::instance()->formatSql(psql,nUserid);
+	//如果用户角色是运维员(id=4)，查询执行人对应的操作任务列表
+	if (nRoleid == 4)
+	{
+		//查询操作任务列表
+		char *psql = "select tkm.ID,tkm.UserId,(select u.Name FROM users u WHERE tkm.UserId=u.ID) as Usernaem, \
+					 tkm.ActionUserId,(select u.Name FROM users u WHERE tkm.ActionUserId=u.ID) as Actuname,tkm.Name,tkm.PublishTime from ticket_missions tkm where tkm.ActionUserId=%d ;";
+
+		sql = App_Dba::instance()->formatSql(psql,nUserid);
+	}
+	else
+	{
+		//查询操作任务列表
+		char *psql = "select tkm.ID,tkm.UserId,(select u.Name FROM users u WHERE tkm.UserId=u.ID) as Usernaem, \
+					 tkm.ActionUserId,(select u.Name FROM users u WHERE tkm.ActionUserId=u.ID) as Actuname,tkm.Name,tkm.PublishTime from ticket_missions tkm where tkm.UserId=%d ;";
+
+		sql = App_Dba::instance()->formatSql(psql,nUserid);
+	}
 
 	LISTMAP tkmslist;
 	tkmslist = App_Dba::instance()->getList(sql.c_str());
