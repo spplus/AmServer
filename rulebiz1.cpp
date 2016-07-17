@@ -25,6 +25,9 @@ int RuleBiz1::topoBiz(int saveid,string unitcim,map<int,int>& ruleMap,string sta
 	{
 		// 如果为发电机，条件一成立
 		COM->triggerRule(ruleMap,1);
+
+		// 返回3，表示终止该连接点下的所有设备的遍历。
+		return 3;
 	}
 	else
 	{

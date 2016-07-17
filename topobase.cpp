@@ -67,6 +67,16 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 				{
 					return false;
 				}
+				// 跳过该连接点下的所有设备
+				else if (topoRst == 3)
+				{
+					break;
+				}
+				else if (topoRst == 4)
+				{
+					// 规则被触发
+					return true;
+				}
 
 				// 判断是否规则触发
 				if (ruleMap.size() == 0)
@@ -145,12 +155,12 @@ PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 LISTMAP TopoBase::getUnitsByConnId(string connid,string saveid)
 {
 
-	// 问题：关联查询设备状态的时候，不用考虑saveid么？unit_status表中，同一个unit可能会有多条记录，以哪天记录为准呢？
+	// 
 	LISTMAP unitsList ;
 	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,"\
 		"c.State,d.VolValue from (select UnitCim from Relations where ConnCim='%s') a left join "\
 		"Units b on a.UnitCim=b.CimId  left join (select UnitCim, State from unit_status "\
-		"where saveId=%s) c on c.UnitCim=b.cimid left join voltages d on d.CimId=b.VolCim";
+		"where saveId=%s) c on c.UnitCim=b.cimid left join voltages d on d.CimId=b.VolCim order by b.UnitType asc ";
 
 	string sql = DBA->formatSql(psql,connid.c_str(),saveid.c_str());
 	unitsList = DBA->getList(sql.c_str());
@@ -165,4 +175,9 @@ LISTMAP TopoBase::getConnIdByUnitsId(string unitid)
 	string sql = DBA->formatSql(psql,unitid.c_str());
 	connList = DBA->getList(sql.c_str());
 	return connList;
+}
+
+void TopoBase::setOpcim(string cimid)
+{
+	m_opcim = cimid;
 }

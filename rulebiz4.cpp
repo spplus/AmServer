@@ -32,11 +32,14 @@ int RuleBiz4::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/
 		else
 		{
 			COM->triggerRule(ruleMap,1);
+
+			// 跳过该连接点剩余设备
+			return 3;
 		}
 	}
+	if (ruleMap.size()>0)
 
 	// 判断条件是否全部触发，如果是则返回，规则触发
-	if (ruleMap.size()>0)
 	{
 		return 1;
 	}

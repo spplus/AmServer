@@ -27,6 +27,9 @@ public:
 	*/
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim="") = 0;
 
+	// 设置当前操作的设备
+	void				setOpcim(string	cimid);
+
 protected:
 	// 通过cimid获取unit信息
 	PBNS::StateBean getUnitByCim(int saveid,string unitcim);
@@ -36,6 +39,11 @@ protected:
 
 	// 根据连接点查找关联的设备
 	LISTMAP			getUnitsByConnId(string connid,string saveid);
+
+protected:
+	// 本次操作设备的cim
+	string			m_opcim;
+
 };
 
 #endif

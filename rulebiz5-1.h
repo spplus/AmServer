@@ -14,7 +14,12 @@
 class RuleBiz5_1		:public TopoBase
 {
 private:
+	RuleBiz5_1();
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim="");
+
+private:
+	// 发现的刀闸数量
+	int		count;
 };
 
 #endif
