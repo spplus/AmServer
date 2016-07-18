@@ -1121,6 +1121,7 @@ bool TopoBizCmd::check5(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz5 r;
+	r.setOpcim(unitcim);
 	RMAP ruleMap;
 
 	// 两个条件
@@ -1140,6 +1141,7 @@ bool TopoBizCmd::check12(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz12 r;
+	r.setOpcim(unitcim);
 	RMAP ruleMap;
 
 	// 两个条件

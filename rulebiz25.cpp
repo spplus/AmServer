@@ -75,7 +75,7 @@ bool RuleBiz25::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				int topoRst = topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
 			
 				// 判断是否直接退出
-				if (topoRst == 2)
+				if (topoRst == eRuleExit)
 				{
 					return false;
 				}
@@ -139,10 +139,11 @@ int RuleBiz25::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// 1.如果为母线，不违背规则，直接跳出逻辑。
+	// 1.如果包含开关且闭合，满足条件一，否则直接跳出逻辑。
 	if (bean.unittype() == eSWITCH)
 	{
 		m_hasSwitch = true;
+		
 		m_hasSwitchState = bean.state();
 		m_switchCim = bean.cimid();
 	}
@@ -155,14 +156,14 @@ int RuleBiz25::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}
 	else if (bean.unittype() == eBREAKER)
 	{
-		// 如果为开关且闭合，满足条件一
+		// 如果包含开关且闭合，满足条件一，否则直接跳出逻辑。
 		if (bean.state() == 1)
 		{
 			COM->triggerRule(ruleMap,1);
 		}
 		else
 		{
-			return 2;
+			return eRuleExit;
 		}
 	}
 	return 0;
