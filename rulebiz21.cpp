@@ -68,9 +68,9 @@ bool RuleBiz21::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 
 			}
 			// 如果结果原件不包含母线，满足条件二；如果包含母线，则在上面一层循环，将退出，不会到这里
-			COM->triggerRule(ruleMap,2);
+			//COM->triggerRule(ruleMap,2);
 
-			// 当条件一、条件二满足时，以开关为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含刀闸且断开，满足条件三。
+			// 当条件一满足时，以开关为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含刀闸且断开，满足条件三。
 			if (m_breakerCim.length() > 0)
 			{
 				RuleBiz21_1 r;
@@ -101,7 +101,7 @@ int RuleBiz21::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	// 1.如果为母线，不违背规则，直接跳出逻辑。
 	if (bean.unittype() == eBUS )
 	{
-		return 2;
+		return eRuleExit;
 	}
 	else if (bean.unittype() == eBREAKER)
 	{
@@ -112,5 +112,5 @@ int RuleBiz21::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 			m_breakerCim = bean.cimid();
 		}
 	}
-	return 1;
+	return 0;
 }

@@ -1209,7 +1209,7 @@ bool TopoBizCmd::check21(int saveid,string unitcim)
 	// 2¸öÌõ¼ş
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
-	ruleMap.insert(RVAL(3,3));
+	
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 
 }
