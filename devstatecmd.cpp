@@ -403,7 +403,7 @@ void DevStateCmd::updateIsPower(sClientMsg* msg)
 	}
 
 	// 更新RelatedLine表UnitCim字段等于CimId，StationCim等于StationId的IsPower字段；
-	char* psql = "update related_line set IsPower=1 where UnitCim='%s' and StationCim='%s'";
+	char* psql = "update related_line set IsPower=2 where UnitCim='%s' and StationCim='%s'";
 	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.stationcim().c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());
 	PBNS::PowerSetMsg_Response res;
