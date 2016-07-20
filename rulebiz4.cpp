@@ -1,7 +1,7 @@
 #include "rulebiz4.h"
 
 
-bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
+bool RuleBiz4::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
 {
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
