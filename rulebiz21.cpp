@@ -77,18 +77,18 @@ bool RuleBiz21::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				STRMAP passedNodes;
 				r.topoByUnit(saveid,m_breakerCim,passedNodes,ruleMap);
 			}
-
-			// 判断是否触发规则
-			if (ruleMap.size() == 0)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
 		}
-
+	
+	}
+	
+	// 判断是否触发规则
+	if (ruleMap.size() == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 	return false;
 }
