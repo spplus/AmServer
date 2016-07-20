@@ -13,6 +13,10 @@
 
 class RuleBiz4		:public TopoBase
 {
+public:
+	// ÍØÆË·ÖÎö¿ò¼ÜËã·¨
+	virtual	bool		topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
+
 private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim="");
 };
