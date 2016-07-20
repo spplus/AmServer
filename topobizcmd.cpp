@@ -817,6 +817,7 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 	eDeviceType devtype = (eDeviceType)req.unittype();
 	int optype = req.type();
 
+	
 	// 触发的规则列表
 	vector<int> ruleList;
 
@@ -827,60 +828,60 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 		// 开关闭合
 		if (optype == 1)
 		{
-			if (check1(saveid,unitcim))
+			if (check1(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_1);
 			}
 
 			// 规则4是满足条件两次，规则不触发，满足低于两次，规则触发，这个返回值和规则一相反
-			if (!check4(saveid,unitcim))
+			if (!check4(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_4);
 			}
 
-			if (check20(saveid,unitcim))
+			if (check20(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_20);
 			}
 
-			if (check22(saveid,unitcim))
+			if (check22(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_22);
 			}
 
-			if (check29(saveid,unitcim))
+			if (check29(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_29);
 			}
-			if (check32(saveid,unitcim))
+			if (check32(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_32);
 			}
-			if (check33(saveid,unitcim))
+			if (check33(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_33);
 			}
 
-			if (check34(saveid,unitcim))
+			if (check34(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_34);
 			}
 
-			if (check35(saveid,unitcim))
+			if (check35(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_35);
 			}
 
-			if (check39(saveid,unitcim))
+			if (check39(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_39);
 			}
-			if (check45(saveid,unitcim))
+			if (check45(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_45);
 			}
 
-			if (check46(saveid,unitcim))
+			if (check46(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_46);
 			}
@@ -890,26 +891,26 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 		else
 		{
 
-			if (check2(saveid,unitcim))
+			if (check2(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_2);
 			}
 
-			if (check28(saveid,unitcim))
+			if (check28(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_28);
 			}
-			if (check47(saveid,unitcim))
+			if (check47(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_47);
 			}
-			if (check48(saveid,unitcim))
+			if (check48(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_48);
 			}
 		}
 		
-		if (check43(saveid,unitcim))
+		if (check43(saveid,unitcim,req))
 		{
 			ruleList.push_back(R_CHECK_43);
 		}
@@ -917,73 +918,73 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 	case eSWITCH:
 		if (optype == 1)
 		{
-			if (check5(saveid,unitcim))
+			if (check5(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_5);
 			}
-			if (check21(saveid,unitcim))
+			if (check21(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_21);
 			}
-			if (check22(saveid,unitcim))
+			if (check22(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_22);
 			}
-			if (check26(saveid,unitcim))
+			if (check26(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_26);
 			}
 
-			if (check29(saveid,unitcim))
+			if (check29(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_29);
 			}
-			if (check32(saveid,unitcim))
+			if (check32(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_32);
 			}
-			if (check33(saveid,unitcim))
+			if (check33(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_33);
 			}
 		}
 		else
 		{
-			if (check12(saveid,unitcim))
+			if (check12(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_12);
 			}
-			if (check27(saveid,unitcim))
+			if (check27(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_27);
 			}
-			if (check28(saveid,unitcim))
+			if (check28(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_28);
 			}
-			if (check38(saveid,unitcim))
+			if (check38(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_38);
 			}
 		}
-		if (check25(saveid,unitcim,optype))
+		if (check25(saveid,unitcim,optype,req))
 		{
 			ruleList.push_back(R_CHECK_25);
 		}
 
-		if (check43(saveid,unitcim))
+		if (check43(saveid,unitcim,req))
 		{
 			ruleList.push_back(R_CHECK_43);
 		}
 		break;
 	case eGROUNDSWITCH:
-		if (check16(saveid,unitcim))
+		if (check16(saveid,unitcim,req))
 		{
 			ruleList.push_back(R_CHECK_16);
 		}
 		if (optype == 1)
 		{
-			if (check18(saveid,unitcim))
+			if (check18(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_18);
 			}
@@ -1064,7 +1065,7 @@ void TopoBizCmd::sendRuleBack(int connid,int optype,vector<int> ruleList)
 	App_ClientMgr::instance()->sendData(connid,data,CMD_TRIGGER_RULES);
 }
 
-bool TopoBizCmd::check1(int saveid,string unitcim)
+bool TopoBizCmd::check1(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_1))
 	{
@@ -1072,6 +1073,8 @@ bool TopoBizCmd::check1(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz1 r1;
+	r1.setReq(req);
+
 	RMAP ruleMap;
 
 	// 两个条件
@@ -1081,7 +1084,7 @@ bool TopoBizCmd::check1(int saveid,string unitcim)
 	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check2(int saveid,string unitcim)
+bool TopoBizCmd::check2(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_2))
 	{
@@ -1089,6 +1092,7 @@ bool TopoBizCmd::check2(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz1 r1;
+	r1.setReq(req);
 	RMAP ruleMap;
 
 	// 两个条件
@@ -1097,7 +1101,7 @@ bool TopoBizCmd::check2(int saveid,string unitcim)
 	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check4(int saveid,string unitcim)
+bool TopoBizCmd::check4(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_4))
 	{
@@ -1105,6 +1109,7 @@ bool TopoBizCmd::check4(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz4 r4;
+	r4.setReq(req);
 	RMAP ruleMap;
 
 	// 两个条件
@@ -1113,7 +1118,7 @@ bool TopoBizCmd::check4(int saveid,string unitcim)
 	return r4.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check5(int saveid,string unitcim)
+bool TopoBizCmd::check5(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_5))
 	{
@@ -1121,6 +1126,7 @@ bool TopoBizCmd::check5(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz5 r;
+	r.setReq(req);
 	r.setOpcim(unitcim);
 	RMAP ruleMap;
 
@@ -1133,7 +1139,7 @@ bool TopoBizCmd::check5(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check12(int saveid,string unitcim)
+bool TopoBizCmd::check12(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_12))
 	{
@@ -1141,6 +1147,7 @@ bool TopoBizCmd::check12(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz12 r;
+	r.setReq(req);
 	r.setOpcim(unitcim);
 	RMAP ruleMap;
 
@@ -1150,7 +1157,7 @@ bool TopoBizCmd::check12(int saveid,string unitcim)
 
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
-bool TopoBizCmd::check16(int saveid,string unitcim)
+bool TopoBizCmd::check16(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_16))
 	{
@@ -1158,6 +1165,7 @@ bool TopoBizCmd::check16(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz16 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 1个条件
@@ -1165,7 +1173,7 @@ bool TopoBizCmd::check16(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check18(int saveid,string unitcim)
+bool TopoBizCmd::check18(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_18))
 	{
@@ -1173,6 +1181,7 @@ bool TopoBizCmd::check18(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz18 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 1个条件
@@ -1180,7 +1189,7 @@ bool TopoBizCmd::check18(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check20(int saveid,string unitcim)
+bool TopoBizCmd::check20(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_20))
 	{
@@ -1188,6 +1197,7 @@ bool TopoBizCmd::check20(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz20 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1196,7 +1206,7 @@ bool TopoBizCmd::check20(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check21(int saveid,string unitcim)
+bool TopoBizCmd::check21(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_21))
 	{
@@ -1204,6 +1214,7 @@ bool TopoBizCmd::check21(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz21 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1214,7 +1225,7 @@ bool TopoBizCmd::check21(int saveid,string unitcim)
 
 }
 
-bool TopoBizCmd::check22(int saveid,string unitcim)
+bool TopoBizCmd::check22(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_22))
 	{
@@ -1222,6 +1233,7 @@ bool TopoBizCmd::check22(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz22 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1229,7 +1241,7 @@ bool TopoBizCmd::check22(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check25(int saveid,string unitcim,int optype)
+bool TopoBizCmd::check25(int saveid,string unitcim,int optype,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_25))
 	{
@@ -1237,6 +1249,7 @@ bool TopoBizCmd::check25(int saveid,string unitcim,int optype)
 	}
 	STRMAP passedNodes;
 	RuleBiz25 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 5个条件
@@ -1249,7 +1262,7 @@ bool TopoBizCmd::check25(int saveid,string unitcim,int optype)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check26(int saveid,string unitcim)
+bool TopoBizCmd::check26(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_26))
 	{
@@ -1257,6 +1270,7 @@ bool TopoBizCmd::check26(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz26 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 3个条件
@@ -1266,7 +1280,7 @@ bool TopoBizCmd::check26(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check27(int saveid,string unitcim)
+bool TopoBizCmd::check27(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_27))
 	{
@@ -1274,6 +1288,7 @@ bool TopoBizCmd::check27(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz27 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 3个条件
@@ -1284,7 +1299,7 @@ bool TopoBizCmd::check27(int saveid,string unitcim)
 }
 
 // 28,29 逻辑相同
-bool TopoBizCmd::check28(int saveid,string unitcim)
+bool TopoBizCmd::check28(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_28))
 	{
@@ -1292,6 +1307,7 @@ bool TopoBizCmd::check28(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz28 r;
+	r.setReq(req);
 	r.setBeginCim(unitcim);
 	RMAP ruleMap;
 
@@ -1300,16 +1316,16 @@ bool TopoBizCmd::check28(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check29(int saveid,string unitcim)
+bool TopoBizCmd::check29(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_29))
 	{
 		return false;
 	}
-	return check28(saveid,unitcim);
+	return check28(saveid,unitcim,req);
 }
 
-bool TopoBizCmd::check32(int saveid,string unitcim)
+bool TopoBizCmd::check32(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_32))
 	{
@@ -1317,6 +1333,7 @@ bool TopoBizCmd::check32(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz32 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1325,7 +1342,7 @@ bool TopoBizCmd::check32(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check33(int saveid,string unitcim)
+bool TopoBizCmd::check33(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_33))
 	{
@@ -1333,6 +1350,7 @@ bool TopoBizCmd::check33(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz33 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1341,7 +1359,7 @@ bool TopoBizCmd::check33(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check34(int saveid,string unitcim)
+bool TopoBizCmd::check34(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_34))
 	{
@@ -1349,6 +1367,7 @@ bool TopoBizCmd::check34(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz34 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 3个条件
@@ -1359,7 +1378,7 @@ bool TopoBizCmd::check34(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check35(int saveid,string unitcim)
+bool TopoBizCmd::check35(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_35))
 	{
@@ -1367,6 +1386,7 @@ bool TopoBizCmd::check35(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz35 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 3个条件
@@ -1377,7 +1397,7 @@ bool TopoBizCmd::check35(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check38(int saveid,string unitcim)
+bool TopoBizCmd::check38(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_38))
 	{
@@ -1385,6 +1405,7 @@ bool TopoBizCmd::check38(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz38 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 3个条件
@@ -1394,7 +1415,7 @@ bool TopoBizCmd::check38(int saveid,string unitcim)
 
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
-bool TopoBizCmd::check39(int saveid,string unitcim)
+bool TopoBizCmd::check39(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_39))
 	{
@@ -1402,6 +1423,7 @@ bool TopoBizCmd::check39(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz39 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1411,7 +1433,7 @@ bool TopoBizCmd::check39(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check43(int saveid,string unitcim)
+bool TopoBizCmd::check43(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_43))
 	{
@@ -1419,6 +1441,7 @@ bool TopoBizCmd::check43(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz43 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1428,7 +1451,7 @@ bool TopoBizCmd::check43(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check45(int saveid,string unitcim)
+bool TopoBizCmd::check45(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_45))
 	{
@@ -1436,6 +1459,7 @@ bool TopoBizCmd::check45(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz45 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1444,7 +1468,7 @@ bool TopoBizCmd::check45(int saveid,string unitcim)
 
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
-bool TopoBizCmd::check46(int saveid,string unitcim)
+bool TopoBizCmd::check46(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_46))
 	{
@@ -1452,6 +1476,7 @@ bool TopoBizCmd::check46(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz46 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1460,7 +1485,7 @@ bool TopoBizCmd::check46(int saveid,string unitcim)
 
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
-bool TopoBizCmd::check47(int saveid,string unitcim)
+bool TopoBizCmd::check47(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_47))
 	{
@@ -1468,6 +1493,7 @@ bool TopoBizCmd::check47(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz47 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件
@@ -1477,7 +1503,7 @@ bool TopoBizCmd::check47(int saveid,string unitcim)
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-bool TopoBizCmd::check48(int saveid,string unitcim)
+bool TopoBizCmd::check48(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_48))
 	{
@@ -1485,6 +1511,7 @@ bool TopoBizCmd::check48(int saveid,string unitcim)
 	}
 	STRMAP passedNodes;
 	RuleBiz48 r;
+	r.setReq(req);
 	RMAP ruleMap;
 
 	// 2个条件

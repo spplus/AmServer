@@ -30,6 +30,8 @@ public:
 	// 设置当前操作的设备
 	void				setOpcim(string	cimid);
 
+	// 设置客户端操作设备列表
+	void				setReq(PBNS::OprationMsg_Request req);
 protected:
 	// 通过cimid获取unit信息
 	PBNS::StateBean getUnitByCim(int saveid,string unitcim);
@@ -44,6 +46,7 @@ protected:
 	// 本次操作设备的cim
 	string			m_opcim;
 
+	PBNS::OprationMsg_Request	m_req;
 };
 
 #endif

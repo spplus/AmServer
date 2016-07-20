@@ -68,33 +68,33 @@ private:
 	// 检测规则是否生效
 	bool		checkRuleIsUse(string cimid,int ruleid);
 
-	bool		check1(int saveid,string unitcim);
-	bool		check2(int saveid,string unitcim);
-	bool		check4(int saveid,string unitcim);
-	bool		check5(int saveid,string unitcim);
-	bool		check12(int saveid,string unitcim);
-	bool		check16(int saveid,string unitcim);
-	bool		check18(int saveid,string unitcim);
-	bool		check20(int saveid,string unitcim);
-	bool		check21(int saveid,string unitcim);
-	bool		check22(int saveid,string unitcim);
-	bool		check25(int saveid,string unitcim,int optype);
-	bool		check26(int saveid,string unitcim);
-	bool		check27(int saveid,string unitcim);
-	bool		check28(int saveid,string unitcim);
-	bool		check29(int saveid,string unitcim);
-	bool		check32(int saveid,string unitcim);
-	bool		check33(int saveid,string unitcim);
-	bool		check34(int saveid,string unitcim);
-	bool		check35(int saveid,string unitcim);
-	bool		check38(int saveid,string unitcim);
-	bool		check39(int saveid,string unitcim);
-	bool		check43(int saveid,string unitcim);
+	bool		check1(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check2(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check4(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check5(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check12(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check16(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check18(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check20(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check21(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check22(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check25(int saveid,string unitcim,int optype,PBNS::OprationMsg_Request req);
+	bool		check26(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check27(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check28(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check29(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check32(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check33(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check34(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check35(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check38(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check39(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check43(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 
-	bool		check45(int saveid,string unitcim);
-	bool		check46(int saveid,string unitcim);
-	bool		check47(int saveid,string unitcim);
-	bool		check48(int saveid,string unitcim);
+	bool		check45(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check46(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check47(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+	bool		check48(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 };
 
 #endif

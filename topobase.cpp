@@ -1,5 +1,9 @@
 #include "topobase.h"
 
+void TopoBase::setReq(PBNS::OprationMsg_Request req)
+{
+	m_req = req;
+}
 
 bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
 {
@@ -148,6 +152,24 @@ PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 	{
 		LOG->warn("数据错误，同一存档下面有多个相同cim的元件:%s",unitcim.c_str());
 	}
+
+	// 判断是否在客户端操作列表中，如果在，则用客户端状态
+	int flag = 0;
+	PBNS::StateBean fbean;
+	for (int i = 0;i<m_req.opdevlist_size();i++)
+	{
+		fbean = m_req.opdevlist(i);
+		if (fbean.cimid() == unitcim)
+		{
+			flag = 1;
+		}
+	}
+
+	if (flag == 1)
+	{
+		bean.set_state(fbean.state());
+	}
+	
 
 	return bean;
 }
