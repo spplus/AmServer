@@ -74,6 +74,7 @@ bool RuleBiz21::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 			if (m_breakerCim.length() > 0)
 			{
 				RuleBiz21_1 r;
+				r.setReq(m_req);
 				r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
 			}
 		}

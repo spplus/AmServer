@@ -113,6 +113,7 @@ bool RuleBiz25::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 
 				//  以条件三中断开刀闸为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含母线，满足条件五；
 				RuleBiz25_1 r;
+				r.setReq(m_req);
 				STRMAP passedNodes;
 				r.topoByUnit(saveid,m_switchCim,passedNodes,ruleMap);
 

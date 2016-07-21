@@ -76,6 +76,7 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				if (iter1 == ruleMap.end() && iter2 == ruleMap.end())
 				{
 					RuleBiz38_1 r;
+					r.setReq(m_req);
 					r.topoByUnit(saveid,m_unitCim,passNodes,ruleMap);
 				}
 

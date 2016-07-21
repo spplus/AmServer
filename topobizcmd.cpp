@@ -833,8 +833,7 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 				ruleList.push_back(R_CHECK_1);
 			}
 
-			// 规则4是满足条件两次，规则不触发，满足低于两次，规则触发，这个返回值和规则一相反
-			if (!check4(saveid,unitcim,req))
+			if (check4(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_4);
 			}
