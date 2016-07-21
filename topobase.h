@@ -32,6 +32,10 @@ public:
 
 	// 设置客户端操作设备列表
 	void				setReq(PBNS::OprationMsg_Request req);
+
+	// 设置经历过的节点
+	void				setPassedNodes(STRMAP &passedNodes);
+
 protected:
 	// 通过cimid获取unit信息
 	PBNS::StateBean getUnitByCim(int saveid,string unitcim);
@@ -45,7 +49,7 @@ protected:
 protected:
 	// 本次操作设备的cim
 	string			m_opcim;
-
+	STRMAP			m_passedNodes;
 	PBNS::OprationMsg_Request	m_req;
 };
 

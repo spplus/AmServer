@@ -96,8 +96,9 @@ int RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/
 		// 遍历开关（B）另一侧的连接点
 		RuleBiz5_1 r51;
 		r51.setReq(m_req);
-		STRMAP passedNodes;
-		bool ret = r51.topoByUnit(saveid,bean.cimid(),passedNodes,ruleMap);
+		r51.setPassedNodes(m_passedNodes);
+
+		bool ret = r51.topoByUnit(saveid,bean.cimid(),m_passedNodes,ruleMap);
 		
 		// 如果发现两个闭合的刀闸，则规则触发
 		if (ret)

@@ -69,8 +69,8 @@ bool RuleBiz26::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 			{
 				RuleBiz26_1 r;
 				r.setReq(m_req);
-				STRMAP passedNodes;
-				r.topoByUnit(saveid,m_breakerCim,passedNodes,ruleMap);
+				r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
+
 			}
 			
 			// 条件一、二、三同时满足时触发规则

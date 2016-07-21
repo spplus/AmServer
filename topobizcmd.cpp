@@ -1127,6 +1127,7 @@ bool TopoBizCmd::check5(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 	RuleBiz5 r;
 	r.setReq(req);
 	r.setOpcim(unitcim);
+	r.setPassedNodes(passedNodes);
 	RMAP ruleMap;
 
 	// 两个条件

@@ -5,6 +5,11 @@ void TopoBase::setReq(PBNS::OprationMsg_Request req)
 	m_req = req;
 }
 
+void TopoBase::setPassedNodes(STRMAP &passedNodes)
+{
+	m_passedNodes = passedNodes;
+}
+
 bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
 {
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
