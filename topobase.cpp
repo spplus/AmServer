@@ -167,6 +167,7 @@ PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 		if (fbean.cimid() == unitcim)
 		{
 			flag = 1;
+			break;
 		}
 	}
 

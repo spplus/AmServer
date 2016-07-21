@@ -25,17 +25,9 @@ private:
 	// 客户端操作类型
 	int				m_optype;
 
-	// 是否包含刀闸
-	bool				m_hasSwitch;
+	vector<PBNS::StateBean>		m_switchList;
+	vector<PBNS::StateBean>		m_breakList;
 
-	// 是否包含母线
-	bool				m_hasBus;
-
-	// 包含的刀闸状态
-	int				m_hasSwitchState;
-
-	// 满足条件三的刀闸cim
-	string			m_switchCim;
 };
 
 #endif

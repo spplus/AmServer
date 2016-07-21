@@ -79,7 +79,7 @@ bool RuleBiz4::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 	}
 
 	// 当条件一成立两次以下（不含两次）时，规则被触发。
-	if (ruleMap.size() == 1)
+	if (ruleMap.size()>0)
 	{
 		return true;
 	}

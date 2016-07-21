@@ -3,11 +3,7 @@
 
 RuleBiz25::RuleBiz25()
 {
-	m_hasSwitch = false;
-	m_hasSwitchState = 1;
 	m_optype = 1;
-	m_hasBus = false;
-	m_switchCim = "";
 }
 void RuleBiz25::setOptype(int optype)
 {
@@ -72,87 +68,74 @@ bool RuleBiz25::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				}
 
 				// 本轮拓扑的业务处理，具体子类实现
-				int topoRst = topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
+				int topoRst = topoBiz(saveid,unitId,ruleMap,connIter->second);
 			
 				// 判断是否直接退出
 				if (topoRst == eRuleExit)
 				{
 					return false;
 				}
-
-			}
-			// 如果不包含刀闸，满足条件二
-			if (!m_hasSwitch)
-			{
-				COM->triggerRule(ruleMap,2);
-			}
-			
-			R_ITERATOR iter1 = ruleMap.find(1);
-			R_ITERATOR iter2 = ruleMap.find(2);
-
-			// 条件一二同时满足时，触发规则
-			if (iter1 == ruleMap.end() && iter2 == ruleMap.end())
-			{
-				return true;
-			}
-			
-			// 如果包含刀闸，进入分支逻辑
-			if (m_hasSwitch)
-			{
-				// 起始条件为客户端断开刀闸，否则直接跳出
-				if (m_optype == 0)
-				{
-					return false;
-				}
-
-				// 如果包含的刀闸为断开，满足条件三
-				if (m_hasSwitchState == 0)
-				{
-					COM->triggerRule(ruleMap,3);
-				}
-
-				//  以条件三中断开刀闸为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含母线，满足条件五；
-				RuleBiz25_1 r;
-				r.setReq(m_req);
-				r.topoByUnit(saveid,m_switchCim,passNodes,ruleMap);
-
 			}
 
-			// 当条件一、条件三、条件四、条件五满足时触发规则。
-			iter2 = ruleMap.find(2);
-			if (ruleMap.size() == 4 && iter2 != ruleMap.end())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
 		}
 
 	}
+	// 判断满足条件1的开关所在的连接点下有没有刀闸
+	if (m_breakList.size() > 0)
+	{
+		PBNS::StateBean breakBean = m_breakList.at(0);
+
+		// 如果不包含刀闸，满足条件二，触发规则
+		if (m_switchList.size() == 0)
+		{
+			return true;
+		}
+
+
+		// 标记是否找打同一连接点下的刀闸
+		int	flag = -1;
+		// 如果包含刀闸，则判断是否与满足条件1的开关在同一个连接点
+		for (int i = 0;i<m_switchList.size();i++)
+		{
+			PBNS::StateBean switchBean = m_switchList.at(i);
+			if (switchBean.stationcim() == breakBean.stationcim())
+			{
+				flag = i;
+				break;
+			}
+		}
+		// 如果没找到，则满足条件二，触发规则
+		if (flag == -1)
+		{
+			return true;
+		}
+		else
+		{
+			PBNS::StateBean sbean = m_switchList.at(flag);
+			// 如果刀闸状态为断开，则满足条件三
+			if (m_optype == 0 && sbean.state() == 0)
+			{
+				COM->triggerRule(ruleMap,3);
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
 
-int RuleBiz25::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
+int RuleBiz25::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string conncim)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
+	
+	// 保存连接点cim
+	bean.set_stationcim(conncim);
 
 	// 1.如果包含开关且闭合，满足条件一，否则直接跳出逻辑。
-	if (bean.unittype() == eSWITCH)
+	if (bean.unittype() == eSWITCH && bean.cimid() != m_opcim)
 	{
-		m_hasSwitch = true;
-		
-		m_hasSwitchState = bean.state();
-		m_switchCim = bean.cimid();
-	}
-	else if (bean.unittype() == eBUS)
-	{
-		m_hasBus = true;
-
-		// 如果结果包含母线，满足条件四
-		COM->triggerRule(ruleMap,4);
+		m_switchList.push_back(bean);
 	}
 	else if (bean.unittype() == eBREAKER)
 	{
@@ -160,6 +143,7 @@ int RuleBiz25::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 		if (bean.state() == 1)
 		{
 			COM->triggerRule(ruleMap,1);
+			m_breakList.push_back(bean);
 		}
 		else
 		{

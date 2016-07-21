@@ -1153,7 +1153,6 @@ bool TopoBizCmd::check12(int saveid,string unitcim,PBNS::OprationMsg_Request req
 
 	// 两个条件
 	ruleMap.insert(RVAL(1,1));
-	ruleMap.insert(RVAL(2,2));
 
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
@@ -1252,12 +1251,11 @@ bool TopoBizCmd::check25(int saveid,string unitcim,int optype,PBNS::OprationMsg_
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 5个条件
+	//3个条件
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
-	ruleMap.insert(RVAL(4,4));
-	ruleMap.insert(RVAL(5,5));
+
 	r.setOptype(optype);
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }

@@ -8,6 +8,13 @@ RuleBiz12::RuleBiz12()
 
 bool RuleBiz12::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
 {
+
+	// 刀闸连接点CIM
+	string sconncim = "";
+
+	// 满足条件的刀闸的所在连接点CIM
+	string bconncim = "";
+
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
 	// 把当前元件加入到已分析列表
@@ -21,6 +28,8 @@ bool RuleBiz12::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 	{
 		STRMAP connMap = connIds.at(j);
 		MAP_ITERATOR connIter = connMap.find("connId");
+		string curconncim = COM->getVal(connMap,"connId");
+
 		if (connIter != connMap.end())
 		{
 			// 判断是否已经查找过的连接点，如果是则跳出，不是则加入
@@ -60,50 +69,62 @@ bool RuleBiz12::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 
 				// 本轮拓扑的业务处理，具体子类实现
 				int topoRst = topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
-				bool ret = false;
-
-				if (topoRst == eRuleRecursion)
-				{
-					// 递归，以该元件为起点进行重新遍历
-					ret = topoByUnit(saveid,unitId,passNodes,ruleMap);
-				}
+	
 				// 判断是否直接退出
-				else if (topoRst == eRuleExit)
+				if (topoRst == eRuleExit)
 				{
 					return false;
 				}
-				// 跳过该连接点下的所有设备
-				else if (topoRst == eRuleBreak)
+				else if (topoRst == eRuleUser)
 				{
-					break;
+					// 记录刀闸的连接点
+					if (sconncim.length() > 0 && sconncim != curconncim )
+					{
+						m_hasSwitch = true;	
+					}
+					else
+					{
+						sconncim = curconncim;
+					}
 				}
-				else if (topoRst == eRuleTriggered)
+				else if (topoRst == eRuleRecursion)
 				{
-					// 规则被触发
-					return true;
+					// 找到满足条件的开关
+					bconncim == curconncim;
 				}
-
-				// 判断是否规则触发
-				if (ruleMap.size() == 0)
-				{
-					return true;
-				}
-				else
-				{
-					return ret;
-				}
-			}
-
-			// 如果集合不包含母线，直接触发规则
 			
-			if (!m_hasBus)
-			{
-				return true;
 			}
 
 		}
 
 	}
+
+	// 触发规则1满足后
+	if (ruleMap.size() == 0)
+	{
+		// 如果集合不包含母线，直接触发规则
+		if (!m_hasBus)
+		{
+			return true;
+		}
+		else
+		{
+			// 如果集合包含母线，判断集合（A）是否包含刀闸且闭合（非起始条件自己），如包含，不违背规则
+			if (m_hasSwitch || bconncim == sconncim)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		// 
+	}
+	
+
+	//	
+
 	return false;
 }
 
@@ -124,7 +145,7 @@ int RuleBiz12::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 			COM->triggerRule(ruleMap,1);
 
 			// 不继续遍历
-			return eRuleTriggered;
+			return eRuleRecursion;
 		}
 	}
 	// 1.如果为刀闸且闭合，继续遍历，断开则终止
@@ -132,24 +153,18 @@ int RuleBiz12::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	{
 		if (bean.state() == 1 && bean.cimid() == m_opcim)
 		{
-			m_hasSwitch = true;
+			return eRuleUser;
 		}
-		return eRuleNotRecursion;
-
+		
 	}
 	else if (bean.unittype() == eBUS)
 	{
-		// 如果集合包含母线，判断集合（A）是否包含刀闸且闭合（非起始条件自己）,如包含，不违背规则，校验通过
-		m_hasBus = true;
-		if (m_hasSwitch)
-		{
-			return eRuleExit;
-		}
-		else
-		{
+			// 如果集合包含母线，判断集合（A）是否包含刀闸且闭合（非起始条件自己）,如包含，不违背规则，校验通过
+			m_hasBus = true;
+
 			// 否则规则被触发。
-			return eRuleTriggered;
-		}
+			return eRuleNotRecursion;
+		
 		
 	}
 	else
