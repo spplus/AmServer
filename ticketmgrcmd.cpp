@@ -158,6 +158,63 @@ void TicketMgrCmd::getTicketList(sClientMsg* msg)
 
 void TicketMgrCmd::createTicket(sClientMsg* msg)
 {
+	PBNS::TicketActMgrMsg_Request req;
+	req.ParseFromArray(msg->data,msg->length);
+
+	string rdsql = req.mgrsql();
+
+	int nret = App_Dba::instance()->execSql(rdsql.c_str());
+
+	int ticketid = 0;
+
+	if (nret > 0)
+	{
+		string sql ;
+		//select ID from tickets t where t.UserId=8 and t.MissionId=4 and t.StartTime='2016-07-17 10:42:26' and t.EndTime='2016-07-17 10:42:26'
+		char *psql = "select ID from tickets t where t.UserId=%d and t.MissionId=%d and t.StartTime='%s' and t.EndTime='%s' ";
+		sql = App_Dba::instance()->formatSql(psql,req.requid(),req.reqmid(),req.startt().c_str(),req.endt().c_str());
+
+		LISTMAP ticketlist;
+		ticketlist = App_Dba::instance()->getList(sql.c_str());
+
+		for (int i=0; i < ticketlist.size(); i++)
+		{
+			STRMAP record = ticketlist.at(i);
+			MAP_ITERATOR iter;
+
+			iter = record.find("ID");
+			if (iter != record.end())
+			{
+				ticketid = ACE_OS::atoi(iter->second.c_str());
+			}
+		}
+
+
+		int nsuccess = 0;
+
+		for (int i=0;i<req.ticketactlist_size();i++)
+		{
+			PBNS::TicketActBean tketactbean = req.ticketactlist(i);
+
+			string sql ;
+			char *psql = "insert into ticket_actions (TicketId,OrderNum,SystemContent,Content) VALUES (%d,%d,'%s','%s');";
+			sql = App_Dba::instance()->formatSql(psql,ticketid,tketactbean.ordernum(),tketactbean.systemcontent().c_str(),tketactbean.content().c_str());
+
+			int nret = App_Dba::instance()->execSql(sql.c_str());
+
+			nsuccess = nret;
+
+		}
+	}
+
+
+	PBNS::TicketActMgrMsg_Response resp;
+	resp.set_rescode(nret);
+
+	// 返回到客户端
+	string data;
+	resp.SerializeToString(&data);
+	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
 
 }
 
