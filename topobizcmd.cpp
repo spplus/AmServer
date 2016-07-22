@@ -516,6 +516,15 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 				// 保存电压等级颜色
 				bean.set_volcolor(COM->getVal(unitMap,"Color"));
 
+				//保存带电状态
+				bean.set_iselectric(1);
+
+				//保存站点cim
+				bean.set_stationcim(COM->getVal(unitMap,"StationCim"));
+
+				//将找到的电源点加入带电集合
+				rsltMap.push_back(bean);
+
 				// 以该设备为起点进行拓扑分析
 				topoByUnitIdMem(bean,passedNodes,rsltMap,req);
 			}
@@ -564,7 +573,7 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 			}
 		}
 	}
-	
+	LOG->debug("返回设备总数量:%d,带电设备数量：%d",res.devstate_size(),rsltMap.size());
 	return res.SerializeAsString();
 
 }
@@ -644,7 +653,16 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 			for (int k = 0;k<unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
-				MAP_ITERATOR unitIter = unitMap.find("id");
+
+				//判断是否为当前站点的元件，不是则跳过
+				MAP_ITERATOR unitIter = unitMap.find("StationId");
+				if (unitIter != unitMap.end())
+				{
+					if(unitIter->second != bean.stationcim())
+						continue;
+				}
+
+				unitIter = unitMap.find("id");
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
@@ -748,6 +766,10 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 				// 过滤不需要进行拓扑的设备
 				if (flag != 1)
 				{
+					// 查询元件站点cim，下一次递归需要用到
+					unitIter = unitMap.find("StationId");
+					cbean.set_stationcim(unitIter->second);
+
 					// 递归，以该元件为起点进行重新遍历
 					topoByUnitIdMem(cbean,passNodes,rsltMap,req);
 				}

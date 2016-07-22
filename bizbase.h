@@ -15,8 +15,18 @@
 class BizBase
 {
 public:
-	void		exec(sClientMsg* msg);
+	BizBase();
 
+	// 执行业务逻辑
+	void		exec(sClientMsg* msg);
+private:
+	// 返回服务器忙碌
+	void		sendBusyBack(sClientMsg* msg);
+
+private:
+	
+	// 是否在处理中
+	bool		m_isBusy;
 };
 
 #endif

@@ -11,9 +11,14 @@
 #include "ticketmsionmgrcmd.h"
 #include "ticketmgrcmd.h"
 
+BizBase::BizBase()
+{
+	m_isBusy = false;
+}
+
 void BizBase::exec(sClientMsg* msg)
 {
-	CmdBase* pbase = 0;
+	CmdBase* pbase = NULL;
 	switch (msg->type)
 	{
 	case CMD_USER_LONGIN:
@@ -71,7 +76,19 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_TOPO_BREAKER_CHANGE:		// 开关变位
 	case CMD_CHECK_PASS:								// 规则校验通过
 	case CMD_TOPO_ENTIRE:							// 整站拓扑
-		pbase = new TopoBizCmd;
+		{
+			if (m_isBusy)
+			{
+				// 返回客户端服务器忙碌，此次不执行
+				sendBusyBack(msg);
+			}
+			else
+			{
+				m_isBusy = true;
+				pbase = new TopoBizCmd;
+			}
+		}
+		
 		break;
 	case CMD_TICKETMS_LIST:
 	case CMD_TICKETMS_MANAGER:
@@ -92,10 +109,17 @@ void BizBase::exec(sClientMsg* msg)
 	default:
 		break;
 	}
-	if (pbase != 0)
+	if (pbase != NULL)
 	{
 		pbase->exec(msg);
 		delete pbase;
 		pbase = NULL;
+		m_isBusy = false;
 	}
+}
+
+void BizBase::sendBusyBack(sClientMsg* msg)
+{
+	string data = "server is busy,wait a moment please.";
+	App_ClientMgr::instance()->sendData(msg->connectId,data,CMD_SERVER_BUSY);
 }
