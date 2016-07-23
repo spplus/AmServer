@@ -10,7 +10,7 @@ void KeepAliveHandler::setClient(TcpClient *client)
 int KeepAliveHandler::handle_timeout(const ACE_Time_Value &current_time,const void * /* = 0 */)
 {
 	LOG->debug("begin reconnect to server");
-
+	
 	if (!m_client->isConnected())
 	{
 		m_client->connect();

@@ -11,6 +11,7 @@
 #include "scadaclientmgr.h"
 #include "dbaccess.h"
 #include "confmgr.h"
+#include "cimtask.h"
 
 int ACE_TMAIN (int, ACE_TCHAR *[]) 
 {

@@ -37,6 +37,9 @@
     <Filter Include="biz\rules">
       <UniqueIdentifier>{8714350b-e3a5-4f97-b5f0-c321f1dfa8fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cim">
+      <UniqueIdentifier>{bc4d4d9e-1335-4ffc-a3aa-b474c1ed3e5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -227,6 +230,9 @@
     </ClCompile>
     <ClCompile Include="ticketmgrcmd.cpp">
       <Filter>biz</Filter>
+    </ClCompile>
+    <ClCompile Include="cimtask.cpp">
+      <Filter>cim</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -427,6 +433,9 @@
     </ClInclude>
     <ClInclude Include="ticketmgrcmd.h">
       <Filter>biz</Filter>
+    </ClInclude>
+    <ClInclude Include="cimtask.h">
+      <Filter>cim</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

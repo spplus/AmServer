@@ -56,6 +56,15 @@ const short		FRAME_TAG_END = 	0x88;
 // 数据库配置根KEY
 #define		DB_ROOT			"DB"
 
+// CIM文件配置KEY
+#define		CIM_ROOT						"CIM"
+#define		CIM_NAME						"CIMNAME"
+#define		CIM_FTPPATH					"FTPPATH"
+#define		CIM_WORKPATH				"WORKPATH"
+#define		CIM_CHECKHOUR			"CHECKHOUR"
+
+// CIM文件默认检查时间
+#define		CIM_DEFAULT_CHECKHOUR		23
 
 // 日志文件名称
 #define		LOGNAME "AmServer"

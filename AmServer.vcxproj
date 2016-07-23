@@ -71,6 +71,7 @@
     <ClCompile Include="..\common\buff\msgbean.pb.cc" />
     <ClCompile Include="..\common\buff\msgbody.pb.cc" />
     <ClCompile Include="bizbase.cpp" />
+    <ClCompile Include="cimtask.cpp" />
     <ClCompile Include="clienthandler.cpp" />
     <ClCompile Include="clientmgr.cpp" />
     <ClCompile Include="comutils.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="..\common\buff\msgbody.pb.h" />
     <ClInclude Include="..\common\include\commands.h" />
     <ClInclude Include="bizbase.h" />
+    <ClInclude Include="cimtask.h" />
     <ClInclude Include="clienthandler.h" />
     <ClInclude Include="clientmgr.h" />
     <ClInclude Include="cmdbase.h" />
