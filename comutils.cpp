@@ -1,4 +1,5 @@
 #include "comutils.h"
+#include "ace/Date_Time.h"
 
 int	ComUtils::str2i(string val)
 {
@@ -39,4 +40,15 @@ void ComUtils::triggerRule(RMAP &ruleMap,int rid)
 	{
 		ruleMap.erase(iter);
 	}
+}
+
+string ComUtils::getCurTime()
+{
+	ACE_Date_Time tvTime(ACE_OS::gettimeofday());   
+	ACE_DEBUG((LM_DEBUG,ACE_TEXT("%d:%d:%d:%d:%d:%d:%d\n"),tvTime.year(),tvTime.month(),tvTime.day(),   
+		tvTime.hour(),tvTime.minute(),tvTime.second(),tvTime.microsec()));   
+	char date[24];
+	sprintf(date,"%d-%d-%d %d:%d:%d",tvTime.year(),tvTime.month(),tvTime.day(),tvTime.hour(),tvTime.minute(),tvTime.second());
+
+	return string(date);
 }

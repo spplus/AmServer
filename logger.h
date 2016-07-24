@@ -50,7 +50,7 @@ using namespace std;
 #define HP_LOG_MAX_FILESIZE (32*1024*1024)			/*最大日志文件大小32M*/
 
 #define HP_LOG_GRP_ID			96469
-#define HP_LOG_INPUT_SIZE		(200*1024)			/*单个日志最大字节数*/
+#define HP_LOG_INPUT_SIZE		(400*1024)			/*单个日志最大字节数*/
 #define HP_LOG_SEND_HIGHT_MARK	(1024*1024)			/*日志队列满负荷能力*/
 
 /*配置参数定义*/

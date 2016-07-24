@@ -65,6 +65,23 @@ void LoginCmd::exec(sClientMsg* msg)
 
 	}
 
+	// 如果登陆成功，则坚持是否有CIM文件需要更新
+	if (usersatelist.size() > 0)
+	{
+		char *psql = "select count(*) as count from system_config where isnew=1";
+		LISTMAP countList = DBA->getList(psql);
+		if (countList.size() > 0)
+		{
+			STRMAP countMap = countList.at(0);
+			int count = COM->getIval(countMap,"count");
+			if (count > 0)
+			{
+				rep.set_rescode(2);
+			}
+		}
+	}
+	
+
 	// 返回到客户端
 	string data;
 	rep.SerializeToString(&data);

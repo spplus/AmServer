@@ -58,10 +58,11 @@ const short		FRAME_TAG_END = 	0x88;
 
 // CIM文件配置KEY
 #define		CIM_ROOT						"CIM"
-#define		CIM_NAME						"CIMNAME"
-#define		CIM_FTPPATH					"FTPPATH"
-#define		CIM_WORKPATH				"WORKPATH"
-#define		CIM_CHECKHOUR			"CHECKHOUR"
+#define		CIM_NAME						"CimName"
+#define		CIM_FTPPATH					"FtpPath"
+#define		CIM_WORKPATH				"WorkPath"
+#define		CIM_CHECKHOUR			"CheckHour"
+#define		CIM_PRODUCTID			"ProductId"
 
 // CIM文件默认检查时间
 #define		CIM_DEFAULT_CHECKHOUR		23

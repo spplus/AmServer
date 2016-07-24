@@ -2,6 +2,7 @@
 #include "confmgr.h"
 #include "defines.h"
 #include "comutils.h"
+#include "dbaccess.h"
 #include "ace/Time_Value.h"
 #include "ace/Date_Time.h"
 
@@ -56,7 +57,7 @@ int CimTask::svc()
 			if(checkFile())
 			{
 				// 需要更新CIM，更新数据库字段未待导库
-				// 。。。
+				updateIsNew();
 			}
 
 			m_lastCheckDate = curdate;
@@ -163,4 +164,19 @@ bool CimTask::needUpdate(const char* destpath,const char* srcpath)
 	{
 		return false;
 	}
+}
+
+void CimTask::updateIsNew()
+{
+	char* psql = "insert into system_config(isNew,CreateTime)values(1,now())";
+
+	if(DBA->execSql(psql) == 1)
+	{
+		LOG->message("新增CIM更新标志成功");
+	}
+	else
+	{
+		LOG->warn("新增CIM更新标志失败");
+	}
+
 }

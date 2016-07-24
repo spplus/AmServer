@@ -30,6 +30,7 @@ protected:
 	int		svc();
 	int		getHour();
 	string	getCurDate();
+	void		updateIsNew();
 	bool		needUpdate(const char* destpath,const char* srcpath);
 private:
 	//  «∑Ò∆Ù∂Ø

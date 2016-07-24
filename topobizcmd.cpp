@@ -1,4 +1,6 @@
 #include "topobizcmd.h"
+#include "confmgr.h"
+#include "cimloader.h"
 #include "rulebiz1.h"
 #include "rulebiz4.h"
 #include "rulebiz5.h"
@@ -94,8 +96,46 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 
 }
 
+void TopoBizCmd::loadCim()
+{
+	// 判断是否有更新
+	char *psql = "select id, count(*) as count from system_config where isnew=1";
+	LISTMAP countList = DBA->getList(psql);
+	if (countList.size() > 0)
+	{
+		STRMAP countMap = countList.at(0);
+		int count = COM->getIval(countMap,"count");
+		if (count > 0)
+		{
+			int factype = COM->str2i(App_Config::instance()->getValue(CIM_ROOT,CIM_PRODUCTID));
+			CimLoader cloader;
+			string cimname = App_Config::instance()->getValue(CIM_ROOT,CIM_WORKPATH);
+			cimname += "/";
+			cimname +=  App_Config::instance()->getValue(CIM_ROOT,CIM_NAME);
+			
+			// 如果导库成功，则更新系统标志位0
+			if(cloader.Load(cimname,factype) == 0)
+			{
+				psql = "update system_config set IsNew=0,ModifyTime=now() where id=%d";
+				string sql = DBA->formatSql(psql,COM->getIval(countMap,"id"));
+				if (DBA->execSql(sql.c_str()) <=0 )
+				{
+					LOG->warn("更新CIM文件变更标志失败");
+				}
+				else
+				{
+					LOG->message("更新CIM文件变更标志成功");
+				}
+			}
+		}
+	}
+}
+
 void TopoBizCmd::topoEntire(sClientMsg *msg)
 {
+
+	// 导CIM
+	loadCim();
 
 	// 检查状态表有没有ispower等于2的记录，如果没有说明尚未导入cim数据，则不执行拓扑分析
 	int count = 0;

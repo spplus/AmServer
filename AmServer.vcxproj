@@ -71,6 +71,7 @@
     <ClCompile Include="..\common\buff\msgbean.pb.cc" />
     <ClCompile Include="..\common\buff\msgbody.pb.cc" />
     <ClCompile Include="bizbase.cpp" />
+    <ClCompile Include="cimloader.cpp" />
     <ClCompile Include="cimtask.cpp" />
     <ClCompile Include="clienthandler.cpp" />
     <ClCompile Include="clientmgr.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="packetparser.cpp" />
     <ClCompile Include="clientmsgservice.cpp" />
+    <ClCompile Include="parsexml.cpp" />
     <ClCompile Include="querymgrcmd.cpp" />
     <ClCompile Include="recvTask.cpp" />
     <ClCompile Include="rulebiz1.cpp" />
@@ -138,6 +140,7 @@
     <ClInclude Include="..\common\buff\msgbody.pb.h" />
     <ClInclude Include="..\common\include\commands.h" />
     <ClInclude Include="bizbase.h" />
+    <ClInclude Include="cimloader.h" />
     <ClInclude Include="cimtask.h" />
     <ClInclude Include="clienthandler.h" />
     <ClInclude Include="clientmgr.h" />
@@ -152,7 +155,12 @@
     <ClInclude Include="logincmd.h" />
     <ClInclude Include="packetparser.h" />
     <ClInclude Include="clientmsgservice.h" />
+    <ClInclude Include="parsexml.h" />
     <ClInclude Include="querymgrcmd.h" />
+    <ClInclude Include="rapidxml.hpp" />
+    <ClInclude Include="rapidxml_iterators.hpp" />
+    <ClInclude Include="rapidxml_print.hpp" />
+    <ClInclude Include="rapidxml_utils.hpp" />
     <ClInclude Include="recvTask.h" />
     <ClInclude Include="rulebiz1.h" />
     <ClInclude Include="rulebiz12.h" />

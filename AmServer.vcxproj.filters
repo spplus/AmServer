@@ -234,6 +234,12 @@
     <ClCompile Include="cimtask.cpp">
       <Filter>cim</Filter>
     </ClCompile>
+    <ClCompile Include="cimloader.cpp">
+      <Filter>cim</Filter>
+    </ClCompile>
+    <ClCompile Include="parsexml.cpp">
+      <Filter>cim</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -435,6 +441,24 @@
       <Filter>biz</Filter>
     </ClInclude>
     <ClInclude Include="cimtask.h">
+      <Filter>cim</Filter>
+    </ClInclude>
+    <ClInclude Include="cimloader.h">
+      <Filter>cim</Filter>
+    </ClInclude>
+    <ClInclude Include="parsexml.h">
+      <Filter>cim</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml_print.hpp">
+      <Filter>cim</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml.hpp">
+      <Filter>cim</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml_iterators.hpp">
+      <Filter>cim</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml_utils.hpp">
       <Filter>cim</Filter>
     </ClInclude>
   </ItemGroup>

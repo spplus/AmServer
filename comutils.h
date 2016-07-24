@@ -24,7 +24,7 @@ public:
 	string	getVal(STRMAP &smap,string key);
 	int		getIval(STRMAP &smap,string key);
 	void		triggerRule(RMAP &ruleMap,int rid);
-
+	string	getCurTime();
 };
 
 

@@ -18,6 +18,9 @@ public:
 	void			topoBySaveId(string saveid,int unittype=eGENERATOR);
 private:
 
+	// CIMÈë¿â
+	void		loadCim();
+
 	// ÕûÕ¾ÍØÆË
 	void		topoEntire(sClientMsg *msg);
 
