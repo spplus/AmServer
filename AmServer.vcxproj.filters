@@ -455,9 +455,6 @@
     <ClInclude Include="rapidxml.hpp">
       <Filter>cim</Filter>
     </ClInclude>
-    <ClInclude Include="rapidxml_iterators.hpp">
-      <Filter>cim</Filter>
-    </ClInclude>
     <ClInclude Include="rapidxml_utils.hpp">
       <Filter>cim</Filter>
     </ClInclude>

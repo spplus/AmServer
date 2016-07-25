@@ -9,7 +9,7 @@
 
 #ifndef __DEFINETAG_H__
 #define __DEFINETAG_H__
-
+#include <string>
 //配置文件路径. 
 //#define INIPATHNAME "cimin.ini"
 ////日志名称和路径配置.
