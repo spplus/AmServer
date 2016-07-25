@@ -11,7 +11,7 @@
 
 #include <string>
 #include "ace/Task.h"
-
+#include "ace/Singleton.h"
 
 using namespace std;
 
@@ -51,6 +51,7 @@ private:
 	// ÎÄ¼þÃû³Æ
 	string		m_cimName;
 };
+typedef ACE_Singleton<CimTask, ACE_Recursive_Thread_Mutex> App_CIMTask;
 
 
 #endif

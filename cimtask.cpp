@@ -3,6 +3,7 @@
 #include "defines.h"
 #include "comutils.h"
 #include "dbaccess.h"
+#include "defines.h"
 #include "ace/Time_Value.h"
 #include "ace/Date_Time.h"
 
@@ -39,6 +40,8 @@ void CimTask::start()
 	}
 
 	activate();
+
+	LOG->message("Cim Task start.");
 }
 
 void CimTask::stop()
@@ -70,8 +73,7 @@ int CimTask::svc()
 string CimTask::getCurDate()
 {
 	ACE_Date_Time tvTime(ACE_OS::gettimeofday());   
-	ACE_DEBUG((LM_DEBUG,ACE_TEXT("%d:%d:%d:%d:%d:%d:%d\n"),tvTime.year(),tvTime.month(),tvTime.day(),   
-		tvTime.hour(),tvTime.minute(),tvTime.second(),tvTime.microsec()));   
+	 
 	char date[24];
 	sprintf(date,"%d-%d-%d",tvTime.year(),tvTime.month(),tvTime.day());
 
@@ -81,8 +83,6 @@ string CimTask::getCurDate()
 int CimTask::getHour()
 {
 	ACE_Date_Time tvTime(ACE_OS::gettimeofday());   
-	ACE_DEBUG((LM_DEBUG,ACE_TEXT("%d:%d:%d:%d:%d:%d:%d\n"),tvTime.year(),tvTime.month(),tvTime.day(),   
-		tvTime.hour(),tvTime.minute(),tvTime.second(),tvTime.microsec()));   
 	return tvTime.hour();
 }
 

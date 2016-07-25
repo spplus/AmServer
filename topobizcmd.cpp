@@ -1196,8 +1196,6 @@ bool TopoBizCmd::check5(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
-	ruleMap.insert(RVAL(4,4));
-	ruleMap.insert(RVAL(5,5));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 

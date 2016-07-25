@@ -62,6 +62,12 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 				// 本次查询的元件CIMID
 				unitId = unitIter->second;
 
+				// 判断是否是本次操作的设备，如果是，则跳过
+				if (unitcim == unitId)
+				{
+					continue;
+				}
+
 				// 本轮拓扑的业务处理，具体子类实现
 				int topoRst = topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
 				bool ret = false;

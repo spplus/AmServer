@@ -28,7 +28,8 @@ int ACE_TMAIN (int, ACE_TCHAR *[])
 		LOG->error("加载服务器配置失败，服务器自动退出.");
 		return 0;
 	}
-
+	// 启动CIM 入库检查线程
+	App_CIMTask::instance()->start();
 
 	// 启动服务器
 	App_TcpServer::instance()->init();

@@ -8,9 +8,9 @@ RuleBiz38_1::RuleBiz38_1()
 int RuleBiz38_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
-	if (bean.unittype() == eGROUNDSWITCH)
+	if (bean.unittype() == eSWITCH)
 	{
-		// 如果结果元件为地刀（无论闭合断开），继续遍历地刀另一侧的连接点
+		// 如果结果元件为刀闸（无论闭合断开），继续遍历刀闸另一侧的连接点
 		m_flag = true;
 		return 1;
 	}
