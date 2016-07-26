@@ -31,6 +31,9 @@ int ACE_TMAIN (int, ACE_TCHAR *[])
 	// 启动CIM 入库检查线程
 	App_CIMTask::instance()->start();
 
+	// 初始化数据库连接
+	App_Dba::instance()->init();
+
 	// 启动服务器
 	App_TcpServer::instance()->init();
 	App_TcpServer::instance()->start();
@@ -38,10 +41,6 @@ int ACE_TMAIN (int, ACE_TCHAR *[])
 	// 启动客户端连接
 	App_ScadaClient::instance()->init();
 	App_ScadaClient::instance()->start();
-
-
-	// 初始化数据库连接
-	App_Dba::instance()->init();
 
 	// 启动事件循环
 	ACE_Reactor::instance()->run_reactor_event_loop();
