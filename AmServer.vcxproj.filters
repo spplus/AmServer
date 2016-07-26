@@ -40,6 +40,9 @@
     <Filter Include="cim">
       <UniqueIdentifier>{bc4d4d9e-1335-4ffc-a3aa-b474c1ed3e5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="protocol">
+      <UniqueIdentifier>{91aa7477-495b-4fcd-99e4-30f4b99124d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="parsexml.cpp">
       <Filter>cim</Filter>
+    </ClCompile>
+    <ClCompile Include="protocolmgr.cpp">
+      <Filter>protocol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +463,12 @@
     </ClInclude>
     <ClInclude Include="rapidxml_utils.hpp">
       <Filter>cim</Filter>
+    </ClInclude>
+    <ClInclude Include="protocolmgr.h">
+      <Filter>protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="protocolstruct.h">
+      <Filter>protocol</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,6 +2,9 @@
 #include "scadahandler.h"
 #include "logger.h"
 
+#include "scadaclientmgr.h"
+
+
 ScadaHandler::ScadaHandler()
 {
 	m_isConnected = false;
@@ -44,6 +47,104 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 		App_Logger::instance()->error("fd == ACE_INVALID_HANDLE.");
 		return -1;
 	}
+
+	char buff[HEADLEN_LEN];
+	int len = peer().recv(buff,HEADLEN_LEN,&nowait);
+	if (len <= 0)
+	{
+		return -1;
+	}
+	if (len != HEADLEN_LEN)
+	{
+		LOG->error("Invalid packet head length:%d.",len);
+		return 0;
+	}
+
+	//取第一个字节内容所有帧首字节为：0x68
+	int nhead = 0;
+	ACE_OS::memcpy(&nhead,buff,FIRST_LEN);
+	if (nhead != HEAD_TAG)
+	{
+		LOG->error("Invalid packet head :%x.",nhead);
+		return 0;
+	}
+	
+	//取第二个字节内容，所有帧第二个字节表示帧的数据长度(不是帧长度，帧长度=帧头+帧长度字节+数据帧长度)
+	int plen = 0;
+	ACE_OS::memcpy(&plen,buff+FIRST_LEN,SECOND_LEN);
+	//数据帧长度用一个字节表示的，最大长度为0xFF，数据帧最小长度为4
+	if (plen > DATAFRAME_MAX_LEN || plen < DATAFRAME_MIN_LEN)
+	{
+		LOG->error("Invalid packet data length:%d.",plen);
+		return 0;
+	}
+	
+	// 接收包体内容
+	ACE_Message_Block* mb = new ACE_Message_Block(plen);
+
+	// 总接收长度
+	int total = 0;
+
+	// 继续读取包体内容
+	int dlen = peer().recv(mb->wr_ptr(),plen,&nowait);
+	if (dlen <= 0)
+	{
+		mb->release();
+		return -1;
+	}
+	total = dlen;
+	mb->wr_ptr(dlen);
+
+	// 如果短读，则继续读取。
+	while(total < plen)
+	{
+		dlen = peer().recv(mb->wr_ptr(),plen-total,&nowait);
+		if (dlen<=0)
+		{
+			mb->release();
+			return -1;
+		}
+		mb->wr_ptr(dlen);
+		total += dlen;
+	}
+
+	// 接收完整包，投递到数据处理队列
+	if (total == plen)
+	{
+		//string msg = ShowMsg(mb->rd_ptr(),mb->length());
+		LOG->debug("Recive data length:%d",mb->length());
+		LOG->debug("Recive data :%s",mb->rd_ptr());
+		ACE_OS::printf("%s\n",mb->rd_ptr());
+		if (m_recvTask->putq(mb) == -1)
+		{
+			App_Logger::instance()->error("Put queue error.");
+		}
+
+		/*
+		char *data = mb->rd_ptr();
+		// 消息标识头
+		unsigned char type;
+		unsigned char end;
+		int pos = 0;
+		ACE_OS::memcpy(&type,data+pos,1);
+		//
+		if (plen == 4 && type == 0x0B)
+		{
+			App_ScadaClient::instance()->startProTimer();
+		}*/
+		
+
+	}
+	else
+	{
+		mb->release();
+		// 接收包长度错误
+		LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
+	}
+
+/*
+
+	
 	char buff[FRAME_HEAD_LEN];
 	int len = peer().recv(buff,FRAME_HEAD_LEN,&nowait);
 	if (len <= 0)
@@ -111,7 +212,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 		mb->release();
 		// 接收包长度错误
 		LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
-	}
+	}*/
 	return 0;
 }
 

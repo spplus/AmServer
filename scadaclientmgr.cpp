@@ -7,6 +7,13 @@ void ScadaClientMgr::init()
 	int port = ACE_OS::atoi(App_Config::instance()->getValue(SERVER_ROOT,"ScadaPort").c_str());
 	string addr = App_Config::instance()->getValue(SERVER_ROOT,"ScadaAddr");
 
+	//加载总召唤发送命令周期
+	int	nAllCall =  ACE_OS::atoi(App_Config::instance()->getValue(SERVER_ROOT,"MAllCall").c_str());
+
+	//总召唤RTU地址
+	int nrtu = ACE_OS::atoi(App_Config::instance()->getValue(SERVER_ROOT,"RtuAddr").c_str());
+	unsigned short nRtuaddr = nrtu;
+
 	m_svrAddr.set(port,addr.c_str());
 
 	// 创建消息接收任务
@@ -16,12 +23,25 @@ void ScadaClientMgr::init()
 	// 定时器处理器
 	m_kpHandler.setClient(&m_tcpClient);
 
+	//总召唤发送命令定时器
+	m_proMgr.setClient(&m_tcpClient);
+
+	//设置总召唤RTU地址
+	m_proMgr.setRtuAddr(nRtuaddr);
+
+	//设置定时周期
+	m_proMgr.setCallAll(nAllCall);
+
+	//初始化数据库中数据取数据
+	m_proMgr.initDBCimid();
+
 }
 
 void ScadaClientMgr::start()
 {
 	m_rTask->start();
-	m_tcpClient.connect(m_svrAddr);
+    m_tcpClient.connect(m_svrAddr);
+
 }
 
 void ScadaClientMgr::close()
@@ -54,3 +74,28 @@ void ScadaClientMgr::stopTimer()
 {
 	ACE_Reactor::instance()->cancel_timer(&m_kpHandler);
 }
+
+
+void ScadaClientMgr::sendUFrame()
+{
+	m_proMgr.sendUFrame();
+}
+
+void ScadaClientMgr::parseDataFrame(char *data,int datalength)
+{
+	m_proMgr.parseDataFrame(data,datalength);
+}
+
+void ScadaClientMgr::startProTimer()
+{
+	m_proMgr.startITimer();
+}
+
+
+void ScadaClientMgr::stopProTimer()
+{
+	m_proMgr.stopITimer();
+}
+
+
+

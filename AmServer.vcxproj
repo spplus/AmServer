@@ -86,6 +86,7 @@
     <ClCompile Include="packetparser.cpp" />
     <ClCompile Include="clientmsgservice.cpp" />
     <ClCompile Include="parsexml.cpp" />
+    <ClCompile Include="protocolmgr.cpp" />
     <ClCompile Include="querymgrcmd.cpp" />
     <ClCompile Include="recvTask.cpp" />
     <ClCompile Include="rulebiz1.cpp" />
@@ -156,6 +157,8 @@
     <ClInclude Include="packetparser.h" />
     <ClInclude Include="clientmsgservice.h" />
     <ClInclude Include="parsexml.h" />
+    <ClInclude Include="protocolmgr.h" />
+    <ClInclude Include="protocolstruct.h" />
     <ClInclude Include="querymgrcmd.h" />
     <ClInclude Include="rapidxml.hpp" />
     <ClInclude Include="rapidxml_print.hpp" />

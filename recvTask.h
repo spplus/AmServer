@@ -26,10 +26,10 @@ private:
 	void	ParseData(ACE_Message_Block* mb);
 
 private:
-	
 	BizBase			m_biz;
 	bool			m_stop;
 	PacketParser	m_pack;
+
 };
 
 

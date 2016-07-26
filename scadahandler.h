@@ -10,6 +10,7 @@
 #include "ace/Reactor_Notification_Strategy.h"
 #include "defines.h"
 #include "recvTask.h"
+#include "protocolstruct.h"
 
 using namespace std;
 

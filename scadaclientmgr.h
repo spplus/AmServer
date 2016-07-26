@@ -15,7 +15,9 @@
 #include "scadahandler.h"
 #include "recvTask.h"
 #include "keepAliveHandler.h"
+#include "protocolmgr.h"
 #include "tcpClient.h"
+
 
 class ScadaClientMgr
 {
@@ -35,10 +37,20 @@ public:
 	void	startTimer();
 	void	stopTimer();
 
+	//发送总召唤定时器启动、停止
+	void	startProTimer();
+	void	stopProTimer();
+
+	//发送U帧
+	void	sendUFrame();
+	//数据区数据解析
+	void	parseDataFrame(char *data,int datalength);
+
 private:
 	RecvTask*			m_rTask;
 	TcpClient			m_tcpClient;
 	KeepAliveHandler	m_kpHandler;
+	ProtocolMgr			m_proMgr;
 	ACE_INET_Addr		m_svrAddr;
 };
 typedef ACE_Singleton<ScadaClientMgr, ACE_Recursive_Thread_Mutex>  App_ScadaClient;
