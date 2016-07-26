@@ -85,7 +85,7 @@ void ProtocolMgr::sendUFrame()
 	ACE_OS::memcpy(mb->wr_ptr(),uBuffer,SHORFRAME_LEN);
 	mb->wr_ptr(SHORFRAME_LEN);
 
-	Sleep(1000);
+	ACE_OS::sleep(1);
 
 	m_client->send(mb);
 
