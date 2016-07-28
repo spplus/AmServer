@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-		DESC:		¶¨Òå±êÇ©µÈ³£Á¿.
+		DESC:		å®šä¹‰æ ‡ç­¾ç­‰å¸¸é‡.
 		DATE:		2016-06-04
 		AUTHOR:		ABELSKY
 */
@@ -10,13 +10,13 @@
 #ifndef __DEFINETAG_H__
 #define __DEFINETAG_H__
 #include <string>
-//ÅäÖÃÎÄ¼şÂ·¾¶. 
+//é…ç½®æ–‡ä»¶è·¯å¾„. 
 //#define INIPATHNAME "cimin.ini"
-////ÈÕÖ¾Ãû³ÆºÍÂ·¾¶ÅäÖÃ.
+////æ—¥å¿—åç§°å’Œè·¯å¾„é…ç½®.
 //#define LOGPATH		"LOGPATH" 
 //#define LOGNAME		"logname"
 //#define LOGPATHNAME "logpath"
-////Êı¾İ¿âÁ¬½ÓÅäÖÃ.
+////æ•°æ®åº“è¿æ¥é…ç½®.
 //#define DBINFO		"DBINFO" 
 //#define DBADDR		"DBAddr"
 //#define DBPORT		"DBPort"
@@ -24,17 +24,17 @@
 //#define USERPWD		"UserPwd"
 //#define DBNAME		"DBName"
 
-//¶¨Òå·µ»ØÖµ
+//å®šä¹‰è¿”å›å€¼
 #define RC_FAILURE      -1
 #define RC_SUCCESS		0
 
-//¶¨ÒåÖ§³Ö½âÎöCIMÎÄ¼ş³§¼Ò:Ä¿Ç°Ö»Ö§³ÖÄÏÈğ¡¢¿Æ¶«¡¢¶«·½µç×Ó¡¢»ı³Éµç×ÓËÄÖÖÀàĞÍ
+//å®šä¹‰æ”¯æŒè§£æCIMæ–‡ä»¶å‚å®¶:ç›®å‰åªæ”¯æŒå—ç‘ã€ç§‘ä¸œã€ä¸œæ–¹ç”µå­ã€ç§¯æˆç”µå­å››ç§ç±»å‹
 #define FACNARI			1
 #define FACKEDONG		2
 #define FACDONGFANG		3
 #define FACJICHENGDZ	4
 
-//¶¨Òå±äÑ¹Æ÷Èı²ã¸ßÖĞµÍ
+//å®šä¹‰å˜å‹å™¨ä¸‰å±‚é«˜ä¸­ä½
 #define PRIMARY			1
 #define	SECONDARY		2
 #define	TERTIARY		3
@@ -43,11 +43,11 @@
 #define STR_SECONDARY			"secondary"
 #define STR_TERTIARY			"tertiary"
 
-// ¶¨ÒåÉè±¸ÀàĞÍ
+// å®šä¹‰è®¾å¤‡ç±»å‹
 enum eUnitType{eBreaker,eSwitch,eBus,eCapacitor,eLoad,eGenerator,ePt,eCT,eTransformer,eLine,eGrdSwitch};
 
-/************************************±êÇ©¶¨Òå***********************************************/
-//¶¨Òå¹«¹²±êÇ©
+/************************************æ ‡ç­¾å®šä¹‰***********************************************/
+//å®šä¹‰å…¬å…±æ ‡ç­¾
 #define RDFID						"rdf:ID"
 #define RDFRESOURCE					"rdf:resource"
 
@@ -55,61 +55,61 @@ enum eUnitType{eBreaker,eSwitch,eBus,eCapacitor,eLoad,eGenerator,ePt,eCT,eTransf
 #define CIM_NAMING_ALSNAME			"cim:Naming.aliasName"
 #define CIM_NAMING_DESCRIPTION		"cim:Naming.description"
 
-//¶¨Òå»ù´¡µçÑ¹ÀàĞÍ±êÇ©
+//å®šä¹‰åŸºç¡€ç”µå‹ç±»å‹æ ‡ç­¾
 #define CIM_BVOL					"cim:BaseVoltage"
 #define CIM_NARI_BVOL_NAME			"cimNARI:BaseVoltage.name"
 #define CIM_BVOL_NALVOL				"cim:BaseVoltage.nominalVoltage"
 #define CIM_IES_BVOL_NAME			"cimIESLAB:BaseVoltage.name"
 
-//¶¨Òå³§Õ¾±êÇ©
+//å®šä¹‰å‚ç«™æ ‡ç­¾
 #define CIM_SUBSTATION				"cim:Substation"
 #define CIM_NARI_SUBSTATION_BVOL	"cimNARI:Substation.MaxBaseVoltage"
 
-//¶¨ÒåµçÑ¹µÈ¼¶±êÇ©
+//å®šä¹‰ç”µå‹ç­‰çº§æ ‡ç­¾
 #define CIM_VOLEVEL					"cim:VoltageLevel"
 #define CIM_VOLEVEL_STATION			"cim:VoltageLevel.MemberOf_Substation"
 #define CIM_VOLEVEL_BVOL			"cim:VoltageLevel.BaseVoltage"
 
-//¶¨Òå¼ä¸ô±êÇ©
+//å®šä¹‰é—´éš”æ ‡ç­¾
 #define CIM_BAY						"cim:Bay"
 #define CIM_BAY_MOF_VOLEVEL			"cim:Bay.MemberOf_VoltageLevel"
 #define CIM_BAY_MOF_STATION			"cim:Bay.MemberOf_Substation"
 
-//¶¨Òå¿ª¹Ø±êÇ©
+//å®šä¹‰å¼€å…³æ ‡ç­¾
 #define CIM_BREAKER					"cim:Breaker"
 #define CIM_CONDTEQPMENT_BVAL		"cim:ConductingEquipment.BaseVoltage"
 #define CIM_EQPMENT_MOF_QPTCONT		"cim:Equipment.MemberOf_EquipmentContainer"
 
-//¶¨Òåµ¶Õ¢±êÇ©
+//å®šä¹‰åˆ€é—¸æ ‡ç­¾
 #define CIM_DISCTOR					"cim:Disconnector"
-//¶¨Òå½ÓµØµ¶Õ¢±êÇ©
+//å®šä¹‰æ¥åœ°åˆ€é—¸æ ‡ç­¾
 #define CIM_GRD_DISCTOR				"cim:GroundDisconnector"
 
-//¶¨ÒåÄ¸Ïß±êÇ©
+//å®šä¹‰æ¯çº¿æ ‡ç­¾
 #define CIM_BUS						"cim:BusbarSection"
 
-//¶¨ÒåµçÈİÆ÷±êÇ©
+//å®šä¹‰ç”µå®¹å™¨æ ‡ç­¾
 #define CIM_COMPENSATOR				"cim:Compensator"
 
-//¶¨Òå¸ººÉ±êÇ©
+//å®šä¹‰è´Ÿè·æ ‡ç­¾
 #define CIM_ENERGY_CONSUMER			"cim:EnergyConsumer"
 
-//¶¨Òå·¢µç»ú±êÇ©
+//å®šä¹‰å‘ç”µæœºæ ‡ç­¾
 #define CIM_SYNC_HRUS_MACHINE		"cim:SynchronousMachine"
 
-//¶¨ÒåµçÑ¹»¥¸ĞÆ÷±êÇ©
+//å®šä¹‰ç”µå‹äº’æ„Ÿå™¨æ ‡ç­¾
 #define CIM_PT						"cim:PotentialTransformer"
 
-//¶¨Òå±äÑ¹Æ÷±êÇ©
+//å®šä¹‰å˜å‹å™¨æ ‡ç­¾
 #define CIM_POWER_TRANSFMER			"cim:PowerTransformer"
 
-//¶¨Òå±äÑ¹Æ÷ÈÆ×é±êÇ©
+//å®šä¹‰å˜å‹å™¨ç»•ç»„æ ‡ç­¾
 #define CIM_TRANSFMER_WINDING		"cim:TransformerWinding"
 #define CIM_TRANSFMER_WINDING_TYPE	"cim:TransformerWinding.windingType"
 #define CIM_TRANSFW_MOF_POWERTF		"cim:TransformerWinding.MemberOf_PowerTransformer"
 
 
-//¶¨ÒåÏßÂ·±êÇ©
+//å®šä¹‰çº¿è·¯æ ‡ç­¾
 #define CIM_ACLINESGT				"cim:ACLineSegment"
 #define CIM_NARI_ACLINSGT_ST		"cimNARI:ACLineSegment.StartST"
 #define CIM_NARI_ACLINSGT_END		"cimNARI:ACLineSegment.EndST"
@@ -118,17 +118,17 @@ enum eUnitType{eBreaker,eSwitch,eBus,eCapacitor,eLoad,eGenerator,ePt,eCT,eTransf
 #define CIM_ACLINSGT_TO				"cim:ACLineSegment.FromSubstation"
 #define CIM_CDEQMENT_TERMINALS		"cim:ConductingEquipment.Terminals"
 
-//¶¨Òå¶ËµãĞÅÏ¢
+//å®šä¹‰ç«¯ç‚¹ä¿¡æ¯
 #define CIM_TERMINAL				"cim:Terminal"
 #define CIM_TERMINAL_CONDEQMENT		"cim:Terminal.ConductingEquipment"
 #define CIM_TERMINAL_CONDNODE		"cim:Terminal.ConnectivityNode"
 
-//¶¨ÒåÁ¬½Óµã
+//å®šä¹‰è¿æ¥ç‚¹
 #define CIM_CONNECT_NODE			 "cim:ConnectivityNode"
 #define CIM_CONNECT_NODE_MOFEQMNET	 "cim:ConnectivityNode.MemberOf_EquipmentContainer"
 
-/************************************½á¹¹Ìå¶¨Òå***********************************************/
-//µçÑ¹»ù´¡ĞÅÏ¢
+/************************************ç»“æ„ä½“å®šä¹‰***********************************************/
+//ç”µå‹åŸºç¡€ä¿¡æ¯
 struct BaseVoltage
 {
 	std::string bvcimid;
@@ -137,7 +137,7 @@ struct BaseVoltage
 
 };
 
-//µçÑ¹µÈ¼¶ĞÅÏ¢
+//ç”µå‹ç­‰çº§ä¿¡æ¯
 struct VoltageLevel
 {
 	std::string vlcimid;
@@ -146,7 +146,7 @@ struct VoltageLevel
 	std::string bvcimid;
 };
 
-//Õ¾µãĞÅÏ¢
+//ç«™ç‚¹ä¿¡æ¯
 struct Substation
 {
 	std::string faccimid;
@@ -154,7 +154,7 @@ struct Substation
 	std::string faccrname;
 };
 
-//¼ä¸ôĞÅÏ¢
+//é—´éš”ä¿¡æ¯
 struct Bay
 {
 	std::string baycimid;
@@ -162,7 +162,7 @@ struct Bay
 	std::string faccimid;
 };
 
-//¶ËµãĞÅÏ¢
+//ç«¯ç‚¹ä¿¡æ¯
 struct Terminal
 {
 	std::string tmlcimid;
@@ -171,7 +171,7 @@ struct Terminal
 	std::string nodecimid;
 };
 
-//Á¬½ÓµãĞÅÏ¢
+//è¿æ¥ç‚¹ä¿¡æ¯
 struct ConnectivityNode
 {
 	std::string nodecimid;
@@ -181,7 +181,7 @@ struct ConnectivityNode
 	std::string faccimid;
 };
 
-//¶ÏÂ·Æ÷ĞÅÏ¢
+//æ–­è·¯å™¨ä¿¡æ¯
 struct Breaker
 {
 	std::string brkcimid;
@@ -191,7 +191,7 @@ struct Breaker
 };
 
 
-//µ¶Õ¢ĞÅÏ¢
+//åˆ€é—¸ä¿¡æ¯
 struct Disconnector
 {
 	std::string distcimid;
@@ -201,7 +201,7 @@ struct Disconnector
 };
 
 
-//½ÓµØµ¶Õ¢Æ÷ĞÅÏ¢
+//æ¥åœ°åˆ€é—¸å™¨ä¿¡æ¯
 struct GroundDisconnector
 {
 	std::string gdistcimid;
@@ -210,7 +210,7 @@ struct GroundDisconnector
 	std::string bvcimid;
 };
 
-//Ä¸ÏßĞÅÏ¢
+//æ¯çº¿ä¿¡æ¯
 struct BusbarSection
 {
 	std::string buscimid;
@@ -219,7 +219,7 @@ struct BusbarSection
 	std::string bvcimid;
 };
 
-//µçÈİÆ÷ĞÅÏ¢
+//ç”µå®¹å™¨ä¿¡æ¯
 struct Compensator
 {
 	std::string cptorcimid;
@@ -228,7 +228,7 @@ struct Compensator
 	std::string bvcimid;
 };
 
-//¸ººÉĞÅÏ¢
+//è´Ÿè·ä¿¡æ¯
 struct EnergyConsumer
 {
 	std::string eyccimid;
@@ -237,7 +237,7 @@ struct EnergyConsumer
 	std::string bvcimid;
 };
 
-//Ë®Æ½·¢µç»úĞÅÏ¢
+//æ°´å¹³å‘ç”µæœºä¿¡æ¯
 struct SynchronousMachine
 {
 	std::string symhcimid;
@@ -246,7 +246,7 @@ struct SynchronousMachine
 	std::string bvcimid;
 };
 
-//µçÑ¹»¥¸ĞÆ÷ĞÅÏ¢
+//ç”µå‹äº’æ„Ÿå™¨ä¿¡æ¯
 struct PT
 {
 	std::string ptcimid;
@@ -256,7 +256,7 @@ struct PT
 };
 
 
-//±äÑ¹Æ÷ĞÅÏ¢
+//å˜å‹å™¨ä¿¡æ¯
 struct PowerTransformer
 {
 	std::string ptfcimid;
@@ -264,7 +264,7 @@ struct PowerTransformer
 	std::string faccimid;
 };
 
-//±äÑ¹Æ÷ĞÅÏ¢
+//å˜å‹å™¨ä¿¡æ¯
 struct PowerTransformer_Units
 {
 	std::string ptfcimid;
@@ -273,7 +273,7 @@ struct PowerTransformer_Units
 	std::string bvcimid;
 };
 
-//±äÑ¹Æ÷ÈÆ×éĞÅÏ¢
+//å˜å‹å™¨ç»•ç»„ä¿¡æ¯
 struct TransformerWinding
 {
 	std::string tfwcimid;
@@ -284,7 +284,7 @@ struct TransformerWinding
 	std::string ptfcimid;
 };
 
-//±äÑ¹Æ÷ÈÆ×éĞÅÏ¢
+//å˜å‹å™¨ç»•ç»„ä¿¡æ¯
 struct TransformerWinding_Units
 {
 	std::string tfwcimid;
@@ -295,7 +295,7 @@ struct TransformerWinding_Units
 };
 
 
-//½»Á÷Ïß¶ÎĞÅÏ¢
+//äº¤æµçº¿æ®µä¿¡æ¯
 struct ACLineSegment
 {
 	std::string aclcimid;
@@ -306,7 +306,7 @@ struct ACLineSegment
 };
 
 
-//¶ËµãĞÅÏ¢
+//ç«¯ç‚¹ä¿¡æ¯
 struct TerminalRelation
 {
 	std::string tmlcimid;
@@ -318,7 +318,7 @@ struct TerminalRelation
 
 };
 
-/************************************map¶¨Òå***********************************************/
+/************************************mapå®šä¹‰***********************************************/
 typedef std::map<std::string,BaseVoltage>		MAPBVOL;
 
 typedef std::map<std::string,VoltageLevel>		MAPVOLEVEL;

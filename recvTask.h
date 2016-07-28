@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef __RECVTASK_H__
 #define __RECVTASK_H__
 #include "ace/Task.h"
@@ -8,21 +8,21 @@
 class RecvTask	:public ACE_Task<ACE_MT_SYNCH>
 {
 public:
-	// ¹¹Ôìº¯Êı
+	// æ„é€ å‡½æ•°
 	RecvTask();
 	~RecvTask();
 
-	// Æô¶¯Ïß³Ì
+	// å¯åŠ¨çº¿ç¨‹
 	void	start();
 
-	// ¹Ø±ÕÏß³Ì
+	// å…³é—­çº¿ç¨‹
 	void	close();
 
-	// Ïß³ÌÈë¿Ú
+	// çº¿ç¨‹å…¥å£
 	int		svc();
 
 private:
-	// ½âÎöÊı¾İ
+	// è§£ææ•°æ®
 	void	ParseData(ACE_Message_Block* mb);
 
 private:

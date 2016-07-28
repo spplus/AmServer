@@ -1,10 +1,10 @@
-#include "rulebiz18.h"
+ï»¿#include "rulebiz18.h"
 
 int RuleBiz18::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// 1.ÈçÓĞÔª¼ş´øµç£¬Âú×ãÌõ¼ş
+	// 1.å¦‚æœ‰å…ƒä»¶å¸¦ç”µï¼Œæ»¡è¶³æ¡ä»¶
 	if (bean.iselectric() == 1)
 	{
 		COM->triggerRule(ruleMap,1);
@@ -12,7 +12,7 @@ int RuleBiz18::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 
 	}
 	
-	// ÅĞ¶ÏÌõ¼şÊÇ·ñÈ«²¿´¥·¢£¬Èç¹ûÊÇÔò·µ»Ø£¬¹æÔò´¥·¢
+	// åˆ¤æ–­æ¡ä»¶æ˜¯å¦å…¨éƒ¨è§¦å‘ï¼Œå¦‚æœæ˜¯åˆ™è¿”å›ï¼Œè§„åˆ™è§¦å‘
 	if (ruleMap.size()>0)
 	{
 		return 1;

@@ -1,4 +1,4 @@
-#include "rulebiz5-2.h"
+ï»¿#include "rulebiz5-2.h"
 
 int RuleBiz5_2::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */)
 {
@@ -6,15 +6,15 @@ int RuleBiz5_2::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationci
 
 	if (bean.unittype() == eSWITCH)
 	{
-		// Èç¹ûÎªµ¶Õ¢£¬ÇÒµ¶Õ¢Îª±ÕºÏ£¬Âú×ãÌõ¼şÎå
+		// å¦‚æœä¸ºåˆ€é—¸ï¼Œä¸”åˆ€é—¸ä¸ºé—­åˆï¼Œæ»¡è¶³æ¡ä»¶äº”
 		COM->triggerRule(ruleMap,5);
 
-		// Í£Ö¹¼ÌĞøÍØÆË
+		// åœæ­¢ç»§ç»­æ‹“æ‰‘
 		return 0;
 	}
 	else
 	{
-		// ¼ÌĞøµİ¹éÍØÆË
+		// ç»§ç»­é€’å½’æ‹“æ‰‘
 		return 1;
 	}
 }

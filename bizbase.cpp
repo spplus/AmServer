@@ -1,4 +1,4 @@
-#include "bizbase.h"
+﻿#include "bizbase.h"
 #include "cmdbase.h"
 #include "include/commands.h"
 #include "logincmd.h"
@@ -22,7 +22,7 @@ void BizBase::exec(sClientMsg* msg)
 	switch (msg->type)
 	{
 	case CMD_USER_LONGIN:
-		// ������¼ҵ��������
+		// 创建登录业务处理命令
 		pbase = new LoginCmd;
 		break;
 	case CMD_USER_MANAGER:
@@ -31,7 +31,7 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_USER_DEL:
 	case CMD_USER_MODIFY:
 	case CMD_PWD_MODIFY:
-		//��Ӧ�û������漰���û��б�����ɫ�����ӡ�ɾ�����޸�ҵ��������
+		//对应用户管理涉及的用户列表、角色、增加、删除、修改业务处理命令
 		pbase = new UserMgrListCmd;
 		break;
 	case CMD_RULE_LIST:
@@ -42,7 +42,7 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_STATION_RULE_MANAGER:
 	case CMD_STATION_RULE_MGR:
 	case CMD_COM_RULE_LIST:
-		//��Ӧ��������漰�Ĺ����б������ӡ�ɾ�����޸�ҵ��������
+		//对应规则管理涉及的规则列表、增加、删除、修改业务处理命令
 		pbase = new RuleMgrCmd;
 		break;
 	case CMD_QUERY_CIRCLE_LIST:
@@ -50,7 +50,7 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_QUERY_GSWITCH_LIST:
 	case CMD_QUERY_MSET_LIST:
 	case CMD_QUERY_EVENT_LIST:
-		//��Ӧ��·�����ơ��ӵء��˹��������¼���ѯ��������
+		//对应环路、挂牌、接地、人工置数、事件查询处理命令
 		pbase = new QueryMgrCmd;
 		break;
 	case CMD_STATION_TYPE_ADD:
@@ -59,7 +59,7 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_STATION_TYPE_LIST:
 	case CMD_STATION_LIST:
 	case CMD_STATION_MANAGER:
-		//��Ӧ��վ�ͳ�վ���͹����漰�ĳ�վվ���޸����ã���վ�������ӡ��޸�ҵ��������
+		//对应厂站和厂站类型管理涉及的厂站站点修改配置，厂站类型增加、修改业务处理命令
 		pbase = new StationMgrcmd;
 		break;
 	case CMD_DEV_STATE:
@@ -73,13 +73,13 @@ void BizBase::exec(sClientMsg* msg)
 		pbase = new DevStateCmd;
 		break;
 
-	case CMD_TOPO_BREAKER_CHANGE:		// ���ر�λ
-	case CMD_CHECK_PASS:								// ����У��ͨ��
-	case CMD_TOPO_ENTIRE:							// ��վ����
+	case CMD_TOPO_BREAKER_CHANGE:		// 开关变位
+	case CMD_CHECK_PASS:								// 规则校验通过
+	case CMD_TOPO_ENTIRE:							// 整站拓扑
 		{
 			if (m_isBusy)
 			{
-				// ���ؿͻ��˷�����æµ���˴β�ִ��
+				// 返回客户端服务器忙碌，此次不执行
 				sendBusyBack(msg);
 			}
 			else
@@ -96,14 +96,14 @@ void BizBase::exec(sClientMsg* msg)
 	case CMD_TICKETMS_DEL:
 	case CMD_TICKETMS_MODIFY:
 	case CMD_ROLE_USER_LIST:
-		//��Ӧ����Ʊ��������漰���û��б�����ɫ�����ӡ�ɾ�����޸�ҵ��������
+		//对应操作票任务管理涉及的用户列表、角色、增加、删除、修改业务处理命令
 		pbase = new TicketMsionMgrCmd;
 		break;
 	case CMD_TICKET_LIST:
 	case CMD_TICKET_CREATE:
 	case CMD_TICKET_QUERY:
 	case CMD_TICKET_COMMIT:
-		//��Ӧ����Ʊ�����漰���б����ύ����ѯҵ��������
+		//对应操作票管理涉及的列表、提交、查询业务处理命令
 		pbase = new TicketMgrCmd;
 		break;
 	default:

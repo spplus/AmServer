@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-		DESC:	Ôì³ÉÉè±¸Í£µç.
+		DESC:	é€ æˆè®¾å¤‡åœç”µ.
 		DATE:	2016-07-02
 		AUTHOR:	YUANLS
 */
@@ -20,16 +20,16 @@ private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */);
 
 private:
-	// °üº¬µÄµ¶Õ¢ÊıÁ¿
+	// åŒ…å«çš„åˆ€é—¸æ•°é‡
 	int				m_switchCount;
 
-	// µ¶Õ¢×´Ì¬
+	// åˆ€é—¸çŠ¶æ€
 	bool				m_switchState;
 
 	// next cim
 	string			m_unitCim;
 
-	// µ¶Õ¢ÁĞ±í
+	// åˆ€é—¸åˆ—è¡¨
 	vector<string>	m_switchList;
 };
 

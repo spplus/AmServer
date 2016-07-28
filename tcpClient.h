@@ -1,4 +1,4 @@
-#ifndef __MYTCPCLIENT__H__
+﻿#ifndef __MYTCPCLIENT__H__
 #define __MYTCPCLIENT__H__
 
 #include "ace/Connector.h"

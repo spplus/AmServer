@@ -1,10 +1,10 @@
-#include "rulebiz21-1.h"
+ï»¿#include "rulebiz21-1.h"
 
 int RuleBiz21_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// 1.Èç¹û½á¹ûÔª¼ş°üº¬µ¶Õ¢ÇÒ¶Ï¿ª£¬Âú×ãÌõ¼ş¶ş¡£
+	// 1.å¦‚æœç»“æœå…ƒä»¶åŒ…å«åˆ€é—¸ä¸”æ–­å¼€ï¼Œæ»¡è¶³æ¡ä»¶äºŒã€‚
 	if (bean.unittype() == eSWITCH )
 	{
 	
@@ -14,6 +14,6 @@ int RuleBiz21_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationc
 		}
 	}
 
-	// ²»½øĞĞµİ¹é±éÀú£¬±¾´Î±éÀú½áÊøºóÍË³ö
+	// ä¸è¿›è¡Œé€’å½’éå†ï¼Œæœ¬æ¬¡éå†ç»“æŸåé€€å‡º
 	return 0;
 }

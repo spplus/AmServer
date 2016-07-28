@@ -1,4 +1,4 @@
-#ifndef __TCPSERVERMGR_H__
+ï»¿#ifndef __TCPSERVERMGR_H__
 #define __TCPSERVERMGR_H__
 
 #include "ace/Acceptor.h"
@@ -13,13 +13,13 @@ class TcpServerMgr
 {
 public:
 
-	// ¼ÓÔØÅäÖÃÎÄ¼ş
+	// åŠ è½½é…ç½®æ–‡ä»¶
 	void		init();
 
-	// Æô¶¯·şÎñ¼àÌı
+	// å¯åŠ¨æœåŠ¡ç›‘å¬
 	bool		start();
 
-	// ¹Ø±Õ·şÎñ¼àÌı
+	// å…³é—­æœåŠ¡ç›‘å¬
 	void		stop();
 
 private:

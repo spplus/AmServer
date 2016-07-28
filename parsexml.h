@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-		DESC:		½âÎöxmlÎÄ¼şÄÚÈİ.
+		DESC:		è§£æxmlæ–‡ä»¶å†…å®¹.
 		DATE:		2016-06-04
 		AUTHOR:		ABELSKY
 */
@@ -25,8 +25,8 @@ public:
 	ParseXML(void);
 	~ParseXML(void);
 
-	void	loadXML(std::string filename,int factype);							//¼ÓÔØCIMÎÄ¼ş
-	MAPBVOL			getBaseVoltage(){return mapBaseVol;}								//»ñÈ¡»ù´¡µçÑ¹map
+	void	loadXML(std::string filename,int factype);							//åŠ è½½CIMæ–‡ä»¶
+	MAPBVOL			getBaseVoltage(){return mapBaseVol;}								//è·å–åŸºç¡€ç”µå‹map
 	MAPVOLEVEL		getVollevel(){return mapVollevel;}
 	MAPSUBSTATION	getSubstation(){return mapSubstation;}
 	MAPTML			getTerminal(){return mapTerminal;}
@@ -48,56 +48,56 @@ public:
 
 
 private:
-	int		parseBaseVoltages(xml_node<>* parnode,int factype);					//±éÀú½âÎö»ù´¡µçÑ¹
-	int		parseSubStation(xml_node<>* parnode,int factype);					//±éÀú½âÎö³§Õ¾
-	int		parseVoltagLevel(xml_node<>* parnode,int factype);					//±éÀúµçÑ¹µÈ¼¶
-	int		parseBay(xml_node<>* parnode,int factype);							//±éÀú¼ä¸ôĞÅÏ¢
-	int		parseTerminal(xml_node<>* parnode,int factype);						//±éÀú½âÎö¶ËµãĞÅÏ¢
-	int		parseConnectivityNode(xml_node<>* parnode,int factype);				//±éÀú½âÎöÁ¬½ÓµãĞÅÏ¢
-	int		parseBreaker(xml_node<>* parnode,int factype);						//±éÀú½âÎö¶ÏÂ·Æ÷
-	int		parseDisconnector(xml_node<>* parnode,int factype);					//±éÀú½âÎöµ¶Õ¢ĞÅÏ¢
-	int		parseGrdDisconnector(xml_node<>* parnode,int factype);				//±éÀú½âÎö½ÓµØµ¶Õ¢ĞÅÏ¢
-	int		parseBusbarSection(xml_node<>* parnode,int factype);				//±éÀú½âÎöÄ¸ÏßĞÅÏ¢
-	int		parseCompensator(xml_node<>* parnode,int factype);					//±éÀú½âÎöµçÈİÆ÷ĞÅÏ¢
-	int		parseEnergyConsumer(xml_node<>* parnode,int factype);				//±éÀú½âÎö¸ººÉĞÅÏ¢
-	int		parseSynchronousMachine(xml_node<>* parnode,int factype);			//±éÀú½âÎö·¢µç»úĞÅÏ¢
-	int		parsePotentialTransformer(xml_node<>* parnode,int factype);			//±éÀú½âÎöµçÑ¹»¥¸ĞÆ÷ĞÅÏ¢
-	int		parsePowerTransformer(xml_node<>* parnode,int factype);				//±éÀú½âÎö±äÑ¹Æ÷ĞÅÏ¢
-	int		parseTransformerWinding(xml_node<>* parnode,int factype);			//±éÀú½âÎö±äÑ¹Æ÷ÈÆ×éĞÅÏ¢
-	int		parseACLineSegment(xml_node<>* parnode,int factype);				//±éÀú½âÎöÏßÂ·ĞÅÏ¢
+	int		parseBaseVoltages(xml_node<>* parnode,int factype);					//éå†è§£æåŸºç¡€ç”µå‹
+	int		parseSubStation(xml_node<>* parnode,int factype);					//éå†è§£æå‚ç«™
+	int		parseVoltagLevel(xml_node<>* parnode,int factype);					//éå†ç”µå‹ç­‰çº§
+	int		parseBay(xml_node<>* parnode,int factype);							//éå†é—´éš”ä¿¡æ¯
+	int		parseTerminal(xml_node<>* parnode,int factype);						//éå†è§£æç«¯ç‚¹ä¿¡æ¯
+	int		parseConnectivityNode(xml_node<>* parnode,int factype);				//éå†è§£æè¿æ¥ç‚¹ä¿¡æ¯
+	int		parseBreaker(xml_node<>* parnode,int factype);						//éå†è§£ææ–­è·¯å™¨
+	int		parseDisconnector(xml_node<>* parnode,int factype);					//éå†è§£æåˆ€é—¸ä¿¡æ¯
+	int		parseGrdDisconnector(xml_node<>* parnode,int factype);				//éå†è§£ææ¥åœ°åˆ€é—¸ä¿¡æ¯
+	int		parseBusbarSection(xml_node<>* parnode,int factype);				//éå†è§£ææ¯çº¿ä¿¡æ¯
+	int		parseCompensator(xml_node<>* parnode,int factype);					//éå†è§£æç”µå®¹å™¨ä¿¡æ¯
+	int		parseEnergyConsumer(xml_node<>* parnode,int factype);				//éå†è§£æè´Ÿè·ä¿¡æ¯
+	int		parseSynchronousMachine(xml_node<>* parnode,int factype);			//éå†è§£æå‘ç”µæœºä¿¡æ¯
+	int		parsePotentialTransformer(xml_node<>* parnode,int factype);			//éå†è§£æç”µå‹äº’æ„Ÿå™¨ä¿¡æ¯
+	int		parsePowerTransformer(xml_node<>* parnode,int factype);				//éå†è§£æå˜å‹å™¨ä¿¡æ¯
+	int		parseTransformerWinding(xml_node<>* parnode,int factype);			//éå†è§£æå˜å‹å™¨ç»•ç»„ä¿¡æ¯
+	int		parseACLineSegment(xml_node<>* parnode,int factype);				//éå†è§£æçº¿è·¯ä¿¡æ¯
 
-	int		dealPowerTransformer();												//´¦Àí±äÑ¹Æ÷ĞÅÏ¢
-	int		dealTransformerWinding();											//´¦Àí±äÑ¹Æ÷ÈÆ×éĞÅÏ¢
-	int		dealTerminalRelation();												//´¦Àí¶Ëµã¹ØÁª¹ØÏµ±í
+	int		dealPowerTransformer();												//å¤„ç†å˜å‹å™¨ä¿¡æ¯
+	int		dealTransformerWinding();											//å¤„ç†å˜å‹å™¨ç»•ç»„ä¿¡æ¯
+	int		dealTerminalRelation();												//å¤„ç†ç«¯ç‚¹å…³è”å…³ç³»è¡¨
 
 
 private:
-	MAPBVOL				mapBaseVol;					//±£´æ»ù´¡µçÑ¹ĞÅÏ¢
-	MAPVOLEVEL			mapVollevel;				//±£´æµçÑ¹µÈ¼¶ĞÅÏ¢
-	MAPSUBSTATION		mapSubstation;				//±£´æ³§Õ¾ĞÅÏ¢
+	MAPBVOL				mapBaseVol;					//ä¿å­˜åŸºç¡€ç”µå‹ä¿¡æ¯
+	MAPVOLEVEL			mapVollevel;				//ä¿å­˜ç”µå‹ç­‰çº§ä¿¡æ¯
+	MAPSUBSTATION		mapSubstation;				//ä¿å­˜å‚ç«™ä¿¡æ¯
 
-	MAPBAY				mapBay;						//±£´æ¼ä¸ôĞÅÏ¢
-	MAPTML				mapTerminal;				//±£´æ¶ËµãĞÅÏ¢
-	MAPCNODE			mapConnectivityNode;		//±£´æÁ¬½ÓµãĞÅÏ¢
+	MAPBAY				mapBay;						//ä¿å­˜é—´éš”ä¿¡æ¯
+	MAPTML				mapTerminal;				//ä¿å­˜ç«¯ç‚¹ä¿¡æ¯
+	MAPCNODE			mapConnectivityNode;		//ä¿å­˜è¿æ¥ç‚¹ä¿¡æ¯
 
-	MAPBREAKER			mapBreaker;					//±£´æ¶ÏÂ·Æ÷¿ª¹ØĞÅÏ¢
-	MAPDISCTOR			mapDisconnector;			//±£´æµ¶Õ¢ĞÅÏ¢
-	MAPGRDDISCTOR		mapGroundDisconnector;		//±£´æ½ÓµØµ¶Õ¢ĞÅÏ¢
-	MAPBUS				mapBusbarSection;			//±£´æÄ¸ÏßĞÅÏ¢
-	MAPCOMPTOR			mapCompensator;				//±£´æµçÈİÆ÷ĞÅÏ¢
-	MAPEYCONMER			mapEnergyConsumer;			//±£´æ¸ººÉĞÅÏ¢
-	MAPSYNCMCHINE		mapSynchronousMachine;		//±£´æ·¢µç»úĞÅÏ¢
-	MAPPT				mapPT;						//±£´æµçÑ¹»¥¸ĞÆ÷ĞÅÏ¢
+	MAPBREAKER			mapBreaker;					//ä¿å­˜æ–­è·¯å™¨å¼€å…³ä¿¡æ¯
+	MAPDISCTOR			mapDisconnector;			//ä¿å­˜åˆ€é—¸ä¿¡æ¯
+	MAPGRDDISCTOR		mapGroundDisconnector;		//ä¿å­˜æ¥åœ°åˆ€é—¸ä¿¡æ¯
+	MAPBUS				mapBusbarSection;			//ä¿å­˜æ¯çº¿ä¿¡æ¯
+	MAPCOMPTOR			mapCompensator;				//ä¿å­˜ç”µå®¹å™¨ä¿¡æ¯
+	MAPEYCONMER			mapEnergyConsumer;			//ä¿å­˜è´Ÿè·ä¿¡æ¯
+	MAPSYNCMCHINE		mapSynchronousMachine;		//ä¿å­˜å‘ç”µæœºä¿¡æ¯
+	MAPPT				mapPT;						//ä¿å­˜ç”µå‹äº’æ„Ÿå™¨ä¿¡æ¯
 
-	MAPPOWERTF			mapPowerTransformer;		//±£´æ±äÑ¹Æ÷ĞÅÏ¢
-	MAPTRANSFW			mapTransformerWinding;		//±£´æ±äÑ¹Æ÷ÈÆ×éĞÅÏ¢
+	MAPPOWERTF			mapPowerTransformer;		//ä¿å­˜å˜å‹å™¨ä¿¡æ¯
+	MAPTRANSFW			mapTransformerWinding;		//ä¿å­˜å˜å‹å™¨ç»•ç»„ä¿¡æ¯
 
-	MAPPOWERTFUT		mapPowerTransformerUnt;		//±£´æ±äÑ¹Æ÷´æ´¢µ½Ôª¼ş±íÖĞµÄĞÅÏ¢
-	MAPTRANSFWUT		mapTransformerWindingUnt;	//±£´æ±äÑ¹Æ÷ÈÆ×éĞÅÏ¢¶ÔÓ¦±äÑ¹Æ÷ÏßÈ¦ĞÅÏ¢±í
+	MAPPOWERTFUT		mapPowerTransformerUnt;		//ä¿å­˜å˜å‹å™¨å­˜å‚¨åˆ°å…ƒä»¶è¡¨ä¸­çš„ä¿¡æ¯
+	MAPTRANSFWUT		mapTransformerWindingUnt;	//ä¿å­˜å˜å‹å™¨ç»•ç»„ä¿¡æ¯å¯¹åº”å˜å‹å™¨çº¿åœˆä¿¡æ¯è¡¨
 
-	MAPACLINE			mapACLineSegment;			//±£´æ½ø³öÏßĞÅÏ¢
+	MAPACLINE			mapACLineSegment;			//ä¿å­˜è¿›å‡ºçº¿ä¿¡æ¯
 
-	MAPTMLRAL			mapTerminalRelation;		//±£´æ¶ËµãÁ¬½Ó¹ØÏµĞÅÏ¢
+	MAPTMLRAL			mapTerminalRelation;		//ä¿å­˜ç«¯ç‚¹è¿æ¥å…³ç³»ä¿¡æ¯
 
 };
 #endif // __PARSEXML_H__

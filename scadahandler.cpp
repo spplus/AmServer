@@ -1,4 +1,4 @@
-
+ï»¿
 #include "scadahandler.h"
 #include "logger.h"
 
@@ -25,7 +25,7 @@ int ScadaHandler::open(void*p)
 	}
 	ACE_INET_Addr svraddr;
 
-	//»ñµÃÔ¶³ÌÁ´½ÓµØÖ·ºÍ¶Ë¿Ú
+	//èŽ·å¾—è¿œç¨‹é“¾æŽ¥åœ°å€å’Œç«¯å£
 	if(this->peer().get_remote_addr(svraddr) == -1)
 	{
 		LOG->error("this->peer().get_remote_addr error.");
@@ -60,7 +60,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 		return 0;
 	}
 
-	//È¡µÚÒ»¸ö×Ö½ÚÄÚÈÝËùÓÐÖ¡Ê××Ö½ÚÎª£º0x68
+	//å–ç¬¬ä¸€ä¸ªå­—èŠ‚å†…å®¹æ‰€æœ‰å¸§é¦–å­—èŠ‚ä¸ºï¼š0x68
 	int nhead = 0;
 	ACE_OS::memcpy(&nhead,buff,FIRST_LEN);
 	if (nhead != HEAD_TAG)
@@ -69,23 +69,23 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 		return 0;
 	}
 	
-	//È¡µÚ¶þ¸ö×Ö½ÚÄÚÈÝ£¬ËùÓÐÖ¡µÚ¶þ¸ö×Ö½Ú±íÊ¾Ö¡µÄÊý¾Ý³¤¶È(²»ÊÇÖ¡³¤¶È£¬Ö¡³¤¶È=Ö¡Í·+Ö¡³¤¶È×Ö½Ú+Êý¾ÝÖ¡³¤¶È)
+	//å–ç¬¬äºŒä¸ªå­—èŠ‚å†…å®¹ï¼Œæ‰€æœ‰å¸§ç¬¬äºŒä¸ªå­—èŠ‚è¡¨ç¤ºå¸§çš„æ•°æ®é•¿åº¦(ä¸æ˜¯å¸§é•¿åº¦ï¼Œå¸§é•¿åº¦=å¸§å¤´+å¸§é•¿åº¦å­—èŠ‚+æ•°æ®å¸§é•¿åº¦)
 	int plen = 0;
 	ACE_OS::memcpy(&plen,buff+FIRST_LEN,SECOND_LEN);
-	//Êý¾ÝÖ¡³¤¶ÈÓÃÒ»¸ö×Ö½Ú±íÊ¾µÄ£¬×î´ó³¤¶ÈÎª0xFF£¬Êý¾ÝÖ¡×îÐ¡³¤¶ÈÎª4
+	//æ•°æ®å¸§é•¿åº¦ç”¨ä¸€ä¸ªå­—èŠ‚è¡¨ç¤ºçš„ï¼Œæœ€å¤§é•¿åº¦ä¸º0xFFï¼Œæ•°æ®å¸§æœ€å°é•¿åº¦ä¸º4
 	if (plen > DATAFRAME_MAX_LEN || plen < DATAFRAME_MIN_LEN)
 	{
 		LOG->error("Invalid packet data length:%d.",plen);
 		return 0;
 	}
 	
-	// ½ÓÊÕ°üÌåÄÚÈÝ
+	// æŽ¥æ”¶åŒ…ä½“å†…å®¹
 	ACE_Message_Block* mb = new ACE_Message_Block(plen);
 
-	// ×Ü½ÓÊÕ³¤¶È
+	// æ€»æŽ¥æ”¶é•¿åº¦
 	int total = 0;
 
-	// ¼ÌÐø¶ÁÈ¡°üÌåÄÚÈÝ
+	// ç»§ç»­è¯»å–åŒ…ä½“å†…å®¹
 	int dlen = peer().recv(mb->wr_ptr(),plen,&nowait);
 	if (dlen <= 0)
 	{
@@ -95,7 +95,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 	total = dlen;
 	mb->wr_ptr(dlen);
 
-	// Èç¹û¶Ì¶Á£¬Ôò¼ÌÐø¶ÁÈ¡¡£
+	// å¦‚æžœçŸ­è¯»ï¼Œåˆ™ç»§ç»­è¯»å–ã€‚
 	while(total < plen)
 	{
 		dlen = peer().recv(mb->wr_ptr(),plen-total,&nowait);
@@ -108,7 +108,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 		total += dlen;
 	}
 
-	// ½ÓÊÕÍêÕû°ü£¬Í¶µÝµ½Êý¾Ý´¦Àí¶ÓÁÐ
+	// æŽ¥æ”¶å®Œæ•´åŒ…ï¼ŒæŠ•é€’åˆ°æ•°æ®å¤„ç†é˜Ÿåˆ—
 	if (total == plen)
 	{
 		//string msg = ShowMsg(mb->rd_ptr(),mb->length());
@@ -122,7 +122,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 
 		/*
 		char *data = mb->rd_ptr();
-		// ÏûÏ¢±êÊ¶Í·
+		// æ¶ˆæ¯æ ‡è¯†å¤´
 		unsigned char type;
 		unsigned char end;
 		int pos = 0;
@@ -138,7 +138,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 	else
 	{
 		mb->release();
-		// ½ÓÊÕ°ü³¤¶È´íÎó
+		// æŽ¥æ”¶åŒ…é•¿åº¦é”™è¯¯
 		LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
 	}
 
@@ -157,23 +157,23 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 		return 0;
 	}
 
-	// ½âÎö³öÊý¾Ý°ü³¤¶È
+	// è§£æžå‡ºæ•°æ®åŒ…é•¿åº¦
 	int plen = 0;
 	ACE_OS::memcpy(&plen,buff,FRAME_HEAD_LEN);
 	
-	// ÅÐ¶ÏÊý¾Ý°ü³¤¶ÈÊÇ·ñ·Ç·¨
+	// åˆ¤æ–­æ•°æ®åŒ…é•¿åº¦æ˜¯å¦éžæ³•
 	if (plen > MAX_PACKET_LEN || plen <0)
 	{
 		LOG->error("Invalid packet length:%d.",plen);
 		return 0;
 	}
-	// ½ÓÊÕ°üÌåÄÚÈÝ
+	// æŽ¥æ”¶åŒ…ä½“å†…å®¹
 	ACE_Message_Block* mb = new ACE_Message_Block(plen);
 
-	// ×Ü½ÓÊÕ³¤¶È
+	// æ€»æŽ¥æ”¶é•¿åº¦
 	int total = 0;
 
-	// ¼ÌÐø¶ÁÈ¡°üÌåÄÚÈÝ
+	// ç»§ç»­è¯»å–åŒ…ä½“å†…å®¹
 	int dlen = peer().recv(mb->wr_ptr(),plen,&nowait);
 	if (dlen <= 0)
 	{
@@ -183,7 +183,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 	total = dlen;
 	mb->wr_ptr(dlen);
 
-	// Èç¹û¶Ì¶Á£¬Ôò¼ÌÐø¶ÁÈ¡¡£
+	// å¦‚æžœçŸ­è¯»ï¼Œåˆ™ç»§ç»­è¯»å–ã€‚
 	while(total < plen)
 	{
 		dlen = peer().recv(mb->wr_ptr(),plen-total,&nowait);
@@ -196,7 +196,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 		total += dlen;
 	}
 
-	// ½ÓÊÕÍêÕû°ü£¬Í¶µÝµ½Êý¾Ý´¦Àí¶ÓÁÐ
+	// æŽ¥æ”¶å®Œæ•´åŒ…ï¼ŒæŠ•é€’åˆ°æ•°æ®å¤„ç†é˜Ÿåˆ—
 	if (total == plen)
 	{
 		//string msg = ShowMsg(mb->rd_ptr(),mb->length());
@@ -210,7 +210,7 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 	else
 	{
 		mb->release();
-		// ½ÓÊÕ°ü³¤¶È´íÎó
+		// æŽ¥æ”¶åŒ…é•¿åº¦é”™è¯¯
 		LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
 	}*/
 	return 0;
@@ -233,10 +233,10 @@ int ScadaHandler::handle_close(ACE_HANDLE h, ACE_Reactor_Mask mask)
 		m_isConnected = false;
 		connectionNotification(SYS_MSG_CLOSED);
 
-		// ÊÍ·Å¶ÓÁÐ×ÊÔ´
+		// é‡Šæ”¾é˜Ÿåˆ—èµ„æº
 		this->wait();
 
-		// ¹Ø±ÕÁ´Â·
+		// å…³é—­é“¾è·¯
 		this->peer().close_reader();
 		this->peer().close_writer();
 		this->peer().close();
@@ -272,11 +272,11 @@ bool ScadaHandler::sendData(ACE_Message_Block* pmblk)
 		pmblk->release();
 		return false;
 	}
-	//·¢ËÍÊý¾ÝµÄ×Ü³¤¶È
+	//å‘é€æ•°æ®çš„æ€»é•¿åº¦
 	int nSendLen = (int)pmblk->length();   
 	int nIsSendSize = 0;
 
-	//Ñ­»··¢ËÍ£¬Ö±µ½Êý¾Ý·¢ËÍÍê³É¡£
+	//å¾ªçŽ¯å‘é€ï¼Œç›´åˆ°æ•°æ®å‘é€å®Œæˆã€‚
 	while(nIsSendSize < nSendLen)
 	{
 		if(nSendLen <= 0)
@@ -292,7 +292,7 @@ bool ScadaHandler::sendData(ACE_Message_Block* pmblk)
 		{
 			if(nErr == EWOULDBLOCK)
 			{
-				//Èç¹û·¢ËÍ¶ÂÈû£¬ÔòµÈ10ºÁÃëºóÔÙ·¢ËÍ¡£
+				//å¦‚æžœå‘é€å µå¡žï¼Œåˆ™ç­‰10æ¯«ç§’åŽå†å‘é€ã€‚
 				ACE_Time_Value tvSleep(0, 10 * 1000);
 				ACE_OS::sleep(tvSleep);
 				continue;
@@ -302,19 +302,19 @@ bool ScadaHandler::sendData(ACE_Message_Block* pmblk)
 			pmblk->release();
 			return false;
 		}
-		// Ò»´ÎÐÔ·¢ËÍÍêÒ»°üÊý¾Ý
+		// ä¸€æ¬¡æ€§å‘é€å®Œä¸€åŒ…æ•°æ®
 		else if(nDataLen >= nSendLen)   
 		{
 			pmblk->release();
 			return true;
 		}
-		// ·Ö¶à´Î·¢ËÍ
+		// åˆ†å¤šæ¬¡å‘é€
 		else
 		{
 			pmblk->rd_ptr(nDataLen);
 			nIsSendSize  += nDataLen;
 
-			// ¶à´Î·¢ËÍÍê±Ï
+			// å¤šæ¬¡å‘é€å®Œæ¯•
 			if (nIsSendSize == nSendLen)
 			{
 				pmblk->release();
@@ -331,7 +331,7 @@ void ScadaHandler::connectionNotification(int type)
 	mb->msg_type(type);
 	if (m_recvTask->putq(mb) == -1)
 	{
-		LOG->debug("Í¶µÝÏûÏ¢µ½½ÓÊÕ¶ÓÁÐÊ§°Ü");
+		LOG->debug("æŠ•é€’æ¶ˆæ¯åˆ°æŽ¥æ”¶é˜Ÿåˆ—å¤±è´¥");
 	}
 
 }

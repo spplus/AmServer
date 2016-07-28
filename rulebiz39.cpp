@@ -1,4 +1,4 @@
-#include "rulebiz39.h"
+﻿#include "rulebiz39.h"
 #include "rulebiz39-1.h"
 RuleBiz39::RuleBiz39()
 {
@@ -11,13 +11,13 @@ bool RuleBiz39::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 {
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
-	// �ѵ�ǰԪ�����뵽�ѷ����б�
+	// 把当前元件加入到已分析列表
 	passNodes.insert(MAPVAL(unitcim,unitcim));
 
-	// 2.����Ԫ��ID�����Ҷ�Ӧ�����ӵ㣨������������
+	// 2.根据元件ID，查找对应的连接点（可能是两个）
 	LISTMAP connIds = getConnIdByUnitsId(unitcim);
 
-	// 3.��Ӧ�ĵ������ӵ㣨���ǲ����е��������ӵ㣩
+	// 3.对应的单侧连接点（不是查所有的两个连接点）
 	for (int i = 0 ;i<connIds.size();i++)
 	{
 
@@ -26,7 +26,7 @@ bool RuleBiz39::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 		if (connIter != connMap.end())
 		{
 
-			// �ж��Ƿ��Ѿ����ҹ������ӵ㣬����������������������
+			// 判断是否已经查找过的连接点，如果是则跳出，不是则加入
 			if (passNodes.find(connIter->second) != passNodes.end())
 			{
 				continue;
@@ -36,10 +36,10 @@ bool RuleBiz39::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				passNodes.insert(MAPVAL(connIter->second,connIter->second));
 			}
 
-			// �������ӵ㣬���Ҹ����ӵ�������豸����
+			// 根据连接点，查找该连接点关联的设备集合
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,COM->i2str(saveid));
 
-			// �������豸����
+			// 遍历该设备集合
 			for (int k = 0;k<unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
@@ -47,7 +47,7 @@ bool RuleBiz39::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
-					// �ж��Ƿ��Ѿ���Ϊ��ʼ�豸���������������������
+					// 判断是否已经做为起始设备进行搜索，如果是则跳过
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
@@ -58,17 +58,17 @@ bool RuleBiz39::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 					}
 				}
 
-				// ���β�ѯ��Ԫ��CIMID
+				// 本次查询的元件CIMID
 				unitId = unitIter->second;
 				 topoBiz(saveid,unitId,ruleMap,"");
 				
-				// ��֧һ����������ĵ�բԪ�����պϻ��߰����ĵ�բ����һ����ֱ���˳��߼�
+				// 分支一，如果包含的刀闸元件均闭合或者包含的刀闸仅有一个，直接退出逻辑
 				 if (m_switchCount == 1 || (m_switchState && m_switchCount>0))
 				 {
 					 return false;
 				 }
 
-				 // ��֧�������Ԫ����ֻҪ��һ����բ�Ͽ�������һ������������ѯ���е�բ��һ������ӵ㣬�Լ����ӵ��Ӧ�Ľ��Ԫ�������ÿ����բ��Ӧ�Ľ��Ԫ��������ĸ�ߣ�������������
+				 // 分支二，结果元件中只要有一个刀闸断开，条件一成立。继续查询所有刀闸另一侧的连接点，以及连接点对应的结果元件，如果每个刀闸对应的结果元件均包含母线，条件二成立；
 				 bool flag = true;
 				 for (int m = 0;m<m_switchList.size();m++)
 				 {
@@ -76,14 +76,14 @@ bool RuleBiz39::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 					 flag &= topoByUnit(saveid,cim,passNodes,ruleMap);
 				 }
 
-				 // ���ÿ����բ��Ӧ�Ľ��Ԫ��������ĸ�ߣ�������������
+				 // 如果每个刀闸对应的结果元件均包含母线，条件二成立；
 				 if (flag && m_switchCount>0)
 				 {
 					 COM->triggerRule(ruleMap,2);
 				 }
 				
 
-				// ���򱻴���
+				// 规则被触发
 				if (ruleMap.size() == 0)
 				{
 					return true;
@@ -104,16 +104,16 @@ int RuleBiz39::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 	if (bean.unittype() == eSWITCH)
 	{
-		// �ۼƵ�բ����
+		// 累计刀闸数量
 		m_switchCount++;
 
-		// ���ε�բ��״̬
+		// 本次刀闸的状态
 		bool state = bean.state()==1?true:false;
 
-		// ��բ״̬����������������һ��Ϊfalse����Ϊfalse
+		// 刀闸状态进行与操作，如果有一个为false，则为false
 		m_switchState &= state;
 
-		// ���Ԫ����ֻҪ��һ����բ�Ͽ�������һ����
+		// 结果元件中只要有一个刀闸断开，条件一成立
 		if (state == false)
 		{
 			COM->triggerRule(ruleMap,1);

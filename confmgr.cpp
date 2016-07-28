@@ -1,4 +1,4 @@
-#include "confmgr.h"
+﻿#include "confmgr.h"
 
 bool ConfMgr::load(string fname)
 {

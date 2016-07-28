@@ -1,4 +1,4 @@
-#include "comutils.h"
+﻿#include "comutils.h"
 #include "ace/Date_Time.h"
 
 int	ComUtils::str2i(string val)

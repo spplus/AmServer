@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:		²éÑ¯Àà¹ÜÀíÂß¼­.
+	DESC:		æŸ¥è¯¢ç±»ç®¡ç†é€»è¾‘.
 	DATE:		2016-06-28
 	AUTHOR:	    ABELSKY	
 */
@@ -16,37 +16,37 @@ public:
 	void	exec(sClientMsg* msg);
 
 private:
-	//»·Â·²éÑ¯
+	//ç¯è·¯æŸ¥è¯¢
 	void	queryCricleList(sClientMsg* msg);
 
-	//²éÑ¯Àà
+	//æŸ¥è¯¢ç±»
 	void	querySignList(sClientMsg* msg);
 	void	queryGSwitchList(sClientMsg* msg);
 	void	queryMsetList(sClientMsg* msg);
 	void	queryEventList(sClientMsg* msg);
 
-	//»·Â·ÍØÆË
+	//ç¯è·¯æ‹“æ‰‘
 	void	cricleTopo(int saveid);
 
-	//¸ù¾İ¿ª¹Ø¡¢µ¶Õ¢Ôª¼ş½øĞĞ»·Â·ÍØÆË
+	//æ ¹æ®å¼€å…³ã€åˆ€é—¸å…ƒä»¶è¿›è¡Œç¯è·¯æ‹“æ‰‘
 	void	cricleTopoByUnit(int saveid,string unitcim,STRMAP& passNodes);
 
-	// Í¨¹ıcimid»ñÈ¡unitĞÅÏ¢
+	// é€šè¿‡cimidè·å–unitä¿¡æ¯
 	PBNS::StateBean getUnitByCim(int saveid,string unitcim);
 
-	// ¸ù¾İÔª¼şID²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã
+	// æ ¹æ®å…ƒä»¶IDæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹
 	LISTMAP		getConnIdByUnitsId(string unitid);
 
-	// ¸ù¾İÁ¬½Óµã²éÕÒ¹ØÁªµÄÉè±¸
+	// æ ¹æ®è¿æ¥ç‚¹æŸ¥æ‰¾å…³è”çš„è®¾å¤‡
 	LISTMAP		getUnitsByConnId(string connid,string saveid);
 
-	// ÊÇ·ñµÚÒ»´Î
+	// æ˜¯å¦ç¬¬ä¸€æ¬¡
 	bool		m_isFirst;
 
-	// ÆğÊ¼²Ù×÷µÄ¿ª¹Ø£¬µ¶Õ¢cim
+	// èµ·å§‹æ“ä½œçš„å¼€å…³ï¼Œåˆ€é—¸cim
 	string		m_brkswhCim;
 
-	//Ä¸Ïß¼ÇÂ¼Êı
+	//æ¯çº¿è®°å½•æ•°
 	int			m_busCount;
 
 	vector<string>		m_buslist;

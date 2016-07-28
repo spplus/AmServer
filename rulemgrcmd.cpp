@@ -1,4 +1,4 @@
-#include "rulemgrcmd.h"
+ï»¿#include "rulemgrcmd.h"
 #include "buff/msgbody.pb.h"
 
 void RuleMgrCmd::exec(sClientMsg* msg)
@@ -33,7 +33,7 @@ void RuleMgrCmd::getRuleList(sClientMsg* msg)
 	string rd = req.reqdate();
 
 	string sql;
-	//²éÑ¯¹æÔòÁÐ±í
+	//æŸ¥è¯¢è§„åˆ™åˆ—è¡¨
 	char *psql = "SELECT ID,Name,AlarmLevel,Description FROM rules;";
 
 	sql = App_Dba::instance()->formatSql(psql);
@@ -74,7 +74,7 @@ void RuleMgrCmd::getRuleList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -95,7 +95,7 @@ void RuleMgrCmd::ruleManager(sClientMsg* msg)
 	PBNS::RuleMgrMsg_Response resp;
 	resp.set_rescode(nret);
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -107,8 +107,8 @@ void RuleMgrCmd::ruleManager(sClientMsg* msg)
 void RuleMgrCmd::getStationRuleList(sClientMsg* msg)
 {
 	
-	//²éÑ¯Õ¾µã¹æÔò¹ØÁª¹ØÏµÁÐ±í
-	string sql = "SELECT sr.StationCim,s.Name, sr.RuleId, r.Name as RName, sr.IsUse ,case WHEN sr.IsUse=0 THEN '·ñ' when sr.IsUse=1 THEN 'ÊÇ' else 'Î´Öª' end as IsUseName from station_rule sr,stations s,rules r WHERE sr.StationCim=s.CimId and sr.RuleId=r.ID;";
+	//æŸ¥è¯¢ç«™ç‚¹è§„åˆ™å…³è”å…³ç³»åˆ—è¡¨
+	string sql = "SELECT sr.StationCim,s.Name, sr.RuleId, r.Name as RName, sr.IsUse ,case WHEN sr.IsUse=0 THEN 'å¦' when sr.IsUse=1 THEN 'æ˜¯' else 'æœªçŸ¥' end as IsUseName from station_rule sr,stations s,rules r WHERE sr.StationCim=s.CimId and sr.RuleId=r.ID;";
 	//string sql = "SELECT sr.StationCim,s.Name, sr.RuleId, r.Name as RName, sr.IsUse  from station_rule sr,stations s,rules r WHERE sr.StationCim=s.CimId and sr.RuleId=r.ID ;";
 
 	LISTMAP srulelist;
@@ -162,7 +162,7 @@ void RuleMgrCmd::getStationRuleList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -186,7 +186,7 @@ void RuleMgrCmd::stationRuleManager(sClientMsg* msg)
 		PBNS::StationRuleMgrMsg_Response resp;
 		resp.set_rescode(nret);
 
-		// ·µ»Øµ½¿Í»§¶Ë
+		// è¿”å›žåˆ°å®¢æˆ·ç«¯
 		string data;
 		resp.SerializeToString(&data);
 		App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -194,13 +194,13 @@ void RuleMgrCmd::stationRuleManager(sClientMsg* msg)
 		return;
 	}
 
-	//µ±¹æÔòÀàÐÍÐÞ¸ÄÊ±Ö»ÊÇ´«µÝ×÷ÓÃ
+	//å½“è§„åˆ™ç±»åž‹ä¿®æ”¹æ—¶åªæ˜¯ä¼ é€’ä½œç”¨
 	if (reqst.reqtype() == 2)
 	{
 		PBNS::StationRuleMgrMsg_Response resp;
 		resp.set_rescode(2);
 
-		// ·µ»Øµ½¿Í»§¶Ë
+		// è¿”å›žåˆ°å®¢æˆ·ç«¯
 		string data;
 		resp.SerializeToString(&data);
 		App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -208,7 +208,7 @@ void RuleMgrCmd::stationRuleManager(sClientMsg* msg)
 		return;
 	}
 
-	//Ìá½»ÐÞ¸ÄµÄ³§Õ¾¹æÔò¹ØÁª¹ØÏµÁÐ±íÖÐÆôÓÃÖµ
+	//æäº¤ä¿®æ”¹çš„åŽ‚ç«™è§„åˆ™å…³è”å…³ç³»åˆ—è¡¨ä¸­å¯ç”¨å€¼
 	if (reqst.reqtype() == 3)
 	{
 		int nsuccess = 0;
@@ -231,7 +231,7 @@ void RuleMgrCmd::stationRuleManager(sClientMsg* msg)
 		PBNS::StationMgrMsg_Response resp;
 		resp.set_rescode(nsuccess);
 
-		// ·µ»Øµ½¿Í»§¶Ë
+		// è¿”å›žåˆ°å®¢æˆ·ç«¯
 		string data;
 		resp.SerializeToString(&data);
 		App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);

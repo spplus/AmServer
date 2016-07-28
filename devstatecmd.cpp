@@ -1,4 +1,4 @@
-#include "devstatecmd.h"
+ï»¿#include "devstatecmd.h"
 #include "topobizcmd.h"
 
 void DevStateCmd::exec(sClientMsg* msg)
@@ -17,7 +17,7 @@ void DevStateCmd::exec(sClientMsg* msg)
 		getStationType(msg);
 		break;
 	
-		// ¸ÃÃüÁîÔİ²»ÓÃÁË
+		// è¯¥å‘½ä»¤æš‚ä¸ç”¨äº†
 	//case CMD_STATION_LIST:
 		//getStationList(msg);
 		//break;
@@ -56,7 +56,7 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 	{
 		return;
 	}
-	// Í¨¹ıÊı¾İ¿â½øĞĞ²éÑ¯Ôª¼ş×´Ì¬
+	// é€šè¿‡æ•°æ®åº“è¿›è¡ŒæŸ¥è¯¢å…ƒä»¶çŠ¶æ€
 	string sql ;
 	char * p = "select a.State, a.IsElectric, a.IsBoard, a.IsGround, b.CimId, c.Color, b.unitType "\
 		"from (select UnitCim, State, IsElectric, IsBoard, IsGround from unit_status where "\
@@ -69,39 +69,39 @@ void DevStateCmd::getDevState(sClientMsg* msg)
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
 	PBNS::DevStateMsg_Response res;
-	// °Ñvector×ªbuff
+	// æŠŠvectorè½¬buff
 	for (int i=0;i<stateList.size();i++)
 	{
 		STRMAP record = stateList.at(i);
 		MAP_ITERATOR iter;
 		PBNS::StateBean* bean = res.add_devstate();
 
-		// ÉèÖÃÕ¾µãCIM
+		// è®¾ç½®ç«™ç‚¹CIM
 		bean->set_stationcim(req.stationcim());
 
-		// Éè±¸CIM
+		// è®¾å¤‡CIM
 		bean->set_cimid(COM->getVal(record,"CimId"));
 
-		// Éè±¸×´Ì¬
+		// è®¾å¤‡çŠ¶æ€
 		bean->set_state(COM->getIval(record,"State"));
 
-		// ÊÇ·ñ´øµç
+		// æ˜¯å¦å¸¦ç”µ
 		bean->set_iselectric(COM->getIval(record,"IsElectric"));
 		
-		// ÊÇ·ñÒÑ¹ÒÅÆ
+		// æ˜¯å¦å·²æŒ‚ç‰Œ
 		bean->set_isboard(COM->getIval(record,"IsBoard"));
 		
-		// µçÑ¹µÈ¼¶ÑÕÉ«
+		// ç”µå‹ç­‰çº§é¢œè‰²
 		bean->set_volcolor(COM->getVal(record,"Color"));
 
-		// Éè±¸ÀàĞÍ
+		// è®¾å¤‡ç±»å‹
 		bean->set_unittype(COM->getIval(record,"unitType"));
 		
-		// ÊÇ·ñ½ÓµØ
+		// æ˜¯å¦æ¥åœ°
 		bean->set_isground(COM->getIval(record,"IsGround"));
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›åˆ°å®¢æˆ·ç«¯
 	string data;
 	res.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -118,7 +118,7 @@ void DevStateCmd::getStationType(sClientMsg* msg)
 
 	PBNS::StationTypeMsg_Response res;
 
-	// °Ñvector×ªbuff
+	// æŠŠvectorè½¬buff
 	for (int i=0;i<stateList.size();i++)
 	{
 		STRMAP record = stateList.at(i);
@@ -142,11 +142,11 @@ void DevStateCmd::getStationType(sClientMsg* msg)
 			bean->set_name(iter->second);
 		}
 
-		// »ñÈ¡¸ÃÀà±ğÏÂµÄÕ¾µãÁĞ±í
+		// è·å–è¯¥ç±»åˆ«ä¸‹çš„ç«™ç‚¹åˆ—è¡¨
 		getStationByTypeId(bean);
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›åˆ°å®¢æˆ·ç«¯
 	string data;
 	res.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -154,7 +154,7 @@ void DevStateCmd::getStationType(sClientMsg* msg)
 
 void DevStateCmd::getStationByTypeId(PBNS::StationTypeBean *typebean)
 {
-	// Í¨¹ıÊı¾İ¿â½øĞĞ²éÑ¯Ôª¼ş×´Ì¬
+	// é€šè¿‡æ•°æ®åº“è¿›è¡ŒæŸ¥è¯¢å…ƒä»¶çŠ¶æ€
 	string sql ;
 	char * p = "select id, CategoryId, CimId,Name,CurrentName,Path from stations where CategoryId=%d";
 	sql = App_Dba::instance()->formatSql(p,typebean->id());
@@ -162,7 +162,7 @@ void DevStateCmd::getStationByTypeId(PBNS::StationTypeBean *typebean)
 
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
-	// °Ñvector×ªbuff
+	// æŠŠvectorè½¬buff
 	for (int i=0;i<stateList.size();i++)
 	{
 		STRMAP record = stateList.at(i);
@@ -217,7 +217,7 @@ void DevStateCmd::getStationList(sClientMsg* msg)
 		return;
 	}
 
-	// Í¨¹ıÊı¾İ¿â½øĞĞ²éÑ¯Ôª¼ş×´Ì¬
+	// é€šè¿‡æ•°æ®åº“è¿›è¡ŒæŸ¥è¯¢å…ƒä»¶çŠ¶æ€
 	string sql ;
 	char * p = "select id, CategoryId, CimId,Name,CurrentName,Path from stations where CategoryId=%d";
 	sql = App_Dba::instance()->formatSql(p,req.stationid());
@@ -227,7 +227,7 @@ void DevStateCmd::getStationList(sClientMsg* msg)
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
 	PBNS::StationListMsg_Response res;
-	// °Ñvector×ªbuff
+	// æŠŠvectorè½¬buff
 	for (int i=0;i<stateList.size();i++)
 	{
 		STRMAP record = stateList.at(i);
@@ -271,7 +271,7 @@ void DevStateCmd::getStationList(sClientMsg* msg)
 		}
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›åˆ°å®¢æˆ·ç«¯
 	string data;
 	res.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -296,13 +296,13 @@ void DevStateCmd::updateIsBoard(sClientMsg* msg)
 	{
 		tag = 1;
 	}
-	// ·µ»ØÄÚÈİ
+	// è¿”å›å†…å®¹
 	PBNS::TagMsg_Response res;
 
-	// ÊÇ·ñÔÊĞí¹ÒÅÆ£¬ÕªÅÆ
+	// æ˜¯å¦å…è®¸æŒ‚ç‰Œï¼Œæ‘˜ç‰Œ
 	int flag = 0;
 
-	// 1. ¼ì²âÊÇ·ñÒÑ¾­¹ÒÅÆ»òÒÑ¾­ÕªÅÆ
+	// 1. æ£€æµ‹æ˜¯å¦å·²ç»æŒ‚ç‰Œæˆ–å·²ç»æ‘˜ç‰Œ
 	char * psql = "select count(*) as count  from unit_status   where UnitCim='%s' and SaveId=%d and IsBoard=%d";
 	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.saveid(),tag);
 	LISTMAP countMap = App_Dba::instance()->getList(sql.c_str());
@@ -312,7 +312,7 @@ void DevStateCmd::updateIsBoard(sClientMsg* msg)
 		MAP_ITERATOR iter = strMap.find("count");
 		if (iter != strMap.end())
 		{
-			// ÔÊĞí²Ù×÷
+			// å…è®¸æ“ä½œ
 			if (str2i(iter->second) ==1)
 			{
 				flag = 1;
@@ -321,27 +321,27 @@ void DevStateCmd::updateIsBoard(sClientMsg* msg)
 	}
 	if (flag == 1)
 	{
-		// 2.¸üĞÂ¹ÒÕªÅÆ±êÖ¾ 
+		// 2.æ›´æ–°æŒ‚æ‘˜ç‰Œæ ‡å¿— 
 		psql = "update unit_status set IsBoard=%d where UnitCim='%s' and SaveId=%d ";
 		sql = App_Dba::instance()->formatSql(psql,req.type(),req.unitcim().c_str(),req.saveid());
 		int ret = App_Dba::instance()->execSql(sql.c_str());
 		if (ret == 1)
 		{
-			// Ö´ĞĞ³É¹¦
+			// æ‰§è¡ŒæˆåŠŸ
 			res.set_rescode(0);
-			res.set_resmsg("²Ù×÷³É¹¦");
+			res.set_resmsg("æ“ä½œæˆåŠŸ");
 		}
 		else
 		{
-			res.set_resmsg("¸üĞÂÊ§°Ü");
+			res.set_resmsg("æ›´æ–°å¤±è´¥");
 			res.set_rescode(1);
 		}
 	}
 	else
 	{
-		// ²Ù×÷Ê§°Ü
+		// æ“ä½œå¤±è´¥
 		res.set_rescode(2);
-		res.set_resmsg("Î´²éÕÒµ½ÏàÓ¦µÄ¼ÇÂ¼");
+		res.set_resmsg("æœªæŸ¥æ‰¾åˆ°ç›¸åº”çš„è®°å½•");
 	}
 
 	string data;
@@ -361,12 +361,12 @@ void DevStateCmd::updateIsLine(sClientMsg* msg)
 		return;
 	}
 
-	// 1.É¾³ı related_line±íÖĞ unitcimµÈÓÚ¸ÃcimidµÄ¼ÇÂ¼
+	// 1.åˆ é™¤ related_lineè¡¨ä¸­ unitcimç­‰äºè¯¥cimidçš„è®°å½•
 	char * psql = "delete from related_line where UnitCim='%s'";
 	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str());
 	App_Dba::instance()->execSql(sql.c_str());
 
-	// 2.²åÈëÁ½Ìõ¼ÇÂ¼
+	// 2.æ’å…¥ä¸¤æ¡è®°å½•
 	psql = "insert into related_line(UnitCim,StationCim) values(%s,%s)";
 	sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.stationonecim().c_str());
 	int ret =App_Dba::instance()->execSql(sql.c_str());
@@ -378,12 +378,12 @@ void DevStateCmd::updateIsLine(sClientMsg* msg)
 
 	if (ret == 2)
 	{
-		// ²Ù×÷³É¹¦
+		// æ“ä½œæˆåŠŸ
 		res.set_rescode(0);
 	}
 	else
 	{
-		// ²Ù×÷Ê§°Ü
+		// æ“ä½œå¤±è´¥
 		res.set_rescode(1);
 	}
 	
@@ -402,7 +402,7 @@ void DevStateCmd::updateIsPower(sClientMsg* msg)
 		return;
 	}
 
-	// ¸üĞÂRelatedLine±íUnitCim×Ö¶ÎµÈÓÚCimId£¬StationCimµÈÓÚStationIdµÄIsPower×Ö¶Î£»
+	// æ›´æ–°RelatedLineè¡¨UnitCimå­—æ®µç­‰äºCimIdï¼ŒStationCimç­‰äºStationIdçš„IsPowerå­—æ®µï¼›
 	char* psql = "update related_line set IsPower=1 where UnitCim='%s' and StationCim='%s'";
 	string sql = App_Dba::instance()->formatSql(psql,req.unitcim().c_str(),req.stationcim().c_str());
 	int ret = App_Dba::instance()->execSql(sql.c_str());
@@ -414,15 +414,15 @@ void DevStateCmd::updateIsPower(sClientMsg* msg)
 		ret = App_Dba::instance()->execSql(sql.c_str());
 		if (ret != 1)
 		{
-			LOG->warn("¸üĞÂunit_status Ê§°Ü:%s",sql.c_str());
+			LOG->warn("æ›´æ–°unit_status å¤±è´¥:%s",sql.c_str());
 		}
 		res.set_rescode(0);
-		LOG->message("ÉèÖÃµçÔ´µã³É¹¦");
+		LOG->message("è®¾ç½®ç”µæºç‚¹æˆåŠŸ");
 	}
 	else
 	{
 		res.set_rescode(1);
-		LOG->message("ÉèÖÃµçÔ´µãÊ§°Ü");
+		LOG->message("è®¾ç½®ç”µæºç‚¹å¤±è´¥");
 	}
 	string data;
 	res.SerializeToString(&data);
@@ -478,15 +478,15 @@ void DevStateCmd::writeSaving(sClientMsg* msg)
 	if (ret == 1)
 	{
 		res.set_rescode(0);
-		LOG->message("±£³Ö´æµµ³É¹¦,´æµµÃû³Æ£º%s",req.savename().c_str());
+		LOG->message("ä¿æŒå­˜æ¡£æˆåŠŸ,å­˜æ¡£åç§°ï¼š%s",req.savename().c_str());
 	}
 	else
 	{
 		res.set_rescode(1);
-		LOG->message("±£³Ö´æµµÊ§°Ü,´æµµÃû³Æ£º%s",req.savename().c_str());
+		LOG->message("ä¿æŒå­˜æ¡£å¤±è´¥,å­˜æ¡£åç§°ï¼š%s",req.savename().c_str());
 	}
 
-	// ²éÑ¯ĞÂÉú³ÉµÄ´æµµID
+	// æŸ¥è¯¢æ–°ç”Ÿæˆçš„å­˜æ¡£ID
 	string nSaveId ;
 	psql = "select max(id) as id from virtual_saves";
 	LISTMAP idList = App_Dba::instance()->getList(psql);
@@ -500,13 +500,13 @@ void DevStateCmd::writeSaving(sClientMsg* msg)
 		}
 	}
 
-	// ²éÑ¯Ô­SaveIDÏÂÃæ´æµµµÄ×´Ì¬Êı¾İ
+	// æŸ¥è¯¢åŸSaveIDä¸‹é¢å­˜æ¡£çš„çŠ¶æ€æ•°æ®
 	psql = "insert into unit_status(SaveId,UnitCim,StationCim,State,IsElectric,IsPower,IsBoard) " \
 		"select %s, UnitCim,StationCim,State,IsElectric,IsPower,IsBoard from unit_status where saveid=%d";
 	sql = App_Dba::instance()->formatSql(psql,nSaveId.c_str(),req.saveid());
 	App_Dba::instance()->execSql(sql.c_str());
 
-	// ¸üĞÂ¿Í»§¶Ë²Ù×÷ºóµÄÉè±¸×´Ì¬£¬°üÀ¨¿ª¹Ø£¬µ¶Õ¢µÄ×´Ì¬£¬¹ÒÅÆ×´Ì¬
+	// æ›´æ–°å®¢æˆ·ç«¯æ“ä½œåçš„è®¾å¤‡çŠ¶æ€ï¼ŒåŒ…æ‹¬å¼€å…³ï¼Œåˆ€é—¸çš„çŠ¶æ€ï¼ŒæŒ‚ç‰ŒçŠ¶æ€
 	for (int i=0;i<req.statelist_size();i++)
 	{
 		PBNS::StateBean bean = req.statelist(i);
@@ -515,7 +515,7 @@ void DevStateCmd::writeSaving(sClientMsg* msg)
 		App_Dba::instance()->execSql(sql.c_str());
 	}
 
-	// ¶ÔĞÂ´æµµ½øĞĞÕûÕ¾ÍØÆË
+	// å¯¹æ–°å­˜æ¡£è¿›è¡Œæ•´ç«™æ‹“æ‰‘
 	TopoBizCmd topo;
 	topo.topoBySaveId(nSaveId,eGENERATOR);
 

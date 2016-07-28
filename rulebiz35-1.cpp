@@ -1,4 +1,4 @@
-#include "rulebiz35-1.h"
+ï»¿#include "rulebiz35-1.h"
 
 RuleBiz35_1::RuleBiz35_1()
 {
@@ -10,7 +10,7 @@ int RuleBiz35_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationc
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 	if (bean.unittype() == eSWITCH || bean.unittype() == eBREAKER)
 	{
-		// Èç¹ûÎª¿ª¹Ø»òµ¶Õ¢ÇÒ±ÕºÏ£¬¼ÌĞø±éÀú£¬¶Ï¿ªÔòÖÕÖ¹
+		// å¦‚æœä¸ºå¼€å…³æˆ–åˆ€é—¸ä¸”é—­åˆï¼Œç»§ç»­éå†ï¼Œæ–­å¼€åˆ™ç»ˆæ­¢
 		if (bean.state() == 1)
 		{
 			return 1;
@@ -22,14 +22,14 @@ int RuleBiz35_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationc
 	}	
 	if (bean.unittype() == eTRANSFORMER)
 	{
-		// Èç¹ûÎª±äÑ¹Æ÷£¬Ìõ¼şÈı³ÉÁ¢¡£
+		// å¦‚æœä¸ºå˜å‹å™¨ï¼Œæ¡ä»¶ä¸‰æˆç«‹ã€‚
 		COM->triggerRule(ruleMap,3);
 		m_flag = true;
 		return 1;
 	}
 	else if (bean.unittype() == eGROUNDSWITCH)
 	{
-		// Èç¹û½á¹ûÔª¼şÎªµØµ¶Îª¶Ï¿ª£¬Âú×ãÌõ¼şËÄ¡£
+		// å¦‚æœç»“æœå…ƒä»¶ä¸ºåœ°åˆ€ä¸ºæ–­å¼€ï¼Œæ»¡è¶³æ¡ä»¶å››ã€‚
 		if (m_flag && bean.state() == 0)
 		{
 			COM->triggerRule(ruleMap,4);
@@ -39,7 +39,7 @@ int RuleBiz35_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationc
 	}
 	else
 	{
-		// Èç¹ûÎª·Ç¿ª¹Ø¡¢µ¶Õ¢¡¢µØµ¶¡¢±äÑ¹Æ÷µÄÈÎºÎÒ»ÖÖÔª¼şÀàĞÍ£¬ÖÕÖ¹¸ÃÌõÂ·±éÀú
+		// å¦‚æœä¸ºéå¼€å…³ã€åˆ€é—¸ã€åœ°åˆ€ã€å˜å‹å™¨çš„ä»»ä½•ä¸€ç§å…ƒä»¶ç±»å‹ï¼Œç»ˆæ­¢è¯¥æ¡è·¯éå†
 		return 0;
 	}
 }

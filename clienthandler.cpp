@@ -1,4 +1,4 @@
-
+ï»¿
 #include "ace/OS_NS_unistd.h"
 #include "ace/Time_Value.h"
 #include "ace/Date_Time.h"
@@ -19,16 +19,16 @@ int ClientHandler::open(void*p)
 	}
 	ACE_INET_Addr svraddr;
 
-	//»ñµÃÔ¶³ÌÁ´½ÓµØÖ·ºÍ¶Ë¿Ú
+	//è·å¾—è¿œç¨‹é“¾æ¥åœ°å€å’Œç«¯å£
 	if(this->peer().get_remote_addr(svraddr) == -1)
 	{
 		LOG->warn(" get_remote_addr failed!");
 		return -1;
 	}
 
-	LOG->message("new client connection£º%s",svraddr.get_host_addr());
+	LOG->message("new client connectionï¼š%s",svraddr.get_host_addr());
 
-	// ±£´æ¿Í»§¶ËÁ¬½Ó
+	// ä¿å­˜å®¢æˆ·ç«¯è¿æ¥
 	m_connectId = App_ClientMgr::instance()->add(this);
 
 	return 0;
@@ -54,23 +54,23 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 		return 0;
 	}
 
-	// ½âÎö³öÊı¾İ°ü³¤¶È
+	// è§£æå‡ºæ•°æ®åŒ…é•¿åº¦
 	int plen = 0;
 	ACE_OS::memcpy(&plen,buff,FRAME_HEAD_LEN);
 	
-	// ÅĞ¶ÏÊı¾İ°ü³¤¶ÈÊÇ·ñ·Ç·¨
+	// åˆ¤æ–­æ•°æ®åŒ…é•¿åº¦æ˜¯å¦éæ³•
 	if (plen > MAX_PACKET_LEN || plen <0)
 	{
 		LOG->warn("invalid packet length:%d",plen);
 		return 0;
 	}
-	// ½ÓÊÕ°üÌåÄÚÈİ
+	// æ¥æ”¶åŒ…ä½“å†…å®¹
 	ACE_Message_Block* mb = new ACE_Message_Block(plen);
 
-	// ×Ü½ÓÊÕ³¤¶È
+	// æ€»æ¥æ”¶é•¿åº¦
 	int total = 0;
 
-	// ¼ÌĞø¶ÁÈ¡°üÌåÄÚÈİ
+	// ç»§ç»­è¯»å–åŒ…ä½“å†…å®¹
 	int dlen = peer().recv(mb->wr_ptr(),plen,&nowait);
 	if (dlen <= 0)
 	{
@@ -81,7 +81,7 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 	total = dlen;
 	mb->wr_ptr(dlen);
 
-	// Èç¹û¶Ì¶Á£¬Ôò¼ÌĞø¶ÁÈ¡¡£
+	// å¦‚æœçŸ­è¯»ï¼Œåˆ™ç»§ç»­è¯»å–ã€‚
 	while(total < plen)
 	{
 		ACE_DEBUG((LM_DEBUG,"[%D]total:%d,this length:%d,read:%d.\n",plen,dlen,total));
@@ -95,10 +95,10 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 		total += dlen;
 	}
 
-	// ½ÓÊÕÍêÕû°ü£¬Í¶µİµ½Êı¾İ´¦Àí¶ÓÁĞ
+	// æ¥æ”¶å®Œæ•´åŒ…ï¼ŒæŠ•é€’åˆ°æ•°æ®å¤„ç†é˜Ÿåˆ—
 	if (total == plen)
 	{
-		// °ÑÏûÏ¢±ê¼ÇÉÏÁ¬½ÓID,ÒÔÒµÎñ²ã´¦ÀíÍê¿ÉÒÔÔ­Â··µ»Ø
+		// æŠŠæ¶ˆæ¯æ ‡è®°ä¸Šè¿æ¥ID,ä»¥ä¸šåŠ¡å±‚å¤„ç†å®Œå¯ä»¥åŸè·¯è¿”å›
 		mb->msg_type(m_connectId);
 		if(App_CMService::instance()->putq(mb) != -1)
 		{
@@ -109,7 +109,7 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 	{
 		mb->release();
 
-		// ½ÓÊÕ°ü³¤¶È´íÎó
+		// æ¥æ”¶åŒ…é•¿åº¦é”™è¯¯
 		LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
 	}
 	return 0;
@@ -131,20 +131,20 @@ int ClientHandler::handle_close(ACE_HANDLE h, ACE_Reactor_Mask mask)
 			LOG->debug("Connection closed:%s.",peer_name);
 		}
 
-		// ÊÍ·Å¶ÓÁĞ×ÊÔ´
+		// é‡Šæ”¾é˜Ÿåˆ—èµ„æº
 		this->wait();
 
-		// ¹Ø±ÕÁ´Â·
+		// å…³é—­é“¾è·¯
 		this->peer().close_reader();
 		this->peer().close_writer();
 		this->peer().close();
 
 		this->closing_ = true;
 
-		// É¾³ı¿Í»§¶ËÁ¬½Ó¶ÔÏó
+		// åˆ é™¤å®¢æˆ·ç«¯è¿æ¥å¯¹è±¡
 		App_ClientMgr::instance()->del(m_connectId);
 
-		// Á¬½Ó¶Ï¿ª£¬Í¨Öª¹¤×÷Ïß³ÌÍË³ö
+		// è¿æ¥æ–­å¼€ï¼Œé€šçŸ¥å·¥ä½œçº¿ç¨‹é€€å‡º
 		/*ACE_Message_Block* mb = new ACE_Message_Block(1);
 		mb->msg_type(ACE_Message_Block::MB_STOP);
 		m_checktsk->put(mb);*/
@@ -171,12 +171,12 @@ bool ClientHandler::SendData(const char* data,int length)
 
 	const char* pData = data;
 	
-	//·¢ËÍÊı¾İµÄ×Ü³¤¶È
+	//å‘é€æ•°æ®çš„æ€»é•¿åº¦
 	int nSendLen = length;
 
 	int nIsSendSize = 0;
 
-	//Ñ­»··¢ËÍ£¬Ö±µ½Êı¾İ·¢ËÍÍê³É¡£
+	//å¾ªç¯å‘é€ï¼Œç›´åˆ°æ•°æ®å‘é€å®Œæˆã€‚
 	while(nIsSendSize < nSendLen)
 	{
 
@@ -186,7 +186,7 @@ bool ClientHandler::SendData(const char* data,int length)
 		{
 			if(nErr == EWOULDBLOCK)
 			{
-				//Èç¹û·¢ËÍ¶ÂÈû£¬ÔòµÈ10ºÁÃëºóÔÙ·¢ËÍ¡£
+				//å¦‚æœå‘é€å µå¡ï¼Œåˆ™ç­‰10æ¯«ç§’åå†å‘é€ã€‚
 				ACE_Time_Value tvSleep(0, 10 * 1000);
 				ACE_OS::sleep(tvSleep);
 				continue;
@@ -194,19 +194,19 @@ bool ClientHandler::SendData(const char* data,int length)
 			delete []data;
 			return false;
 		}
-		// Ò»´ÎĞÔ·¢ËÍÍêÒ»°üÊı¾İ
+		// ä¸€æ¬¡æ€§å‘é€å®Œä¸€åŒ…æ•°æ®
 		else if(nDataLen >= nSendLen)   
 		{
 			delete []data;
 			return true;
 		}
-		// ·Ö¶à´Î·¢ËÍ
+		// åˆ†å¤šæ¬¡å‘é€
 		else
 		{
 			nIsSendSize  += nDataLen;
 			nSendLen -= nDataLen;
 
-			// ¶à´Î·¢ËÍÍê±Ï
+			// å¤šæ¬¡å‘é€å®Œæ¯•
 			if (nIsSendSize == nSendLen)
 			{
 				delete []data;

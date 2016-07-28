@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-		DESC:	Á¬½ÓSCADA¿Í»§¶Ë¹ÜÀíÆ÷.
+		DESC:	è¿æ¥SCADAå®¢æˆ·ç«¯ç®¡ç†å™¨.
 		DATE:	2016-04-21
 		AUTHOR:	YUANLS
 */
@@ -22,28 +22,28 @@
 class ScadaClientMgr
 {
 public:
-	// ³õÊ¼»¯¿Í»§¶ËÏà¹ØÅäÖÃ
+	// åˆå§‹åŒ–å®¢æˆ·ç«¯ç›¸å…³é…ç½®
 	void	init();
 
-	// Æô¶¯¿Í»§¶ËÁ¬½Ó
+	// å¯åŠ¨å®¢æˆ·ç«¯è¿æ¥
 	void	start();
 
-	// ¹Ø±ÕÁ¬½Ó
+	// å…³é—­è¿æ¥
 	void	close();
 
-	// ·¢ËÍÊı¾İ
+	// å‘é€æ•°æ®
 	int		sendData(char* data,int length);
 
 	void	startTimer();
 	void	stopTimer();
 
-	//·¢ËÍ×ÜÕÙ»½¶¨Ê±Æ÷Æô¶¯¡¢Í£Ö¹
+	//å‘é€æ€»å¬å”¤å®šæ—¶å™¨å¯åŠ¨ã€åœæ­¢
 	void	startProTimer();
 	void	stopProTimer();
 
-	//·¢ËÍUÖ¡
+	//å‘é€Uå¸§
 	void	sendUFrame();
-	//Êı¾İÇøÊı¾İ½âÎö
+	//æ•°æ®åŒºæ•°æ®è§£æ
 	void	parseDataFrame(char *data,int datalength);
 
 private:

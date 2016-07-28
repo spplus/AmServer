@@ -1,4 +1,4 @@
-#include "ace/Log_Msg.h"
+ï»¿#include "ace/Log_Msg.h"
 #include "ace/Reactor.h"
 #include "recvTask.h"
 #include "scadaclientmgr.h"
@@ -44,7 +44,7 @@ int RecvTask::svc()
 
 	LOG->message("RecvTask exit");
 
-	// ÏµÍ³ÍË³ö
+	// ç³»ç»Ÿé€€å‡º
 	close();
 	return 0;
 }
@@ -52,12 +52,12 @@ int RecvTask::svc()
 void RecvTask::ParseData(ACE_Message_Block* mb)
 {
 
-	// 1. Êý¾Ý½â°ü
+	// 1. æ•°æ®è§£åŒ…
 	switch (mb->msg_type())
 	{
 	case SYS_MSG_CONNECTED:
 		{
-			//tcpÁ¬½Ó½¨Á¢ºó,Á¢¼´·¢ËÍUÖ¡½¨Á¢¹æÔ¼Á´½Ó
+			//tcpè¿žæŽ¥å»ºç«‹åŽ,ç«‹å³å‘é€Uå¸§å»ºç«‹è§„çº¦é“¾æŽ¥
 			App_ScadaClient::instance()->sendUFrame();
 
 			App_ScadaClient::instance()->stopTimer();
@@ -65,7 +65,7 @@ void RecvTask::ParseData(ACE_Message_Block* mb)
 		break;
 	case SYS_MSG_CLOSED:
 		{
-			//tcp¶Ï¿ªºó,Æô¶¯ÖØÐÂÁ¬½Ó·þÎñ¶Ë¶¨Ê±Æ÷£¬¹Ø±Õ¶¨Ê±·¢ËÍIÖ¡µÄ¶¨Ê±Æ÷
+			//tcpæ–­å¼€åŽ,å¯åŠ¨é‡æ–°è¿žæŽ¥æœåŠ¡ç«¯å®šæ—¶å™¨ï¼Œå…³é—­å®šæ—¶å‘é€Iå¸§çš„å®šæ—¶å™¨
 			App_ScadaClient::instance()->startTimer();
 
 			App_ScadaClient::instance()->stopProTimer();
@@ -75,10 +75,10 @@ void RecvTask::ParseData(ACE_Message_Block* mb)
 	default:
 		{
 			//sClientMsg*	msg = m_pack.decoderS(mb->rd_ptr(),mb->length());
-			// µ÷ÓÃÒµÎñÂ·¾¶´¦Àí
+			// è°ƒç”¨ä¸šåŠ¡è·¯å¾„å¤„ç†
 			//m_biz.exec(msg);
 
-			//½âÎöÊý¾ÝÇø
+			//è§£æžæ•°æ®åŒº
 			App_ScadaClient::instance()->parseDataFrame(mb->rd_ptr(),mb->length());
 
 		}

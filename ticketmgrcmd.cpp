@@ -1,4 +1,4 @@
-#include "ticketmgrcmd.h"
+ï»¿#include "ticketmgrcmd.h"
 
 
 void TicketMgrCmd::exec(sClientMsg* msg)
@@ -32,7 +32,7 @@ void TicketMgrCmd::getTicketList(sClientMsg* msg)
 	string sql;
 
 
-	//²éÑ¯²Ù×÷ÈÎÎñÁÐ±í
+	//æŸ¥è¯¢æ“ä½œä»»åŠ¡åˆ—è¡¨
 	char *psql = "select tk.ID,tkm.UserId,(select u.Name from users u where u.ID=tkm.UserId) as UserName, \
 		tkm.ActionUserId,(select u.Name from users u where u.ID=tkm.ActionUserId) as ActionUserName, \
 		tk.MissionId,tkm.Name as MissionName,tk.No,tk.ActionType,tk.Info,tk.ActionPerson,tk.ProtectPerson,tk.ChargePerson,tk.StartTime,tk.EndTime,tkm.PublishTime \
@@ -149,7 +149,7 @@ void TicketMgrCmd::getTicketList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -211,7 +211,7 @@ void TicketMgrCmd::createTicket(sClientMsg* msg)
 	PBNS::TicketActMgrMsg_Response resp;
 	resp.set_rescode(nret);
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -227,7 +227,7 @@ void TicketMgrCmd::queryTicketActions(sClientMsg* msg)
 
 	string sql;
 
-	//²éÑ¯²Ù×÷ÈÎÎñÁÐ±í
+	//æŸ¥è¯¢æ“ä½œä»»åŠ¡åˆ—è¡¨
 	char *psql = "select tka.TicketId,tka.OrderNum,tka.SystemContent,tka.Content from ticket_actions tka where tka.TicketId=%d ;";
 
 	sql = App_Dba::instance()->formatSql(psql,nId);
@@ -269,7 +269,7 @@ void TicketMgrCmd::queryTicketActions(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -288,7 +288,7 @@ void TicketMgrCmd::commitTicket(sClientMsg* msg)
 	PBNS::TicketMgrMsg_Response resp;
 	resp.set_rescode(nret);
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);

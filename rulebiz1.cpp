@@ -1,10 +1,10 @@
-#include "rulebiz1.h"
+ï»¿#include "rulebiz1.h"
 
 int RuleBiz1::topoBiz(int saveid,string unitcim,map<int,int>& ruleMap,string stationcim/* ="" */)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// 1.Èç¹ûÎª¿ª¹Ø»òµ¶Õ¢ÇÒ±ÕºÏ£¬¼ÌĞø±éÀú£¬¶Ï¿ªÔòÖÕÖ¹
+	// 1.å¦‚æœä¸ºå¼€å…³æˆ–åˆ€é—¸ä¸”é—­åˆï¼Œç»§ç»­éå†ï¼Œæ–­å¼€åˆ™ç»ˆæ­¢
 	if (bean.unittype() == eBREAKER || bean.unittype() == eSWITCH)
 	{
 		if (bean.state() == 1)
@@ -23,19 +23,19 @@ int RuleBiz1::topoBiz(int saveid,string unitcim,map<int,int>& ruleMap,string sta
 	}
 	else if (bean.unittype() == eGENERATOR)
 	{
-		// Èç¹ûÎª·¢µç»ú£¬Ìõ¼şÒ»³ÉÁ¢
+		// å¦‚æœä¸ºå‘ç”µæœºï¼Œæ¡ä»¶ä¸€æˆç«‹
 		COM->triggerRule(ruleMap,1);
 
-		// ·µ»Ø3£¬±íÊ¾ÖÕÖ¹¸ÃÁ¬½ÓµãÏÂµÄËùÓĞÉè±¸µÄ±éÀú¡£
+		// è¿”å›3ï¼Œè¡¨ç¤ºç»ˆæ­¢è¯¥è¿æ¥ç‚¹ä¸‹çš„æ‰€æœ‰è®¾å¤‡çš„éå†ã€‚
 		return 3;
 	}
 	else
 	{
-		// Èç¹ûÎª·Ç¿ª¹Ø¡¢µ¶Õ¢¡¢µØµ¶¡¢·¢µç»úµÄÈÎºÎÒ»ÖÖÔª¼şÀàĞÍ£¬Ìõ¼ş¶ş³ÉÁ¢£»
+		// å¦‚æœä¸ºéå¼€å…³ã€åˆ€é—¸ã€åœ°åˆ€ã€å‘ç”µæœºçš„ä»»ä½•ä¸€ç§å…ƒä»¶ç±»å‹ï¼Œæ¡ä»¶äºŒæˆç«‹ï¼›
 		COM->triggerRule(ruleMap,2);
 	}
 
-	// ÅĞ¶ÏÌõ¼şÊÇ·ñÈ«²¿´¥·¢£¬Èç¹ûÊÇÔò·µ»Ø£¬¹æÔò´¥·¢
+	// åˆ¤æ–­æ¡ä»¶æ˜¯å¦å…¨éƒ¨è§¦å‘ï¼Œå¦‚æœæ˜¯åˆ™è¿”å›ï¼Œè§„åˆ™è§¦å‘
 	if (ruleMap.size()>0)
 	{
 		return 1;

@@ -1,4 +1,4 @@
-#include "dbaccess.h"
+ï»¿#include "dbaccess.h"
 #include "defines.h"
 #include "confmgr.h"
 
@@ -23,7 +23,7 @@ string DbAccess::formatSql(const char * fmt, ...)
 
 void DbAccess::init()
 {
-	// ¼ÓÔØÊı¾İ¿âÅäÖÃ
+	// åŠ è½½æ•°æ®åº“é…ç½®
 	m_dbhost = App_Config::instance()->getValue(DB_ROOT,"DBAddr");
 	m_dbname =App_Config::instance()->getValue(DB_ROOT,"DBName");
 	m_dbpwd = App_Config::instance()->getValue(DB_ROOT,"UserPwd");
@@ -41,7 +41,7 @@ void DbAccess::init()
 
 	LOG->message("MySQL ssock init OK.");
 */
-	//Á¬½Óµ½Ö¸¶¨µÄÊı¾İ¿â
+	//è¿æ¥åˆ°æŒ‡å®šçš„æ•°æ®åº“
 	
 	/*if (conn2db())
 	{
@@ -61,7 +61,7 @@ bool DbAccess::conn2db()
 		return  false;
 	}
 
-	//Á¬½Óµ½Ö¸¶¨µÄÊı¾İ¿â
+	//è¿æ¥åˆ°æŒ‡å®šçš„æ•°æ®åº“
 	m_mysql =mysql_real_connect(m_mysql, m_dbhost.c_str(),m_dbuser.c_str(),m_dbpwd.c_str(), m_dbname.c_str(),m_dbport, NULL, 0);
 	if(!m_mysql)
 	{
@@ -69,8 +69,12 @@ bool DbAccess::conn2db()
 		unsigned int mtint = mysql_errno(m_mysql);
 		return false;
 	}
-
+#ifdef WIN32
 	mysql_set_character_set(m_mysql,"gbk");
+#else
+	mysql_set_character_set(m_mysql,"utf8");
+#endif
+	
 	return true;
 }
 

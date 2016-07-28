@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:	»ñÈ¡¿ª¹Ø×´Ì¬.
+	DESC:	è·å–å¼€å…³çŠ¶æ€.
 	DATE:	2016-05-03
 	AUTHOR:	YUANLS
 */
@@ -17,30 +17,30 @@ public:
 	void		exec(sClientMsg* msg);
 
 private:
-	// »ñÈ¡Éè±¸×´Ì¬
+	// è·å–è®¾å¤‡çŠ¶æ€
 	void		getDevState(sClientMsg* msg);
 
-	// »ñÈ¡Õ¾µã·ÖÀà
+	// è·å–ç«™ç‚¹åˆ†ç±»
 	void		getStationType(sClientMsg* msg);
 
-	// »ñÈ¡Õ¾µãÁĞ±í
+	// è·å–ç«™ç‚¹åˆ—è¡¨
 	void		getStationList(sClientMsg* msg);
 
 	void		getStationByTypeId(PBNS::StationTypeBean *typebean);
 
-	// ¹ÒÕªÅÆ
+	// æŒ‚æ‘˜ç‰Œ
 	void		updateIsBoard(sClientMsg* msg);			
 
-	// ÉèÖÃµçÔ´µã
+	// è®¾ç½®ç”µæºç‚¹
 	void		updateIsPower(sClientMsg* msg);
 
-	// ÉèÖÃ½ø³öÏß
+	// è®¾ç½®è¿›å‡ºçº¿
 	void		updateIsLine(sClientMsg* msg);
 
-	// »ñÈ¡´æµµÁĞ±í
+	// è·å–å­˜æ¡£åˆ—è¡¨
 	void		getSavingList(sClientMsg* msg);
 
-	// ±£´æ´æµµ
+	// ä¿å­˜å­˜æ¡£
 	void		writeSaving(sClientMsg* msg);
 };
 

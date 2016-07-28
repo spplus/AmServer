@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:	CIMÎÄ¼şÈë¿âÈÎÎñ.
+	DESC:	CIMæ–‡ä»¶å…¥åº“ä»»åŠ¡.
 	DATE:	2016-07-23
 	AUTHOR:	YUANLS
 */
@@ -21,7 +21,7 @@ public:
 	CimTask();
 
 public:
-	// Æô¶¯·şÎñ
+	// å¯åŠ¨æœåŠ¡
 	void		start();
 	void		stop();
 	bool		fileCopy(const char* destpath,const char* srcpath);
@@ -33,22 +33,22 @@ protected:
 	void		updateIsNew();
 	bool		needUpdate(const char* destpath,const char* srcpath);
 private:
-	// ÊÇ·ñÆô¶¯
+	// æ˜¯å¦å¯åŠ¨
 	bool			m_stop;
 
-	// ¼ì²âÊ±¼ä
+	// æ£€æµ‹æ—¶é—´
 	int			m_checkHour;
 
-	// ÉÏ´Î¼ì²éÈÕÆÚ
+	// ä¸Šæ¬¡æ£€æŸ¥æ—¥æœŸ
 	string		m_lastCheckDate;
 
-	// FTPÄ¿Â¼
+	// FTPç›®å½•
 	string		m_ftpPath;
 
-	// WorkÄ¿Â¼
+	// Workç›®å½•
 	string		m_workPath;
 
-	// ÎÄ¼şÃû³Æ
+	// æ–‡ä»¶åç§°
 	string		m_cimName;
 };
 typedef ACE_Singleton<CimTask, ACE_Recursive_Thread_Mutex> App_CIMTask;

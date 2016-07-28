@@ -1,4 +1,4 @@
-
+﻿
 #ifndef __CLIENTHANDLE_H__
 #define __CLIENTHANDLE_H__
 

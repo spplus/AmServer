@@ -1,4 +1,4 @@
-
+ï»¿
 #include "defines.h"
 #include "clientmgr.h"
 ClientMgr::ClientMgr()
@@ -33,7 +33,7 @@ ClientHandler* ClientMgr::get(unsigned int connid)
 
 int ClientMgr::sendData(unsigned int connid,string data,int msgtype)
 {
-	// ´ò°üÊı¾İ
+	// Ğ”Ñ’ĞÑœĞªÂ§ĞĞ½
 	int outLength = 0;
 	char * buff = m_pack.encoder(data,msgtype,outLength);
 	

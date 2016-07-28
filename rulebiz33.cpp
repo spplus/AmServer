@@ -1,4 +1,4 @@
-#include "rulebiz33.h"
+ï»¿#include "rulebiz33.h"
 
 
 
@@ -7,7 +7,7 @@ int RuleBiz33::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 	if (bean.unittype() == eSWITCH || bean.unittype() == eBREAKER)
 	{
-		// Èç¹ûÎª¿ª¹Ø»òµ¶Õ¢ÇÒ±ÕºÏ£¬¼ÌĞø±éÀú£¬¶Ï¿ªÔòÖÕÖ¹
+		// å¦‚æœä¸ºå¼€å…³æˆ–åˆ€é—¸ä¸”é—­åˆï¼Œç»§ç»­éå†ï¼Œæ–­å¼€åˆ™ç»ˆæ­¢
 		if (bean.state() == 1)
 		{
 			return 1;
@@ -19,20 +19,20 @@ int RuleBiz33::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}
 	else if (bean.unittype() == eREACTOR)
 	{
-		// Èç¹ûÎªµç¿¹Æ÷£¬Âú×ãÌõ¼ş¶ş
+		// å¦‚æœä¸ºç”µæŠ—å™¨ï¼Œæ»¡è¶³æ¡ä»¶äºŒ
 		COM->triggerRule(ruleMap,2);
 	
 		return 0;
 	}
 	else if (bean.unittype() == eCAPACITOR)
 	{
-		// Èç¹ûÎªµçÈİÆ÷£¬Âú×ãÌõ¼şÒ»
+		// å¦‚æœä¸ºç”µå®¹å™¨ï¼Œæ»¡è¶³æ¡ä»¶ä¸€
 		COM->triggerRule(ruleMap,1);
 		return 1;
 	}
 	else if (bean.unittype() == eTRANSFORMER)
 	{
-		// Èç¹ûÎª±äÑ¹Æ÷£¬ÖÕÖ¹¸ÃÌõÂ·µÄ±éÀú
+		// å¦‚æœä¸ºå˜å‹å™¨ï¼Œç»ˆæ­¢è¯¥æ¡è·¯çš„éå†
 		return 0;
 	}
 	else if (bean.unittype() == eGROUNDSWITCH)
@@ -41,7 +41,7 @@ int RuleBiz33::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}
 	else
 	{
-		// Èç¹ûÎª·Ç¿ª¹Ø¡¢µ¶Õ¢¡¢µØµ¶¡¢µç¿¹Æ÷¡¢±äÑ¹Æ÷µÄÈÎºÎÔª¼ş£¨ºóÓÃA´úÖ¸£©£¬¶Ôµç¿¹Æ÷ºÍAµÄÁíÒ»²àÁ¬½Óµã³ÖĞøÍùÏÂ±éÀú£¬Ö±ÖÁ×îÖÕ
+		// å¦‚æœä¸ºéå¼€å…³ã€åˆ€é—¸ã€åœ°åˆ€ã€ç”µæŠ—å™¨ã€å˜å‹å™¨çš„ä»»ä½•å…ƒä»¶ï¼ˆåç”¨Aä»£æŒ‡ï¼‰ï¼Œå¯¹ç”µæŠ—å™¨å’ŒAçš„å¦ä¸€ä¾§è¿æ¥ç‚¹æŒç»­å¾€ä¸‹éå†ï¼Œç›´è‡³æœ€ç»ˆ
 		return 1;
 	}
 

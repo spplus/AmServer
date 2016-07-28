@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:	¹«¹²±äÁ¿¶¨Òå.
+	DESC:	å…¬å…±å˜é‡å®šä¹‰.
 	DATE:	2016-04-20
 	AUTHOR:	YUANLS
 */
@@ -20,43 +20,43 @@
 #include <vector>
 using namespace std;
 
-// °üÍ·
+// åŒ…å¤´
 const short		FRAM_TAG_HEAD = 	0x11;
 
-// °üÎ²
+// åŒ…å°¾
 const short		FRAME_TAG_END = 	0x88;
 
-// °ü±êÊ¶³¤¶È
+// åŒ…æ ‡è¯†é•¿åº¦
 #define		FRAME_TAG__LEN	2
 
-// ÏûÏ¢³¤¶È
+// æ¶ˆæ¯é•¿åº¦
 #define		FRAME_HEAD_LEN	4
 
-// ÏûÏ¢ÀàĞÍ³¤¶È
+// æ¶ˆæ¯ç±»å‹é•¿åº¦
 #define		DATA_TYPE_LEN		4
 
-// ½ÓÊÕµÈ´ı³¬Ê±
+// æ¥æ”¶ç­‰å¾…è¶…æ—¶
 #define		RECV_TIMEOUT		5
 
-// ·¢ËÍµÈ´ı³¬Ê±
+// å‘é€ç­‰å¾…è¶…æ—¶
 #define		SEND_TIMEOUT		5
 
-// ×î´óÊı¾İ°ü³¤¶È
+// æœ€å¤§æ•°æ®åŒ…é•¿åº¦
 #define		MAX_PACKET_LEN		20*1024
 
-// ÈÕÖ¾ÅäÖÃÎÄ¼ş
+// æ—¥å¿—é…ç½®æ–‡ä»¶
 #define		CONFIG_FILE ACE_TEXT("logconf.conf")
 
-// ·şÎñÆ÷ÅäÖÃÎÄ¼ş
+// æœåŠ¡å™¨é…ç½®æ–‡ä»¶
 #define		SERVER_CONFIG "server.conf"
 
-// ·şÎñÆ÷ÅäÖÃ¸ùKEY
+// æœåŠ¡å™¨é…ç½®æ ¹KEY
 #define		SERVER_ROOT		"SERVER"
 
-// Êı¾İ¿âÅäÖÃ¸ùKEY
+// æ•°æ®åº“é…ç½®æ ¹KEY
 #define		DB_ROOT			"DB"
 
-// CIMÎÄ¼şÅäÖÃKEY
+// CIMæ–‡ä»¶é…ç½®KEY
 #define		CIM_ROOT						"CIM"
 #define		CIM_NAME						"CimName"
 #define		CIM_FTPPATH					"FtpPath"
@@ -64,29 +64,29 @@ const short		FRAME_TAG_END = 	0x88;
 #define		CIM_CHECKHOUR			"CheckHour"
 #define		CIM_PRODUCTID			"ProductId"
 
-// CIMÎÄ¼şÄ¬ÈÏ¼ì²éÊ±¼ä
+// CIMæ–‡ä»¶é»˜è®¤æ£€æŸ¥æ—¶é—´
 #define		CIM_DEFAULT_CHECKHOUR		23
 
-// ÈÕÖ¾ÎÄ¼şÃû³Æ
+// æ—¥å¿—æ–‡ä»¶åç§°
 #define		LOGNAME "AmServer"
 
-// ±£ÁôÏûÏ¢ÀàĞÍ¶¨Òå
-#define		SYS_MSG_CONNECTED		10		// Á¬½Ó½¨Á¢
+// ä¿ç•™æ¶ˆæ¯ç±»å‹å®šä¹‰
+#define		SYS_MSG_CONNECTED		10		// è¿æ¥å»ºç«‹
 
-#define		SYS_MSG_CLOSED			11		// Á¬½Ó¶Ï¿ª
+#define		SYS_MSG_CLOSED			11		// è¿æ¥æ–­å¼€
 
-// ÈÕÖ¾¶ÔÏó¼ò»¯
+// æ—¥å¿—å¯¹è±¡ç®€åŒ–
 #define		LOG		App_Logger::instance()	
 
-// ¹«¹²·½·¨
+// å…¬å…±æ–¹æ³•
 #define		COM		App_Com::instance()
 
-// Êı¾İ¿â¶ÔÏó
+// æ•°æ®åº“å¯¹è±¡
 #define		DBA		App_Dba::instance()
 
 #define		PBNS	com::spplus::buff
 //
-//// ÖØ¶¨Òå²éÑ¯½á¹ûÊı¾İÀàĞÍ
+//// é‡å®šä¹‰æŸ¥è¯¢ç»“æœæ•°æ®ç±»å‹
 typedef		map<string,string>				STRMAP;
 typedef		STRMAP::value_type				MAPVAL;
 typedef		STRMAP::iterator					MAP_ITERATOR;
@@ -95,6 +95,6 @@ typedef		map<int,int>						RMAP;
 typedef		RMAP::value_type					RVAL;
 typedef		RMAP::iterator					R_ITERATOR;
 
-// ¶¨ÒåÉè±¸ÀàĞÍ
+// å®šä¹‰è®¾å¤‡ç±»å‹
 //enum eUnitType{eBreaker,eSwitch,eBus,eCapacitor,eLoad,eGenerator,ePt,eTransformer,eLine};
 #endif

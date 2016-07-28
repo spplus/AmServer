@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-		DESC:	ÍØÆË·ÖÎö»ùÀà£¬Ìá¹©ÍØÆË·ÖÎöµÄ¿ò¼ÜÂß¼­£¬¾ßÌåÒµÎñÂß¼­£¬Í¨¹ıĞéº¯Êı£¬ÔÚ×ÓÀàÊµÏÖ.
+		DESC:	æ‹“æ‰‘åˆ†æåŸºç±»ï¼Œæä¾›æ‹“æ‰‘åˆ†æçš„æ¡†æ¶é€»è¾‘ï¼Œå…·ä½“ä¸šåŠ¡é€»è¾‘ï¼Œé€šè¿‡è™šå‡½æ•°ï¼Œåœ¨å­ç±»å®ç°.
 		DATE:	2016-06-25
 		AUTHOR:	YUANLS
 */
@@ -18,36 +18,36 @@ class TopoBase
 {
 public:
 
-	// ÍØÆË·ÖÎö¿ò¼ÜËã·¨
+	// æ‹“æ‰‘åˆ†ææ¡†æ¶ç®—æ³•
 	virtual	bool		topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
 
-	// Ö´ĞĞ¾ßÌåµÄÒµÎñÂß¼­ 
+	// æ‰§è¡Œå…·ä½“çš„ä¸šåŠ¡é€»è¾‘ 
 	/*
-	·µ»ØÖµËµÃ÷£º1 ¼ÌĞøÍØÆË £¬0 ²»ÓÃµİ¹éÍØÆË£¬2 Ö±½ÓÍË³ö£¬¹æÔò²»»á±»´¥·¢
+	è¿”å›å€¼è¯´æ˜ï¼š1 ç»§ç»­æ‹“æ‰‘ ï¼Œ0 ä¸ç”¨é€’å½’æ‹“æ‰‘ï¼Œ2 ç›´æ¥é€€å‡ºï¼Œè§„åˆ™ä¸ä¼šè¢«è§¦å‘
 	*/
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim="") = 0;
 
-	// ÉèÖÃµ±Ç°²Ù×÷µÄÉè±¸
+	// è®¾ç½®å½“å‰æ“ä½œçš„è®¾å¤‡
 	void				setOpcim(string	cimid);
 
-	// ÉèÖÃ¿Í»§¶Ë²Ù×÷Éè±¸ÁĞ±í
+	// è®¾ç½®å®¢æˆ·ç«¯æ“ä½œè®¾å¤‡åˆ—è¡¨
 	void				setReq(PBNS::OprationMsg_Request req);
 
-	// ÉèÖÃ¾­Àú¹ıµÄ½Úµã
+	// è®¾ç½®ç»å†è¿‡çš„èŠ‚ç‚¹
 	void				setPassedNodes(STRMAP &passedNodes);
 
 protected:
-	// Í¨¹ıcimid»ñÈ¡unitĞÅÏ¢
+	// é€šè¿‡cimidè·å–unitä¿¡æ¯
 	PBNS::StateBean getUnitByCim(int saveid,string unitcim);
 
-	// ¸ù¾İÔª¼şID²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã
+	// æ ¹æ®å…ƒä»¶IDæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹
 	LISTMAP			getConnIdByUnitsId(string unitid);
 
-	// ¸ù¾İÁ¬½Óµã²éÕÒ¹ØÁªµÄÉè±¸
+	// æ ¹æ®è¿æ¥ç‚¹æŸ¥æ‰¾å…³è”çš„è®¾å¤‡
 	LISTMAP			getUnitsByConnId(string connid,string saveid);
 
 protected:
-	// ±¾´Î²Ù×÷Éè±¸µÄcim
+	// æœ¬æ¬¡æ“ä½œè®¾å¤‡çš„cim
 	string			m_opcim;
 	STRMAP			m_passedNodes;
 	PBNS::OprationMsg_Request	m_req;

@@ -1,4 +1,4 @@
-
+ï»¿
 #include "defines.h"
 #include "comutils.h"
 #include "cimloader.h"
@@ -192,7 +192,7 @@ int CimLoader::saveBaseVoltage()
 	MAPBVOL::iterator bviter;
 
 	/*
-	//´´½¨ÁÙÊ±±í
+	//åˆ›å»ºä¸´æ—¶è¡¨
 	QString dropsql = QString("DROP TABLE IF EXISTS `voltages_temp`;");
 	int ret = execSQL(dropsql.toStdString().c_str());
 
@@ -211,7 +211,7 @@ int CimLoader::saveBaseVoltage()
 	QString sqlVal = "";
 	QString sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (iter=mapBVol.begin();iter!=mapBVol.end();iter++)
 	{
 		QString sqlval = QString("('%1','%2','%3'),").arg(iter->second.bvcimid.c_str()).arg(iter->second.bvname.c_str()).arg(iter->second.bvval.c_str());
@@ -219,17 +219,17 @@ int CimLoader::saveBaseVoltage()
 		sqlVal.append(sqlval);
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.left(sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = execSQL(sql.toStdString().c_str());
 */
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (bviter=mapBVol.begin();bviter!=mapBVol.end();bviter++)
 	{
 		//SELECT COUNT(CimId) AS count FROM voltages WHERE CimId='200000003'
@@ -259,7 +259,7 @@ int CimLoader::saveBaseVoltage()
 			qsql = DBA->formatSql(psql,bviter->second.bvcimid.c_str(),bviter->second.bvname.c_str(),bviter->second.bvval.c_str());
 
 			//insersql = QString("INSERT INTO voltages (cimid,name,volvalue) VALUES ('%1','%2','%3')").arg(bviter->second.bvcimid.c_str()).arg(bviter->second.bvname.c_str()).arg(bviter->second.bvval.c_str());;
-			//Ö´ÐÐ²åÈëÓï¾ä
+			//æ‰§è¡Œæ’å…¥è¯­å¥
 			ret = DBA->execSql(qsql.c_str());
 			if (ret <= 0)
 			{
@@ -274,7 +274,7 @@ int CimLoader::saveBaseVoltage()
 			psql = "UPDATE voltages SET Name='%s',VolValue='%s' WHERE CimId='%s'";
 			qsql = DBA->formatSql(psql,bviter->second.bvname.c_str(),bviter->second.bvval.c_str(),bviter->second.bvcimid.c_str());
 			//QString updatesql = QString("UPDATE voltages SET Name='%1',VolValue='%2' WHERE CimId='%3'").arg(bviter->second.bvname.c_str()).arg(bviter->second.bvval.c_str()).arg(bviter->second.bvcimid.c_str());
-			//Ö´ÐÐ²åÈëÓï¾ä
+			//æ‰§è¡Œæ’å…¥è¯­å¥
 			ret = DBA->execSql(qsql.c_str());
 			if (ret <= 0)
 			{
@@ -300,7 +300,7 @@ int CimLoader::saveSubstation()
 	MAPSUBSTATION mapSubstion = parseXML.getSubstation();
 	MAPSUBSTATION::iterator subiter;
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (subiter=mapSubstion.begin();subiter!=mapSubstion.end();subiter++)
 	{
 		//SELECT COUNT(CimId) AS count FROM stations WHERE CimId='210000201'
@@ -330,7 +330,7 @@ int CimLoader::saveSubstation()
 			
 			sql = DBA->formatSql(psql,subiter->second.faccimid.c_str(),subiter->second.facname.c_str(),subiter->second.faccrname.c_str());
 			//QString insersql = QString("INSERT INTO stations (categoryid,cimid,name,currentname) VALUES (0,'%1','%2','%3')").arg(subiter->second.faccimid.c_str()).arg(subiter->second.facname.c_str()).arg(subiter->second.faccrname.c_str());
-			//Ö´ÐÐ²åÈëÓï¾ä
+			//æ‰§è¡Œæ’å…¥è¯­å¥
 			ret = DBA->execSql(sql.c_str());
 			if (ret <= 0)
 			{
@@ -344,7 +344,7 @@ int CimLoader::saveSubstation()
 			psql = "UPDATE stations SET Name='%s',currentname='%s' WHERE CimId='%s'";
 			sql = DBA->formatSql(psql,subiter->second.facname.c_str(),subiter->second.faccrname.c_str(),subiter->second.faccimid.c_str());
 			//QString updatesql = QString("UPDATE stations SET Name='%1',currentname='%2' WHERE CimId='%3'").arg(subiter->second.facname.c_str()).arg(subiter->second.faccrname.c_str()).arg(subiter->second.faccimid.c_str());
-			//Ö´ÐÐ²åÈëÓï¾ä
+			//æ‰§è¡Œæ’å…¥è¯­å¥
 			ret = DBA->execSql(sql.c_str());
 			if (ret <= 0)
 			{
@@ -371,7 +371,7 @@ int CimLoader::saveVollevel()
 	MAPVOLEVEL mapVolel = parseXML.getVollevel();
 	MAPVOLEVEL::iterator vliter;
 
-	//´´½¨ÁÙÊ±±í:´´½¨Ö®Ç°É¾³ýÁÙÊ±±í
+	//åˆ›å»ºä¸´æ—¶è¡¨:åˆ›å»ºä¹‹å‰åˆ é™¤ä¸´æ—¶è¡¨
 
 
 	string dropsql = ("DROP TABLE IF EXISTS `station_vol_temp`;");
@@ -382,7 +382,7 @@ int CimLoader::saveVollevel()
 		save_log(m_log);
 	}
 
-	//´´½¨ÁÙÊ±±í
+	//åˆ›å»ºä¸´æ—¶è¡¨
 
 	string sql= ("CREATE TABLE `station_vol_temp` (\
 		`StationId` varchar(100) NOT NULL,\
@@ -400,20 +400,20 @@ int CimLoader::saveVollevel()
 	string sqlVal = "";
 	//string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (vliter=mapVolel.begin();vliter!=mapVolel.end();vliter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s'),",vliter->second.faccimid.c_str(),vliter->second.bvcimid.c_str());
 		sqlVal.append(sqlval);
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	
 	if (ret <= 0)
@@ -422,7 +422,7 @@ int CimLoader::saveVollevel()
 		return RC_FAILURE;
 	}
 
-	//É¾³ýstation_vol±íÖÐÄÚÈÝ
+	//åˆ é™¤station_volè¡¨ä¸­å†…å®¹
 	string delsql = ("DELETE FROM station_vol;");
 	ret = DBA->execSql(delsql.c_str());
 	if (ret <= 0)
@@ -432,7 +432,7 @@ int CimLoader::saveVollevel()
 	}
 
 
-	//½«ÁÙÊ±±íÖÐµÄÄÚÈÝ²åÈëµ½station_volÖÐ
+	//å°†ä¸´æ—¶è¡¨ä¸­çš„å†…å®¹æ’å…¥åˆ°station_volä¸­
 	string selupsql = ("INSERT INTO station_vol(stationid,volid) \
 		SELECT (SELECT id from stations where CimId = svt.stationid ) AS stationid,(SELECT id FROM voltages WHERE CimId = svt.volid) AS volid from station_vol_temp svt");
 	ret = DBA->execSql(selupsql.c_str());
@@ -442,7 +442,7 @@ int CimLoader::saveVollevel()
 		save_log(m_log);
 	}
 
-	//×îºóÉ¾³ýÁÙÊ±±í
+	//æœ€åŽåˆ é™¤ä¸´æ—¶è¡¨
 	ret = DBA->execSql(dropsql.c_str());
 	if (ret <= 0)
 	{
@@ -461,7 +461,7 @@ int CimLoader::saveBreaker()
 	MAPBREAKER::iterator brkiter;
 
 
-	//É¾³ýUnits±íÖÐÄÚÈÝ
+	//åˆ é™¤Unitsè¡¨ä¸­å†…å®¹
 	string delsql = ("DELETE FROM Units;");
 	ret = DBA->execSql(delsql.c_str());
 	if (ret <= 0)
@@ -474,7 +474,7 @@ int CimLoader::saveBreaker()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (brkiter=mapBreaker.begin();brkiter!=mapBreaker.end();brkiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",brkiter->second.brkcimid.c_str(),brkiter->second.brkname.c_str(),brkiter->second.faccimid.c_str(),brkiter->second.bvcimid.c_str(),eBreaker);
@@ -484,13 +484,13 @@ int CimLoader::saveBreaker()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -520,7 +520,7 @@ int CimLoader::saveDisconnector()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (distoriter=mapDisctor.begin();distoriter!=mapDisctor.end();distoriter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",distoriter->second.distcimid.c_str(),distoriter->second.distname.c_str(),distoriter->second.faccimid.c_str(),distoriter->second.bvcimid.c_str(),eSwitch);
@@ -530,13 +530,13 @@ int CimLoader::saveDisconnector()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -565,7 +565,7 @@ int CimLoader::saveGrdDisconnector()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (grditer=mapGrdDisctor.begin();grditer!=mapGrdDisctor.end();grditer++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",grditer->second.gdistcimid.c_str(),grditer->second.gdistname.c_str(),grditer->second.faccimid.c_str(),grditer->second.bvcimid.c_str(),eGrdSwitch);
@@ -575,13 +575,13 @@ int CimLoader::saveGrdDisconnector()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -610,7 +610,7 @@ int CimLoader::saveBusbarSection()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (busiter=mapBus.begin();busiter!=mapBus.end();busiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",busiter->second.buscimid.c_str(),busiter->second.busname.c_str(),busiter->second.faccimid.c_str(),busiter->second.bvcimid.c_str(),eBus);
@@ -620,13 +620,13 @@ int CimLoader::saveBusbarSection()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -654,7 +654,7 @@ int CimLoader::saveCompensator()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (cptiter=mapCmptor.begin();cptiter!=mapCmptor.end();cptiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",cptiter->second.cptorcimid.c_str(),cptiter->second.cptorname.c_str(),cptiter->second.faccimid.c_str(),cptiter->second.bvcimid.c_str(),eCapacitor);
@@ -664,13 +664,13 @@ int CimLoader::saveCompensator()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -698,7 +698,7 @@ int CimLoader::saveEnergyConsumer()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (eyeriter=mapEyer.begin();eyeriter!=mapEyer.end();eyeriter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",eyeriter->second.eyccimid.c_str(),eyeriter->second.eycname.c_str(),eyeriter->second.faccimid.c_str(),eyeriter->second.bvcimid.c_str(),eLoad);
@@ -708,13 +708,13 @@ int CimLoader::saveEnergyConsumer()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -742,7 +742,7 @@ int CimLoader::saveSynchronousMachine()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (mchiter=mapMch.begin();mchiter!=mapMch.end();mchiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",mchiter->second.symhcimid.c_str(),mchiter->second.symhname.c_str(),mchiter->second.faccimid.c_str(),mchiter->second.bvcimid.c_str(),eGenerator);
@@ -752,13 +752,13 @@ int CimLoader::saveSynchronousMachine()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -787,7 +787,7 @@ int CimLoader::savePotentialTransformer()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (ptiter=mapPT.begin();ptiter!=mapPT.end();ptiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",ptiter->second.ptcimid.c_str(),ptiter->second.ptname.c_str(),ptiter->second.faccimid.c_str(),ptiter->second.bvcimid.c_str(),ePt);
@@ -797,13 +797,13 @@ int CimLoader::savePotentialTransformer()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -831,7 +831,7 @@ int CimLoader::savePowerTransformer()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (ptiter=mapPtfut.begin();ptiter!=mapPtfut.end();ptiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",ptiter->second.ptfcimid.c_str(),ptiter->second.ptfname.c_str(),ptiter->second.faccimid.c_str(),ptiter->second.bvcimid.c_str(),eTransformer);
@@ -841,13 +841,13 @@ int CimLoader::savePowerTransformer()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -875,7 +875,7 @@ int CimLoader::saveACLineSegment()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (ptiter=mapPtfut.begin();ptiter!=mapPtfut.end();ptiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d),",ptiter->second.aclcimid.c_str(),ptiter->second.aclname.c_str(),ptiter->second.fac1cimid.c_str(),ptiter->second.bvcimid.c_str(),eLINE);
@@ -885,13 +885,13 @@ int CimLoader::saveACLineSegment()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -915,7 +915,7 @@ int CimLoader::saveTransformerWinding()
 	MAPTRANSFWUT mapTsfw = parseXML.getTransformerWindingUnt();
 	MAPTRANSFWUT::iterator tsfwiter;
 
-	//´´½¨ÁÙÊ±±í:´´½¨Ö®Ç°É¾³ýÁÙÊ±±í
+	//åˆ›å»ºä¸´æ—¶è¡¨:åˆ›å»ºä¹‹å‰åˆ é™¤ä¸´æ—¶è¡¨
 	string dropsql = string("DROP TABLE IF EXISTS `Windings_temp`;");
 	ret = DBA->execSql(dropsql.c_str());
 	if (ret <= 0)
@@ -929,7 +929,7 @@ int CimLoader::saveTransformerWinding()
 	
 	}
 
-	//´´½¨ÁÙÊ±±í
+	//åˆ›å»ºä¸´æ—¶è¡¨
 	string createsql = string("CREATE TABLE `Windings_temp` (\
 		`UnitCim` varchar(100) NOT NULL,\
 		`VolId` varchar(100) NOT NULL,\
@@ -953,7 +953,7 @@ int CimLoader::saveTransformerWinding()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (tsfwiter=mapTsfw.begin();tsfwiter!=mapTsfw.end();tsfwiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s',%d,%d),",tsfwiter->second.ptfcimid.c_str(),tsfwiter->second.bvcimid.c_str(),tsfwiter->second.wdindex,tsfwiter->second.wdgrade);
@@ -963,13 +963,13 @@ int CimLoader::saveTransformerWinding()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -983,7 +983,7 @@ int CimLoader::saveTransformerWinding()
 	
 	}
 
-	//É¾³ýWindings±íÖÐÄÚÈÝ
+	//åˆ é™¤Windingsè¡¨ä¸­å†…å®¹
 	string delsql = string("DELETE FROM Windings;");
 	ret = DBA->execSql(delsql.c_str());
 	if (ret <= 0)
@@ -998,7 +998,7 @@ int CimLoader::saveTransformerWinding()
 	}
 
 
-	//½«ÁÙÊ±±íÖÐµÄÄÚÈÝ²åÈëµ½WindingsÖÐ
+	//å°†ä¸´æ—¶è¡¨ä¸­çš„å†…å®¹æ’å…¥åˆ°Windingsä¸­
 	string selupsql = string("INSERT INTO Windings(UnitCim,VolId,WindingIndex,WindingGrade) \
 							   SELECT UnitCim,(SELECT id FROM voltages WHERE CimId = wdt.volid) AS volid ,WindingIndex,WindingGrade from Windings_temp wdt");
 	ret = DBA->execSql(selupsql.c_str());
@@ -1012,7 +1012,7 @@ int CimLoader::saveTransformerWinding()
 		
 	}
 
-	//×îºóÉ¾³ýÁÙÊ±±í
+	//æœ€åŽåˆ é™¤ä¸´æ—¶è¡¨
 	ret = DBA->execSql(dropsql.c_str());
 	if (ret <= 0)
 	{
@@ -1039,7 +1039,7 @@ int CimLoader::saveRelateLine()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (aciter=mapACline.begin();aciter!=mapACline.end();aciter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s'),",aciter->second.aclcimid.c_str(),aciter->second.fac1cimid.c_str());
@@ -1055,13 +1055,13 @@ int CimLoader::saveRelateLine()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -1085,7 +1085,7 @@ int CimLoader::saveConnectivityNode()
 	MAPCNODE mapCNode = parseXML.getConnectivityNode();
 	MAPCNODE::iterator cnoditer;
 
-	//´´½¨ÁÙÊ±±í:´´½¨Ö®Ç°É¾³ýÁÙÊ±±í
+	//åˆ›å»ºä¸´æ—¶è¡¨:åˆ›å»ºä¹‹å‰åˆ é™¤ä¸´æ—¶è¡¨
 	string dropsql = string("DROP TABLE IF EXISTS `connections_temp`;");
 	ret = DBA->execSql(dropsql.c_str());
 	if (ret <= 0)
@@ -1099,7 +1099,7 @@ int CimLoader::saveConnectivityNode()
 	
 	}
 
-	//´´½¨ÁÙÊ±±í
+	//åˆ›å»ºä¸´æ—¶è¡¨
 	string createsql = string("CREATE TABLE `connections_temp` (\
 		`CimId` varchar(100) NOT NULL,\
 		`Name` varchar(100) NOT NULL,\
@@ -1122,7 +1122,7 @@ int CimLoader::saveConnectivityNode()
 	string sqlVal = "";
 	string  sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (cnoditer=mapCNode.begin();cnoditer!=mapCNode.end();cnoditer++)
 	{
 		string sqlval = DBA->formatSql("('%s,'%s','%d'),",cnoditer->second.nodecimid.c_str(),cnoditer->second.nodename.c_str(),cnoditer->second.faccimid.c_str());
@@ -1132,13 +1132,13 @@ int CimLoader::saveConnectivityNode()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -1152,7 +1152,7 @@ int CimLoader::saveConnectivityNode()
 		
 	}
 
-	//É¾³ýconnections±íÖÐÄÚÈÝ
+	//åˆ é™¤connectionsè¡¨ä¸­å†…å®¹
 	string delsql = string("DELETE FROM connections;");
 	ret = DBA->execSql(delsql.c_str());
 	if (ret <= 0)
@@ -1167,7 +1167,7 @@ int CimLoader::saveConnectivityNode()
 	}
 
 
-	//½«ÁÙÊ±±íÖÐµÄÄÚÈÝ²åÈëµ½connectionsÖÐ
+	//å°†ä¸´æ—¶è¡¨ä¸­çš„å†…å®¹æ’å…¥åˆ°connectionsä¸­
 	string selupsql = string("INSERT INTO connections(CimId,Name,StationId) \
 							   SELECT CimId,Name,(SELECT id from stations where CimId = stnt.stationid ) AS stationid  from connections_temp stnt");
 	ret = DBA->execSql(selupsql.c_str());
@@ -1182,7 +1182,7 @@ int CimLoader::saveConnectivityNode()
 		
 	}
 
-	//×îºóÉ¾³ýÁÙÊ±±í
+	//æœ€åŽåˆ é™¤ä¸´æ—¶è¡¨
 	ret = DBA->execSql(dropsql.c_str());
 	if (ret <= 0)
 	{
@@ -1209,7 +1209,7 @@ int CimLoader::saveTerminalRelation()
 	string sqlVal = "";
 	string sql = "";
 
-	//×éºÏ²åÈëÓï¾äÖµ²¿·Ö
+	//ç»„åˆæ’å…¥è¯­å¥å€¼éƒ¨åˆ†
 	for (tmlaiter=mapTmla.begin();tmlaiter!=mapTmla.end();tmlaiter++)
 	{
 		string sqlval = DBA->formatSql("('%s','%s','%s','%s',%d,'%s'),",tmlaiter->second.tmlcimid.c_str(),tmlaiter->second.tmlname.c_str(),tmlaiter->second.faccimid.c_str(),tmlaiter->second.unitcimid.c_str(),tmlaiter->second.tmlport,tmlaiter->second.nodecimid.c_str());
@@ -1219,13 +1219,13 @@ int CimLoader::saveTerminalRelation()
 		ncount++;
 	}
 
-	//È¥³ý×îºóÒ»¸ö¶ººÅ
+	//åŽ»é™¤æœ€åŽä¸€ä¸ªé€—å·
 	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
-	//Æ´½ÓÍêÕû²åÈësqlÓï¾ä
+	//æ‹¼æŽ¥å®Œæ•´æ’å…¥sqlè¯­å¥
 	sql.append(sqlInsert).append(sqlVal);
 
-	//Ö´ÐÐ²åÈëÓï¾ä
+	//æ‰§è¡Œæ’å…¥è¯­å¥
 	ret = DBA->execSql(sql.c_str());
 	if (ret <= 0)
 	{
@@ -1245,7 +1245,7 @@ int CimLoader::saveUnitStatus()
 {
 	int ret;
 
-	//É¾³ýunit_status±íÖÐÄÚÈÝ
+	//åˆ é™¤unit_statusè¡¨ä¸­å†…å®¹
 	string delsql = string("DELETE FROM unit_status;");
 	ret = DBA->execSql(delsql.c_str());
 	if (ret <= 0)
@@ -1259,7 +1259,7 @@ int CimLoader::saveUnitStatus()
 		
 	}
 
-	//Ìî³äunit_status±í
+	//å¡«å……unit_statusè¡¨
 	string selupsql = string("INSERT INTO unit_status(UnitCim,StationCim) SELECT CimId,StationCim from units");
 	ret = DBA->execSql(selupsql.c_str());
 	if (ret <= 0)
@@ -1273,7 +1273,7 @@ int CimLoader::saveUnitStatus()
 		
 	}
 
-	//¸üÐÂunit_status±íÖÐÉè±¸Îª·¢µç»úµÄ´øµçºÍÊÇ·ñµçÔ´µãÐÅÏ¢
+	//æ›´æ–°unit_statusè¡¨ä¸­è®¾å¤‡ä¸ºå‘ç”µæœºçš„å¸¦ç”µå’Œæ˜¯å¦ç”µæºç‚¹ä¿¡æ¯
 	string selupdsql = string("UPDATE unit_status us,units u set us.IsElectric=1,us.IsPower=2 where u.CimId=us.UnitCim and u.UnitType=5");
 	ret = DBA->execSql(selupdsql.c_str());
 	if (ret <= 0)

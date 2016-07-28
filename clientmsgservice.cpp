@@ -1,4 +1,4 @@
-
+ï»¿
 #include "ace/OS_NS_unistd.h"
 #include "clientmsgservice.h"
 #include "include/commands.h"
@@ -31,7 +31,7 @@ int ClientMsgService::svc()
 		ACE_Message_Block* mb ;
 		if(getq(mb) != -1)
 		{
-			// ¶Ô½ÓÊÕµ½µÄÇëÇó£¬½øĞĞ´¦Àí
+			// å¯¹æ¥æ”¶åˆ°çš„è¯·æ±‚ï¼Œè¿›è¡Œå¤„ç†
 			parseData(mb);
 
 			mb->release();
@@ -48,7 +48,7 @@ void ClientMsgService::parseData(ACE_Message_Block* mb)
 		LOG->error("Invalid data length %d",mb->length());
 		return;
 	}
-	// ½â°ü
+	// è§£åŒ…
 	sClientMsg* msg = m_pack.decoder(mb->rd_ptr(),mb->length());
 
 	if (msg == NULL)
@@ -56,10 +56,10 @@ void ClientMsgService::parseData(ACE_Message_Block* mb)
 		return ;
 	}
 	
-	// ÉèÖÃÁ¬½ÓID
+	// è®¾ç½®è¿æ¥ID
 	msg->connectId = mb->msg_type();
 
-	// µ÷ÓÃÒµÎñÂß¼­´¦Àí
+	// è°ƒç”¨ä¸šåŠ¡é€»è¾‘å¤„ç†
 	m_biz.exec(msg);
 
 	delete msg;

@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-		DESC:	¿Í»§¶ËºÍ·şÎñÆ÷Ö®¼äĞ­Òé½âÎö.
+		DESC:	å®¢æˆ·ç«¯å’ŒæœåŠ¡å™¨ä¹‹é—´åè®®è§£æ.
 		DATE:	2016-04-20
 		AUTHOR:	YUANLS
 */
@@ -16,16 +16,16 @@ class PacketParser
 {
 public:
 	
-	// ¿Í»§¶Ë  <--> ·şÎñÆ÷ ´ò°ü
+	// å®¢æˆ·ç«¯  <--> æœåŠ¡å™¨ æ‰“åŒ…
 	sClientMsg*		decoder(char* data,int datalength);
 
-	// ¿Í»§¶Ë  <--> ·şÎñÆ÷ ½â°ü
+	// å®¢æˆ·ç«¯  <--> æœåŠ¡å™¨ è§£åŒ…
 	char*				encoder(string data,int msgtype,int &outlengh);
 
-	// ·şÎñÆ÷  <--> SCADA ´ò°ü
+	// æœåŠ¡å™¨  <--> SCADA æ‰“åŒ…
 	sClientMsg*		decoderS(char* data,int datalength);
 
-	// ·şÎñÆ÷  <--> SCADA ½â°ü
+	// æœåŠ¡å™¨  <--> SCADA è§£åŒ…
 	char*				encoderS(char* data,int datalength,int &outlengh);
 
 };

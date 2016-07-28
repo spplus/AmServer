@@ -1,4 +1,4 @@
-#include "rulebiz34-1.h"
+ï»¿#include "rulebiz34-1.h"
 
 int RuleBiz34_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
 {
@@ -6,7 +6,7 @@ int RuleBiz34_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationc
 
 	if (bean.unittype() == eGROUNDSWITCH && bean.state() == 0)
 	{
-		// Èç¹û½á¹ûÔª¼þÎªµØµ¶Îª¶Ï¿ª£¬Âú×ãÌõ¼þÈý
+		// å¦‚æžœç»“æžœå…ƒä»¶ä¸ºåœ°åˆ€ä¸ºæ–­å¼€ï¼Œæ»¡è¶³æ¡ä»¶ä¸‰
 		COM->triggerRule(ruleMap,3);
 		
 	}

@@ -1,4 +1,4 @@
-#include "rulebiz48.h"
+ï»¿#include "rulebiz48.h"
 
 int RuleBiz48::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
 {
@@ -18,7 +18,7 @@ int RuleBiz48::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}	
 	else if (dtype == eCAPACITOR)
 	{
-		// Èç¹ûÎªµçÈÝÆ÷£¬Ìõ¼þÒ»³ÉÁ¢
+		// å¦‚æžœä¸ºç”µå®¹å™¨ï¼Œæ¡ä»¶ä¸€æˆç«‹
 		COM->triggerRule(ruleMap,1);
 	}
 	else if (dtype == eGROUNDSWITCH)
@@ -27,7 +27,7 @@ int RuleBiz48::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}
 	else
 	{
-		// Èç¹ûÎª·Ç¿ª¹Ø¡¢µ¶Õ¢¡¢µØµ¶¡¢µçÈÝÆ÷µÄÈÎºÎÔª¼þ£¬Ìõ¼þ¶þ³ÉÁ¢
+		// å¦‚æžœä¸ºéžå¼€å…³ã€åˆ€é—¸ã€åœ°åˆ€ã€ç”µå®¹å™¨çš„ä»»ä½•å…ƒä»¶ï¼Œæ¡ä»¶äºŒæˆç«‹
 		COM->triggerRule(ruleMap,2);
 	}
 	

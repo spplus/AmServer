@@ -1,7 +1,7 @@
-
+﻿
 /************************************************************************/
 /* 
-	DESC:	�ṩ����,ʵ�ָ�ʽ��־��ӡ,��ѡ���ӡ��Ļ,�ļ������߾���,֧���Զ�������־����.
+	DESC:	提供函数,实现格式日志打印,可选择打印屏幕,文件或两者均有,支持自动清理日志功能.
 	DATE:	2016-04-20
 	AUTHOR:	YUANLS
 */
@@ -23,37 +23,37 @@
 using namespace std;
 
 
-/*Ĭ����־�����·�*/
+/*默认日志保存月份*/
 #define DEFAULT_SAVED_MONTH		6
 
-/*��־���� - ������־��ʾ�ļ���*/
-#define HP_LOGLEVEL_ERROR		0x00				/*����*/
-#define HP_LOGLEVEL_WARN		0x01				/*����*/
-#define HP_LOGLEVEL_MESSAGE		0x02				/*��ʾ*/
-#define HP_LOGLEVEL_DEBUG		0x03				/*����*/
+/*日志级别 - 控制日志显示的级别*/
+#define HP_LOGLEVEL_ERROR		0x00				/*错误*/
+#define HP_LOGLEVEL_WARN		0x01				/*警告*/
+#define HP_LOGLEVEL_MESSAGE		0x02				/*提示*/
+#define HP_LOGLEVEL_DEBUG		0x03				/*调试*/
 
-/*��־ý�� - ������־�����ý��*/
-#define HP_LOGMEDIA_SCREEN		0x00				/*��Ļ*/
-#define HP_LOGMEDIA_FILE		0x01				/*�ļ�*/
-#define HP_LOGMEDIA_ALL			0x02				/*ȫ��*/
+/*日志媒体 - 控制日志输出的媒体*/
+#define HP_LOGMEDIA_SCREEN		0x00				/*屏幕*/
+#define HP_LOGMEDIA_FILE		0x01				/*文件*/
+#define HP_LOGMEDIA_ALL			0x02				/*全部*/
 
-/*��־����״̬*/
-#define HP_LOGCLEANER_CLOSED	0x00				/*��־������*/
-#define HP_LOGCLEANER_OPEN		0x01				/*��־������*/
+/*日志队列状态*/
+#define HP_LOGCLEANER_CLOSED	0x00				/*日志清理关*/
+#define HP_LOGCLEANER_OPEN		0x01				/*日志清理开*/
 
-/*��־�ļ�*/
-#define HP_LOG_MAX_NAMESIZE		255					/*����ļ�������*/
+/*日志文件*/
+#define HP_LOG_MAX_NAMESIZE		255					/*最大文件名长度*/
 
-#define HP_LOG_FILEDIR "log"						/*Ĭ���ļ���Ŀ¼*/
-#define HP_LOG_FILENAME "syslog"					/*Ĭ����־�ļ���*/
-#define HP_LOG_FILETYPE ".log"						/*Ĭ����չ��*/
-#define HP_LOG_MAX_FILESIZE (32*1024*1024)			/*�����־�ļ���С32M*/
+#define HP_LOG_FILEDIR "log"						/*默认文件根目录*/
+#define HP_LOG_FILENAME "syslog"					/*默认日志文件名*/
+#define HP_LOG_FILETYPE ".log"						/*默认扩展名*/
+#define HP_LOG_MAX_FILESIZE (32*1024*1024)			/*最大日志文件大小32M*/
 
 #define HP_LOG_GRP_ID			96469
-#define HP_LOG_INPUT_SIZE		(400*1024)			/*������־����ֽ���*/
-#define HP_LOG_SEND_HIGHT_MARK	(1024*1024)			/*��־��������������*/
+#define HP_LOG_INPUT_SIZE		(400*1024)			/*单个日志最大字节数*/
+#define HP_LOG_SEND_HIGHT_MARK	(1024*1024)			/*日志队列满负荷能力*/
 
-/*���ò�������*/
+/*配置参数定义*/
 #define HP_LOG_CONF_SECTION       "LOGGER"
 #define HP_LOG_CONF_LOGFILEDIR    "LOGFILEDIR"
 #define HP_LOG_CONF_LOGMEDIA      "LOGMEDIA"
@@ -63,7 +63,7 @@ using namespace std;
 
 
 /********************************************************************************************
-* ����ACE_Task���������������ģʽ��������־ϵͳ
+* 采用ACE_Task任务或主动对象处理模式，创建日志系统
 ********************************************************************************************/
 class Logger : public ACE_Task<ACE_MT_SYNCH>
 {
@@ -89,29 +89,29 @@ public:
 	}
 
 	/*-----------------------------------------------------------------------
-	* name:		��ʼ����־ϵͳ����
-	* input:	fdir  -- ��־�ļ���Ŀ¼
-	*			_media  -- ��־ý��
-	*			_level  -- ��־����
-	*			_cleaner_switch  -- ��־��������
-	*			_saved_month  -- ��־��������
+	* name:		初始化日志系统参数
+	* input:	fdir  -- 日志文件根目录
+	*			_media  -- 日志媒体
+	*			_level  -- 日志级别
+	*			_cleaner_switch  -- 日志清理开关
+	*			_saved_month  -- 日志保存月数
 	* output:	NONE
 	* return:	NONE
 	*-----------------------------------------------------------------------*/
 	void	init_logger(const char * _fdir, unsigned int _media = HP_LOGMEDIA_ALL, unsigned int _level = HP_LOGLEVEL_DEBUG, int _cleaner_switch = HP_LOGCLEANER_CLOSED, int _saved_month = DEFAULT_SAVED_MONTH);
 
 	/*-----------------------------------------------------------------------
-	* name:		��ʼ����־ϵͳ
-	* 			ÿ��ϵͳ���ô���־��ʱ ��Ҫ���ô˺�����ʼ����־ϵͳ
+	* name:		初始化日志系统
+	* 			每次系统调用此日志类时 需要调用此函数初始化日志系统
 	* input:	NONE
 	* output:	NONE
-	* return:	RT_NG -- ʧ��
-	* 			RT_OK -- �ɹ�
+	* return:	RT_NG -- 失败
+	* 			RT_OK -- 成功
 	*-----------------------------------------------------------------------*/
 	int		open_logger();
 
 	/*-----------------------------------------------------------------------
-	* name:		�ر���־ϵͳ
+	* name:		关闭日志系统
 	* input:	NONE
 	* output:	NONE
 	* return:	NONE
@@ -119,61 +119,61 @@ public:
 	void	close_logger();
 
 	/*-----------------------------------------------------------------------
-	* name:		���������ļ�
-	* input:	_config_filename  -- ��־�ļ�·��
+	* name:		载入配置文件
+	* input:	_config_filename  -- 日志文件路径
 	* output:	NONE
-	* return:	RT_NG -- ʧ��
-	* 			RT_OK -- �ɹ�
+	* return:	RT_NG -- 失败
+	* 			RT_OK -- 成功
 	*-----------------------------------------------------------------------*/
 	int		load_config(const char * _config_filename);
 
 	/*-----------------------------------------------------------------------
-	* name:		error��־
-	* input:	fmt  -- ����ʽ�ַ���
-	* 			...  -- ���������б�
+	* name:		error日志
+	* input:	fmt  -- 带格式字符串
+	* 			...  -- 不定参数列表
 	* output:
 	* return:
 	*-----------------------------------------------------------------------*/
 	void	error(const char * fmt, ...);
 
 	/*-----------------------------------------------------------------------
-	* name:		warn��־
-	* input:	fmt  -- ����ʽ�ַ���
-	* 			...  -- ���������б�
+	* name:		warn日志
+	* input:	fmt  -- 带格式字符串
+	* 			...  -- 不定参数列表
 	* output:
 	* return:
 	*-----------------------------------------------------------------------*/
 	void	warn(const char * fmt, ...);
 
 	/*-----------------------------------------------------------------------
-	* name:		message��־
-	* input:	fmt  -- ����ʽ�ַ���
-	* 			...  -- ���������б�
+	* name:		message日志
+	* input:	fmt  -- 带格式字符串
+	* 			...  -- 不定参数列表
 	* output:
 	* return:
 	*-----------------------------------------------------------------------*/
 	void	message(const char * fmt, ...);
 
 	/*-----------------------------------------------------------------------
-	* name:		debug��־
-	* input:	fmt  -- ����ʽ�ַ���
-	* 			...  -- ���������б�
+	* name:		debug日志
+	* input:	fmt  -- 带格式字符串
+	* 			...  -- 不定参数列表
 	* output:
 	* return:
 	*-----------------------------------------------------------------------*/
 	void	debug(const char * fmt, ...);
 
 	/*-----------------------------------------------------------------------
-	* name:		ɾ��Ŀ¼���ļ�
-	* input:	_fdir  -- Ŀ¼���ļ�·��
+	* name:		删除目录或文件
+	* input:	_fdir  -- 目录或文件路劲
 	* output:
-	* return:	>0  -- ɾ���ɹ�
-	* 			=0  -- Ŀ¼������
-	* 			<0  -- ɾ��ʧ��
+	* return:	>0  -- 删除成功
+	* 			=0  -- 目录不存在
+	* 			<0  -- 删除失败
 	*-----------------------------------------------------------------------*/
 	int		rmdir(const char * _fdir);
 
-	// ������־�ļ�����
+	// 设置日志文件名称
 	void	set_logname(const char* logname);
 
 
@@ -185,9 +185,9 @@ public:
 private:
 	private:
 	/*-----------------------------------------------------------------------
-	* name:		��ָ����ʽ��ӡ��������������Ϣ
-	* input:	fmt  -- ����ʽ�ַ���
-	* 			...  -- ���������б�
+	* name:		以指定格式打印，不增加其他信息
+	* input:	fmt  -- 带格式字符串
+	* 			...  -- 不定参数列表
 	* output:
 	* return:
 	*-----------------------------------------------------------------------*/
@@ -195,99 +195,99 @@ private:
 	void printf(const char * fmt, ...);
 
 	/*-----------------------------------------------------------------------
-	* name:		ö�ٻ���
-	* input:	_buff  -- ����
-	* 			_size  -- �����С
-	*			_type  -- ������ͣ�1�����գ�2�����ͣ���������
+	* name:		枚举缓存
+	* input:	_buff  -- 缓存
+	* 			_size  -- 缓存大小
+	*			_type  -- 输出类型，1：接收，2：发送，其他：无
 	* output:
 	* return:
 	*-----------------------------------------------------------------------*/
 	void dump(const char * _buf, size_t _size, int _type);
 
 	/*-----------------------------------------------------------------------
-	* name:		����Ŀ¼
-	* input:	_fdir  -- Ŀ¼
+	* name:		建立目录
+	* input:	_fdir  -- 目录
 	* output:
-	* return:	>0  -- �½�Ŀ¼
-	* 			=0  -- Ŀ¼�Ѵ���
-	* 			<0  -- ����ʧ��
+	* return:	>0  -- 新建目录
+	* 			=0  -- 目录已存在
+	* 			<0  -- 创建失败
 	*-----------------------------------------------------------------------*/
 	int mkdir(const char * _fdir);
 	virtual int svc(void);
 
 	/*-----------------------------------------------------------------------
-	* name:		���Ŀ¼
-	* input:	_fdir  -- ��־��Ŀ¼
+	* name:		检测目录
+	* input:	_fdir  -- 日志根目录
 	* output:
-	* return:	>0  -- �½�Ŀ¼
-	* 			=0  -- Ŀ¼�ޱ仯
-	* 			<0  -- ʧ��
+	* return:	>0  -- 新建目录
+	* 			=0  -- 目录无变化
+	* 			<0  -- 失败
 	*-----------------------------------------------------------------------*/
 	int check_subdir(const char * _fdir);
 
 	/*-----------------------------------------------------------------------
-	* name:		����һ����־�ļ���Ŀ¼��
-	* input:	_level  -- Ŀ¼����
-	* output:	_subdir  -- ��Ŀ¼���ַ���
+	* name:		创建一个日志文件子目录名
+	* input:	_level  -- 目录级别
+	* output:	_subdir  -- 子目录名字符串
 	* return:
 	*-----------------------------------------------------------------------*/
 	void create_subdirname(char * _subdir, int _level);
 
 	/*-----------------------------------------------------------------------
-	* name:		������־�ļ�������ʱ���ַ���
+	* name:		创建日志文件名后续时间字符串
 	* input:
-	* output:	_filename  -- ��־�ļ���+����ʱ���ַ���
+	* output:	_filename  -- 日志文件名+后续时间字符串
 	* return:
 	*-----------------------------------------------------------------------*/
 	void create_filename(char * _filename);
 
 	/*-----------------------------------------------------------------------
-	* name:		ȡ��־����
-	* input:	_var_log_level  -- ��־����
-	* output:	_level  -- ��־����
+	* name:		取日志级别
+	* input:	_var_log_level  -- 日志级别
+	* output:	_level  -- 日志级别
 	* return:
 	*-----------------------------------------------------------------------*/
 	void getloglevel(int _var_log_level, char * _level);
 
 	/*-----------------------------------------------------------------------
-	* name:		ȡ��ǰʱ�䣬�������23
+	* name:		取当前时间，输出长度23
 	* input:
-	* output:	_stime  -- ʱ���ַ���
+	* output:	_stime  -- 时间字符串
 	* return:
 	*-----------------------------------------------------------------------*/
 	void currenttime(char * _stime);
 
 	/*-----------------------------------------------------------------------
-	* name:		��Ļ��ӡ
-	* input:	fmt  -- ����ʽ�ַ���
+	* name:		屏幕打印
+	* input:	fmt  -- 带格式字符串
 	* 			
 	* output:
-	* return:	 -1 -- ʧ��
-	* 			>=0 -- ����ַ���
+	* return:	 -1 -- 失败
+	* 			>=0 -- 输出字符数
 	*-----------------------------------------------------------------------*/
 	int to_screen(const char * fmt);
 
 	/*-----------------------------------------------------------------------
-	* name:		�ļ���ӡ
-	* input:	fmt  -- ����ʽ�ַ���
+	* name:		文件打印
+	* input:	fmt  -- 带格式字符串
 	* 			
 	* output:
-	* return:	 -1 -- ʧ��
-	* 			>=0 -- ����ַ���
+	* return:	 -1 -- 失败
+	* 			>=0 -- 输出字符数
 	*-----------------------------------------------------------------------*/
 	int to_file(const char * fmt);
 
 public:
-	int media_; /*��־ý�� Ĭ��= HP_LOGMEDIA_SCREEN*/
-	int level_; /*��־���� Ĭ��= HP_LOGLEVEL_MESSAGE*/
+	int media_; /*日志媒体 默认= HP_LOGMEDIA_SCREEN*/
+	int level_; /*日志级别 默认= HP_LOGLEVEL_MESSAGE*/
 
-	int cleaner_switch_; /*��־�������أ�=1ʱ��Ч*/
-	int saved_month_;    /*��־����������=0��ʾ��ɾ����Ҫ��С��120*/
+	int cleaner_switch_; /*日志清理开关，=1时有效*/
+	int saved_month_;    /*日志保存月数，=0表示不删除，要求小于120*/
 
-	char parentdir_[HP_LOG_MAX_NAMESIZE];   /*��־�ļ���Ŀ¼*/
-	char filedir_  [HP_LOG_MAX_NAMESIZE];   /*��־�ļ�Ŀ¼, ������Ŀ¼����Ŀ¼*/
-	char filename_ [HP_LOG_MAX_NAMESIZE];   /*��־�ļ���,������Ŀ¼*/
-	char fullpath_ [HP_LOG_MAX_NAMESIZE*2]; /*��־�ļ�ȫ·����������Ŀ¼���ļ���*/
+	char parentdir_[HP_LOG_MAX_NAMESIZE];   /*日志文件根目录*/
+	char filedir_  [HP_LOG_MAX_NAMESIZE];   /*日志文件目录, 包括根目录、子目录*/
+	char filename_ [HP_LOG_MAX_NAMESIZE];   /*日志文件名,不包含目录*/
+	char fullpath_ [HP_LOG_MAX_NAMESIZE*2]; /*日志文件全路径名，包括目录和文件名*/
 
 	ACE_FILE_IO fp_;
 

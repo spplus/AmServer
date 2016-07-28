@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-		DESC:	½âÎö¹æÔ¼¹ÜÀíÀà.
+		DESC:	è§£æè§„çº¦ç®¡ç†ç±».
 		DATE:	2016-07-03
 		AUTHOR:	ABELSKY
 */
@@ -19,52 +19,52 @@ public:
 	void	setClient(TcpClient *client);
 	int		handle_timeout (const ACE_Time_Value &current_time,const void * = 0);
 
-	//ÉèÖÃRTUµØÖ·
+	//è®¾ç½®RTUåœ°å€
 	void	setRtuAddr(unsigned short nRtuAddr);
-	//ÉèÖÃ¶¨Ê±ÖÜÆÚ
+	//è®¾ç½®å®šæ—¶å‘¨æœŸ
 	void	setCallAll(int nAll);
-	//·¢ËÍUÖ¡½¨Á¢Á´½Ó
+	//å‘é€Uå¸§å»ºç«‹é“¾æ¥
 	void	sendUFrame();
-	//·¢ËÍ×ÜÕÙ»½IÖ¡
+	//å‘é€æ€»å¬å”¤Iå¸§
 	void	sendIFrame();
-	//·¢ËÍÈ·ÈÏSÖ¡
+	//å‘é€ç¡®è®¤Så¸§
 	void	sendSFrame();
-	//·¢ËÍ²âÊÔÖ¡
+	//å‘é€æµ‹è¯•å¸§
 	void	sendTestFrame();
-	//·¢ËÍÈ·ÈÏ²âÊÔÖ¡
+	//å‘é€ç¡®è®¤æµ‹è¯•å¸§
 	void	sendTestConFrame();
 
-	//Êı¾İÇøÊı¾İ½âÎö
+	//æ•°æ®åŒºæ•°æ®è§£æ
 	void	parseDataFrame(char *data,int datalength);
 
-	//¶¨Ê±·¢ËÍIÖ¡¶¨Ê±Æ÷
+	//å®šæ—¶å‘é€Iå¸§å®šæ—¶å™¨
 	void	startITimer();
 	void	stopITimer();
 
-	//³õÊ¼»¯Êı¾İ¿âÈ¡Êı¾İ
+	//åˆå§‹åŒ–æ•°æ®åº“å–æ•°æ®
 	void	initDBCimid();
 
-	//È¡Êı¾İ¿âÖĞcimidºÍĞòºÅ¶ÔÓ¦¹ØÏµ
+	//å–æ•°æ®åº“ä¸­cimidå’Œåºå·å¯¹åº”å…³ç³»
 	void	getCimidSerialnum();
 
-	//½âÎöÊı¾İºó´¦Àí¶ÔÓ¦¹ØÏµ
+	//è§£ææ•°æ®åå¤„ç†å¯¹åº”å…³ç³»
 	void	setDataRelation();
 
-	//¸üĞÂÊı¾İµ½Êı¾İ¿â
+	//æ›´æ–°æ•°æ®åˆ°æ•°æ®åº“
 	void	updateData2DB();
 
 private:
 	TcpClient *m_client;
 
 	unsigned short m_RtuAddr;
-	//¶¨Ê±ÖÜÆÚ
+	//å®šæ—¶å‘¨æœŸ
 	int m_CallALL;
-	//½ÓÊÕÖ¡±ê×¼
+	//æ¥æ”¶å¸§æ ‡å‡†
 	bool brcvflag;
-	//½ÓÊÕµ½Êı¾İÏî¸öÊı
+	//æ¥æ”¶åˆ°æ•°æ®é¡¹ä¸ªæ•°
 	int m_nRecvDataSum;
 
-	//±£´æÊı¾İ¿âÖĞcimidºÍĞòºÅ¶ÔÓ¦¹ØÏµ
+	//ä¿å­˜æ•°æ®åº“ä¸­cimidå’Œåºå·å¯¹åº”å…³ç³»
 	CIMID_NUM_N_LIST	m_cimid_num_n_list;
 	CIMID_NUM_C_LIST	m_cimid_num_c_list;
 
@@ -73,7 +73,7 @@ private:
 
 };
 
-// »ñÈ¡ĞÅÏ¢ÌåµØÖ·
+// è·å–ä¿¡æ¯ä½“åœ°å€
 inline unsigned int getInfoAddr(unsigned char *pAddr)
 {
 	unsigned int nAddr=0;

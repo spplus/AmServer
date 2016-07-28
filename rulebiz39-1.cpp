@@ -1,4 +1,4 @@
-#include "rulebiz39-1.h"
+ï»¿#include "rulebiz39-1.h"
 
 RuleBiz39_1::RuleBiz39_1()
 {
@@ -9,13 +9,13 @@ bool RuleBiz39_1::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& r
 {
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
-	// °Ñµ±Ç°Ôª¼ş¼ÓÈëµ½ÒÑ·ÖÎöÁĞ±í
+	// æŠŠå½“å‰å…ƒä»¶åŠ å…¥åˆ°å·²åˆ†æåˆ—è¡¨
 	passNodes.insert(MAPVAL(unitcim,unitcim));
 
-	// 2.¸ù¾İÔª¼şID£¬²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã£¨¿ÉÄÜÊÇÁ½¸ö£©
+	// 2.æ ¹æ®å…ƒä»¶IDï¼ŒæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹ï¼ˆå¯èƒ½æ˜¯ä¸¤ä¸ªï¼‰
 	LISTMAP connIds = getConnIdByUnitsId(unitcim);
 
-	// 3.¶ÔÓ¦µÄµ¥²àÁ¬½Óµã£¨²»ÊÇ²éËùÓĞµÄÁ½¸öÁ¬½Óµã£©
+	// 3.å¯¹åº”çš„å•ä¾§è¿æ¥ç‚¹ï¼ˆä¸æ˜¯æŸ¥æ‰€æœ‰çš„ä¸¤ä¸ªè¿æ¥ç‚¹ï¼‰
 	for (int i = 0 ;i<connIds.size();i++)
 	{
 
@@ -24,7 +24,7 @@ bool RuleBiz39_1::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& r
 		if (connIter != connMap.end())
 		{
 
-			// ÅĞ¶ÏÊÇ·ñÒÑ¾­²éÕÒ¹ıµÄÁ¬½Óµã£¬Èç¹ûÊÇÔòÌø³ö£¬²»ÊÇÔò¼ÓÈë
+			// åˆ¤æ–­æ˜¯å¦å·²ç»æŸ¥æ‰¾è¿‡çš„è¿æ¥ç‚¹ï¼Œå¦‚æœæ˜¯åˆ™è·³å‡ºï¼Œä¸æ˜¯åˆ™åŠ å…¥
 			if (passNodes.find(connIter->second) != passNodes.end())
 			{
 				continue;
@@ -34,10 +34,10 @@ bool RuleBiz39_1::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& r
 				passNodes.insert(MAPVAL(connIter->second,connIter->second));
 			}
 
-			// ¸ù¾İÁ¬½Óµã£¬²éÕÒ¸ÃÁ¬½Óµã¹ØÁªµÄÉè±¸¼¯ºÏ
+			// æ ¹æ®è¿æ¥ç‚¹ï¼ŒæŸ¥æ‰¾è¯¥è¿æ¥ç‚¹å…³è”çš„è®¾å¤‡é›†åˆ
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,COM->i2str(saveid));
 
-			// ±éÀú¸ÃÉè±¸¼¯ºÏ
+			// éå†è¯¥è®¾å¤‡é›†åˆ
 			for (int k = 0;k<unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
@@ -45,7 +45,7 @@ bool RuleBiz39_1::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& r
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
-					// ÅĞ¶ÏÊÇ·ñÒÑ¾­×öÎªÆğÊ¼Éè±¸½øĞĞËÑË÷£¬Èç¹ûÊÇÔòÌø¹ı
+					// åˆ¤æ–­æ˜¯å¦å·²ç»åšä¸ºèµ·å§‹è®¾å¤‡è¿›è¡Œæœç´¢ï¼Œå¦‚æœæ˜¯åˆ™è·³è¿‡
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
@@ -56,7 +56,7 @@ bool RuleBiz39_1::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& r
 					}
 				}
 
-				// ±¾´Î²éÑ¯µÄÔª¼şCIMID
+				// æœ¬æ¬¡æŸ¥è¯¢çš„å…ƒä»¶CIMID
 				unitId = unitIter->second;
 				return topoBiz(saveid,unitId,ruleMap,"");
 

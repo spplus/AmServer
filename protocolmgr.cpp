@@ -1,38 +1,38 @@
-#include "protocolmgr.h"
+ï»¿#include "protocolmgr.h"
 #include "defines.h"
 
 
-// ±¾¶ËµÄ·¢ËÍĞòºÅ: Ã¿·¢ËÍÒ»°üI¸ñÊ½Ö¡,·¢ËÍĞòºÅ+1
-unsigned short m_nLocalSendNum = 0x00 ;				// ±¾¶ËµÄ·¢ËÍĞòºÅ
-// ±¾¶ËµÄ½ÓÊÕĞòºÅÀí½â: ±¾¶ËÊÕµ½ÁË¶Ô¶Ë·¢ËÍµÄI¸ñÊ½Ö¡(Æä·¢ËÍĞòºÅ=±¾¶ËµÄ½ÓÊÕĞòºÅ),½«ĞòºÅ+1
-unsigned short m_nLocalRecvNum = 0x00 ;				// ±¾¶ËµÄ½ÓÊÕĞòºÅ
-unsigned short m_nRemoteSendNum = 0x00 ;			// ¶Ô¶ËµÄ·¢ËÍĞòºÅ(Ò²¾ÍÊÇ±¾¶ËµÄ½ÓÊÕĞòºÅ)
-unsigned short nRTUaddr=0xFFFF; // ÄÏÈğOPEN3000; 0xFFFF ±íÊ¾×ÜÕÙ; ÄÏ¾©ÅÍÄÜ0x03(¿ÉÅäÖÃ)
+// æœ¬ç«¯çš„å‘é€åºå·: æ¯å‘é€ä¸€åŒ…Iæ ¼å¼å¸§,å‘é€åºå·+1
+unsigned short m_nLocalSendNum = 0x00 ;				// æœ¬ç«¯çš„å‘é€åºå·
+// æœ¬ç«¯çš„æ¥æ”¶åºå·ç†è§£: æœ¬ç«¯æ”¶åˆ°äº†å¯¹ç«¯å‘é€çš„Iæ ¼å¼å¸§(å…¶å‘é€åºå·=æœ¬ç«¯çš„æ¥æ”¶åºå·),å°†åºå·+1
+unsigned short m_nLocalRecvNum = 0x00 ;				// æœ¬ç«¯çš„æ¥æ”¶åºå·
+unsigned short m_nRemoteSendNum = 0x00 ;			// å¯¹ç«¯çš„å‘é€åºå·(ä¹Ÿå°±æ˜¯æœ¬ç«¯çš„æ¥æ”¶åºå·)
+unsigned short nRTUaddr=0xFFFF; // å—ç‘OPEN3000; 0xFFFF è¡¨ç¤ºæ€»å¬; å—äº¬ç£èƒ½0x03(å¯é…ç½®)
 
-// ÓÃ»§¶¨Òå±¨Í·
+// ç”¨æˆ·å®šä¹‰æŠ¥å¤´
 typedef struct User_PackHead
 {
-	//unsigned char uKey ;				// Í¬²½Í· 68H
-	//unsigned char uLen ;				//£¨APDU£©Êı¾İµ¥Ôª³¤¶È
-	unsigned short uSendNum	;			//·¢ËÍĞòºÅ
-	unsigned short uRecvNum ;			//½ÓÊÕĞòºÅ
+	//unsigned char uKey ;				// åŒæ­¥å¤´ 68H
+	//unsigned char uLen ;				//ï¼ˆAPDUï¼‰æ•°æ®å•å…ƒé•¿åº¦
+	unsigned short uSendNum	;			//å‘é€åºå·
+	unsigned short uRecvNum ;			//æ¥æ”¶åºå·
 
 } USER_PACKHEAD, *LPUSER_PACKHEAD;
 
-// ÓÃ»§¶¨Òå±¨Í·(104¹æÔ¼ÖĞµÄAPCI); I¸ñÊ½
+// ç”¨æˆ·å®šä¹‰æŠ¥å¤´(104è§„çº¦ä¸­çš„APCI); Iæ ¼å¼
 typedef struct Data_PackHead
 {
-	unsigned char cTypeID;				// ÀàĞÍ±êÊ¶
-	unsigned char cDeterminer;			// ¿É±ä½á¹¹ÏŞ¶¨´Ê
-	unsigned char cTransReason;			// ´«ÊäÔ­Òò£¬ÏìÓ¦×ÜÕÙ»½»ò±ä»¯Êı¾İ
-	unsigned char cSourceAddr;			// Ô´·¢µØÖ·(Ô´·¢µØÖ·ÓÃÀ´±êÃ÷ÏìÓ¦À´×ÔÄÇ¸öÖ÷Õ¾µÄÕÙ»½;
-	// Ò»°ãÇé¿ö²»Ê¹ÓÃ;¹æ¶¨Ô´·¢µØÖ·²»Ê¹ÓÃÊ±ÖÃ³É0)
-	unsigned short sRTUAddr;			// ¹«¹²µØÖ·¼´RTUµØÖ·
+	unsigned char cTypeID;				// ç±»å‹æ ‡è¯†
+	unsigned char cDeterminer;			// å¯å˜ç»“æ„é™å®šè¯
+	unsigned char cTransReason;			// ä¼ è¾“åŸå› ï¼Œå“åº”æ€»å¬å”¤æˆ–å˜åŒ–æ•°æ®
+	unsigned char cSourceAddr;			// æºå‘åœ°å€(æºå‘åœ°å€ç”¨æ¥æ ‡æ˜å“åº”æ¥è‡ªé‚£ä¸ªä¸»ç«™çš„å¬å”¤;
+	// ä¸€èˆ¬æƒ…å†µä¸ä½¿ç”¨;è§„å®šæºå‘åœ°å€ä¸ä½¿ç”¨æ—¶ç½®æˆ0)
+	unsigned short sRTUAddr;			// å…¬å…±åœ°å€å³RTUåœ°å€
 
 } DATA_PACKHEAD, *LPDATA_PACKHEAD;
 
 /*=======================================================================================================================*/
-// ²âÊÔÖ¡, »òS¸ñÊ½È·ÈÏÖ¡
+// æµ‹è¯•å¸§, æˆ–Sæ ¼å¼ç¡®è®¤å¸§
 typedef struct Send_Confirm
 {
 	unsigned char usKey;
@@ -61,10 +61,10 @@ void ProtocolMgr::setCallAll(int nAll)
 
 int ProtocolMgr::handle_timeout(const ACE_Time_Value &current_time,const void * /* = 0 */)
 {
-	LOG->debug("=========protocolmgr£ºsend_I_Frame===========");
+	LOG->debug("=========protocolmgrï¼šsend_I_Frame===========");
 	//if (brcvflag)
 	{
-		//¶¨Ê±·¢ËÍIÖ¡:×ÜÕÙ»½
+		//å®šæ—¶å‘é€Iå¸§:æ€»å¬å”¤
 		sendIFrame();
 	}
 
@@ -74,9 +74,9 @@ int ProtocolMgr::handle_timeout(const ACE_Time_Value &current_time,const void * 
 void ProtocolMgr::sendUFrame()
 {
 	char uBuffer[32] = { 0 } ;
-	uBuffer [ 0 ] = 0x68 ;				// ÆğÊ¼×Ö·û
-	uBuffer [ 1 ] = 0x04 ;				// ³¤¶È4¸ö×Ö½Ú
-	uBuffer [ 2 ] = SEND_U_ACT_FRAME ;	// STARTDT µÄACT=1£¬CON=0; 0x07
+	uBuffer [ 0 ] = 0x68 ;				// èµ·å§‹å­—ç¬¦
+	uBuffer [ 1 ] = 0x04 ;				// é•¿åº¦4ä¸ªå­—èŠ‚
+	uBuffer [ 2 ] = SEND_U_ACT_FRAME ;	// STARTDT çš„ACT=1ï¼ŒCON=0; 0x07
 	uBuffer [ 3 ] = 0x00 ;
 	uBuffer [ 4 ] = 0x00 ;
 	uBuffer [ 5 ] = 0x00 ;
@@ -100,32 +100,32 @@ void ProtocolMgr::sendIFrame()
             m_nLocalSendNum=0;
 
     char IBuffer[64] = { 0 } ;
-    IBuffer[0] = 0x68 ;	// Æô¶¯×Ö·û(68H)
-    IBuffer[1] = 0x0E ;	// APDU³¤¶È(¡Ü253)
+    IBuffer[0] = 0x68 ;	// å¯åŠ¨å­—ç¬¦(68H)
+    IBuffer[1] = 0x0E ;	// APDUé•¿åº¦(â‰¤253)
 
-    // ·¢ËÍĞòºÅ,ÉèÖÃÎª0,
+    // å‘é€åºå·,è®¾ç½®ä¸º0,
     unsigned short sendnumber=m_nLocalSendNum;//
     memcpy(&IBuffer[2],&sendnumber,sizeof(unsigned short));
 
-    // ½ÓÊÕĞòºÅ,ÉèÖÃÎª0
+    // æ¥æ”¶åºå·,è®¾ç½®ä¸º0
     unsigned short recvnumber=m_nLocalRecvNum;
     memcpy(&IBuffer[4],&recvnumber,sizeof(unsigned short));
 
-    // CON<100>: ×ÜÕÙ»½ÃüÁî(ASDUÀàĞÍ±êÊ¶)
+    // CON<100>: æ€»å¬å”¤å‘½ä»¤(ASDUç±»å‹æ ‡è¯†)
     IBuffer[6]=0x64;
-    // ¿É±ä½á¹¹ÏŞ¶¨´Ê
+    // å¯å˜ç»“æ„é™å®šè¯
     IBuffer[7]=0x01;
     IBuffer[8]=0x06;
-	IBuffer[9]=0x00;		// ´«ËÍÔ­Òò
-    // ÏòµØÖ·Îª0µÄ×ÓÕ¾·¢ËÍ×ÜÕÙ»½ÃüÁî
-    unsigned short RTUaddr=nRTUaddr;		// ASDU¹«¹²µØÖ·(µÍ×Ö½ÚÔÚÇ°,¸ß×Ö½ÚÔÚºó),Õ¼Á½¸ö×Ö½Ú.È±Ê¡Îª0x01; (±ØĞëÕıÈ·)
+	IBuffer[9]=0x00;		// ä¼ é€åŸå› 
+    // å‘åœ°å€ä¸º0çš„å­ç«™å‘é€æ€»å¬å”¤å‘½ä»¤
+    unsigned short RTUaddr=nRTUaddr;		// ASDUå…¬å…±åœ°å€(ä½å­—èŠ‚åœ¨å‰,é«˜å­—èŠ‚åœ¨å),å ä¸¤ä¸ªå­—èŠ‚.ç¼ºçœä¸º0x01; (å¿…é¡»æ­£ç¡®)
     memcpy(&IBuffer[10],&RTUaddr,sizeof(unsigned short));
 
     IBuffer[12] = 0x00;
 	IBuffer[13] = 0x00;
-	IBuffer[14] = 0x00;	// ĞÅÏ¢ÌåµØÖ·
+	IBuffer[14] = 0x00;	// ä¿¡æ¯ä½“åœ°å€
 
-    IBuffer[15] = 0x14;	// ĞÅÏ¢ÌåÔªËØ(ÕÙ»½ÏŞ¶¨´ÊQOI=20,Õ¾ÕÙ»½È«¾Ö)
+    IBuffer[15] = 0x14;	// ä¿¡æ¯ä½“å…ƒç´ (å¬å”¤é™å®šè¯QOI=20,ç«™å¬å”¤å…¨å±€)
 
 
 
@@ -135,7 +135,7 @@ void ProtocolMgr::sendIFrame()
 
 	m_client->send(mb);
 
-    // ·¢ËÍ·½Ã¿·¢ËÍÒ»¸öI¸ñÊ½±¨ÎÄ,Æä·¢ËÍĞòºÅ+1
+    // å‘é€æ–¹æ¯å‘é€ä¸€ä¸ªIæ ¼å¼æŠ¥æ–‡,å…¶å‘é€åºå·+1
     m_nLocalSendNum += 1 ;
 
 	std::string strsenddata = IBuffer;
@@ -144,16 +144,16 @@ void ProtocolMgr::sendIFrame()
 	return;
 }
 
-//·¢ËÍSÖ¡µÄ²ßÂÔ:Ã¿´Î½ÓÊÕµ½IÖ¡ºó·¢ËÍÒ»¸öSÖ¡
+//å‘é€Så¸§çš„ç­–ç•¥:æ¯æ¬¡æ¥æ”¶åˆ°Iå¸§åå‘é€ä¸€ä¸ªSå¸§
 void ProtocolMgr::sendSFrame()
 {
-	//SÖ¡£º68  04  01  00  02  00
+	//Så¸§ï¼š68  04  01  00  02  00
 	char sBuffer[32] = { 0 } ;
-	sBuffer [ 0 ] = 0x68 ;				// ÆğÊ¼×Ö·û
-	sBuffer [ 1 ] = 0x04 ;				// ³¤¶È4¸ö×Ö½Ú
-	sBuffer [ 2 ] = SEND_S_ACT_FRAME ;	// STARTDT µÄACT=1£¬CON=0; 0x01
+	sBuffer [ 0 ] = 0x68 ;				// èµ·å§‹å­—ç¬¦
+	sBuffer [ 1 ] = 0x04 ;				// é•¿åº¦4ä¸ªå­—èŠ‚
+	sBuffer [ 2 ] = SEND_S_ACT_FRAME ;	// STARTDT çš„ACT=1ï¼ŒCON=0; 0x01
 	sBuffer [ 3 ] = 0x00 ;
-	// ½ÓÊÕĞòºÅ,ÉèÖÃÎª0
+	// æ¥æ”¶åºå·,è®¾ç½®ä¸º0
 	unsigned short recvnumber=m_nLocalRecvNum*2;
 	//recvnumber<<1;
 	memcpy(&sBuffer[4],&recvnumber,sizeof(unsigned short));
@@ -169,7 +169,7 @@ void ProtocolMgr::sendSFrame()
 
 }
 
-// ·¢ËÍ²âÊÔÖ¡£¨Èç¹ûÖ÷Õ¾³¬¹ıÒ»¶¨Ê±¼äÃ»ÓĞÏÂ·¢±¨ÎÄ»òÕßRTUÒ²Ã»ÓĞÉÏËÍÈÎºÎ±¨ÎÄÔòË«·½¶¼¿ÉÒÔ°´ÆµÂÊ·¢ËÍUÖ¡£¬²âÊÔÖ¡£©
+// å‘é€æµ‹è¯•å¸§ï¼ˆå¦‚æœä¸»ç«™è¶…è¿‡ä¸€å®šæ—¶é—´æ²¡æœ‰ä¸‹å‘æŠ¥æ–‡æˆ–è€…RTUä¹Ÿæ²¡æœ‰ä¸Šé€ä»»ä½•æŠ¥æ–‡åˆ™åŒæ–¹éƒ½å¯ä»¥æŒ‰é¢‘ç‡å‘é€Uå¸§ï¼Œæµ‹è¯•å¸§ï¼‰
 void ProtocolMgr::sendTestFrame()
 {
 	char testBuffer[32] = { 0 } ;
@@ -190,7 +190,7 @@ void ProtocolMgr::sendTestFrame()
 	LOG->debug("send sendTestFrame data:%s",strsenddata.c_str());
 }
 
-// ·¢ËÍ²âÊÔÈ·ÈÏÖ¡
+// å‘é€æµ‹è¯•ç¡®è®¤å¸§
 void ProtocolMgr::sendTestConFrame()
 {
 	char testBuffer[32] = { 0 } ;
@@ -213,52 +213,52 @@ void ProtocolMgr::sendTestConFrame()
 
 void ProtocolMgr::parseDataFrame(char *data,int datalength)
 {
-	//È¡°ü(È¥µôÇ°Á½¸ö×Ö½ÚµÄ°ü)Í·
+	//å–åŒ…(å»æ‰å‰ä¸¤ä¸ªå­—èŠ‚çš„åŒ…)å¤´
 	 USER_PACKHEAD *pHead = ( USER_PACKHEAD* ) &data[0] ;
 
-	//½ÓÊÕµ½Êı¾İ½ÓÊÕÖ¡±êÖ¾ÖÃÎªtrue
+	//æ¥æ”¶åˆ°æ•°æ®æ¥æ”¶å¸§æ ‡å¿—ç½®ä¸ºtrue
 	brcvflag = true;
 
-	//´òÓ¡½ÓÊÕµ½µÄ±¨ÎÄ
+	//æ‰“å°æ¥æ”¶åˆ°çš„æŠ¥æ–‡
 	char revdata[1024];
 	ACE_OS::memcpy(&revdata,data,datalength);
 	std::string strdata = revdata;
 	LOG->debug("Recive data:%s",strdata.c_str());
 
-	// ÏûÏ¢±êÊ¶Í·
+	// æ¶ˆæ¯æ ‡è¯†å¤´
 	unsigned char type;
 	int pos = 0;
 	ACE_OS::memcpy(&type,data+pos,THREE_LEN);
 
-	//Ê×ÏÈÅĞ¶ÏÊÇ·ñÊÕµ½UÖ¡µÄÈ·ÈÏÖ¡,ÈôÊÇÆô¶¯¶¨Ê±·¢ËÍIÖ¡µÄ¶¨Ê±Æ÷
+	//é¦–å…ˆåˆ¤æ–­æ˜¯å¦æ”¶åˆ°Uå¸§çš„ç¡®è®¤å¸§,è‹¥æ˜¯å¯åŠ¨å®šæ—¶å‘é€Iå¸§çš„å®šæ—¶å™¨
 	if (datalength == SHORFRAME_DATA_LEN && type == RCV_U_ACT_FRAME)
 	{
 		brcvflag = true;
 
 		startITimer();
-		//·¢ËÍÖ¡ºóÃ»½ÓÊÕµ½Êı¾İÊ±½ÓÊÕÖ¡±êÖ¾ÖÃÎªfalse
+		//å‘é€å¸§åæ²¡æ¥æ”¶åˆ°æ•°æ®æ—¶æ¥æ”¶å¸§æ ‡å¿—ç½®ä¸ºfalse
 		brcvflag = false;
 	}
-	else if (datalength == SHORFRAME_DATA_LEN && type == RCV_S_ACT_FRAME)			//½ÓÊÕÊÇ¶ÌÖ¡ÇÒÀàĞÍÊÇSÖ¡Ê±²»´¦Àí,·¢ËÍSÖ¡µÄ²ßÂÔ:Ã¿´Î½ÓÊÕµ½IÖ¡ºó·¢ËÍÒ»¸öSÖ¡
+	else if (datalength == SHORFRAME_DATA_LEN && type == RCV_S_ACT_FRAME)			//æ¥æ”¶æ˜¯çŸ­å¸§ä¸”ç±»å‹æ˜¯Så¸§æ—¶ä¸å¤„ç†,å‘é€Så¸§çš„ç­–ç•¥:æ¯æ¬¡æ¥æ”¶åˆ°Iå¸§åå‘é€ä¸€ä¸ªSå¸§
 	{
 		//sendSFrame();
-		//·¢ËÍÖ¡ºóÃ»½ÓÊÕµ½Êı¾İÊ±½ÓÊÕÖ¡±êÖ¾ÖÃÎªfalse
+		//å‘é€å¸§åæ²¡æ¥æ”¶åˆ°æ•°æ®æ—¶æ¥æ”¶å¸§æ ‡å¿—ç½®ä¸ºfalse
 		//brcvflag = false;
 	}
-	else if (datalength == SHORFRAME_DATA_LEN && type == SEND_UTEST_CON_FRAME)		//·şÎñÆ÷Ö÷¶¯·¢ËÍ²âÊÔÖ¡£º½ÓÊÕÊÇ¶ÌÖ¡µÄÍ¬Ê±£¬ÀàĞÍÊÇ²âÊÔÖ¡Ê±£¬·¢ËÍ²âÊÔÖ¡½øĞĞÈ·ÈÏ
+	else if (datalength == SHORFRAME_DATA_LEN && type == SEND_UTEST_CON_FRAME)		//æœåŠ¡å™¨ä¸»åŠ¨å‘é€æµ‹è¯•å¸§ï¼šæ¥æ”¶æ˜¯çŸ­å¸§çš„åŒæ—¶ï¼Œç±»å‹æ˜¯æµ‹è¯•å¸§æ—¶ï¼Œå‘é€æµ‹è¯•å¸§è¿›è¡Œç¡®è®¤
 	{
 		sendTestConFrame();
-		//·¢ËÍÖ¡ºóÃ»½ÓÊÕµ½Êı¾İÊ±½ÓÊÕÖ¡±êÖ¾ÖÃÎªfalse
+		//å‘é€å¸§åæ²¡æ¥æ”¶åˆ°æ•°æ®æ—¶æ¥æ”¶å¸§æ ‡å¿—ç½®ä¸ºfalse
 		brcvflag = false;
 	}
-	else if (datalength == SHORFRAME_DATA_LEN && type == RCV_UTEST_CON_FRAME)		//ÊÕµ½:±¾¶Ë·¢ËÍ²âÊÔÖ¡¶Ô¶Ë»ØµÄ²âÊÔÈ·ÈÏÖ¡,²»×ö´¦Àí
+	else if (datalength == SHORFRAME_DATA_LEN && type == RCV_UTEST_CON_FRAME)		//æ”¶åˆ°:æœ¬ç«¯å‘é€æµ‹è¯•å¸§å¯¹ç«¯å›çš„æµ‹è¯•ç¡®è®¤å¸§,ä¸åšå¤„ç†
 	{
-		//½ÓÊÕµ½¶Ô¶Ë·¢ËÍµÄ²âÊÔÈ·ÈÏÖ¡£¬±¾¶Ë²»ÓÃ´¦Àí£¬±íÊ¾±¾¶ËºÍ¶Ô¶ËÊı¾İÁ´Â·ÊÇÎ¬³ÖµÄ
+		//æ¥æ”¶åˆ°å¯¹ç«¯å‘é€çš„æµ‹è¯•ç¡®è®¤å¸§ï¼Œæœ¬ç«¯ä¸ç”¨å¤„ç†ï¼Œè¡¨ç¤ºæœ¬ç«¯å’Œå¯¹ç«¯æ•°æ®é“¾è·¯æ˜¯ç»´æŒçš„
 		LOG->message("Recv RCV_UTEST_CON_FRAME");
 	}
-	else if (datalength == LONGFRAME_DATA_LEN && data[4] == C_IC_NA_1 && data[6]==ACTCON)		//½ÓÊÕµÄÊı¾İÖ¡Îª×ÜÕÙ»½È·ÈÏÖ¡
+	else if (datalength == LONGFRAME_DATA_LEN && data[4] == C_IC_NA_1 && data[6]==ACTCON)		//æ¥æ”¶çš„æ•°æ®å¸§ä¸ºæ€»å¬å”¤ç¡®è®¤å¸§
 	{
-		//±¾¶Ë½ÓÊÕĞòºÅ¼Ó1
+		//æœ¬ç«¯æ¥æ”¶åºå·åŠ 1
 		if(m_nLocalRecvNum*2 == (pHead->uSendNum&0x7F))
 		{
 			m_nLocalRecvNum+=1;
@@ -266,12 +266,12 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 			
 		m_nRemoteSendNum = pHead->uSendNum ;
 
-		//ÊÕµ½IÖ¡ºó·¢ËÍÒ»Ö¡SÖ¡½øĞĞÈ·ÈÏ
+		//æ”¶åˆ°Iå¸§åå‘é€ä¸€å¸§Så¸§è¿›è¡Œç¡®è®¤
 		sendSFrame();
 	}
-	else if (datalength == LONGFRAME_DATA_LEN && data[4] == C_IC_NA_1 && data[6]==ACTTERM)		//½ÓÊÕµÄÊı¾İÖ¡Îª×ÜÕÙ»½½áÊøÖ¡
+	else if (datalength == LONGFRAME_DATA_LEN && data[4] == C_IC_NA_1 && data[6]==ACTTERM)		//æ¥æ”¶çš„æ•°æ®å¸§ä¸ºæ€»å¬å”¤ç»“æŸå¸§
 	{
-		//±¾¶Ë½ÓÊÕĞòºÅ¼Ó1
+		//æœ¬ç«¯æ¥æ”¶åºå·åŠ 1
 		if(m_nLocalRecvNum*2 == (pHead->uSendNum&0x7F))
 		{
 			m_nLocalRecvNum+=1;
@@ -279,83 +279,83 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 		m_nRemoteSendNum = pHead->uSendNum ;
 
-		//ÊÕµ½IÖ¡ºó·¢ËÍÒ»Ö¡SÖ¡½øĞĞÈ·ÈÏ
+		//æ”¶åˆ°Iå¸§åå‘é€ä¸€å¸§Så¸§è¿›è¡Œç¡®è®¤
 		sendSFrame();
 
-		//´¦Àí½ÓÊÕµÄyxÊı¾İ
+		//å¤„ç†æ¥æ”¶çš„yxæ•°æ®
 		setDataRelation();
 
 		brcvflag = true;
 	}
 	else
 	{
-		// ½ÓÊÕ·½ÈôÊÕµ½Ò»¸öI¸ñÊ½±¨ÎÄ,ÅĞ¶Ï´ËI¸ñÊ½±¨ÎÄµÄ·¢ËÍĞòºÅÊÇ·ñµÈÓÚ×Ô¼ºµÄ½ÓÊÕĞòºÅ
-		// ÈôÏàµÈÔò½«×Ô¼ºµÄ½ÓÊÕĞòºÅ+1.
+		// æ¥æ”¶æ–¹è‹¥æ”¶åˆ°ä¸€ä¸ªIæ ¼å¼æŠ¥æ–‡,åˆ¤æ–­æ­¤Iæ ¼å¼æŠ¥æ–‡çš„å‘é€åºå·æ˜¯å¦ç­‰äºè‡ªå·±çš„æ¥æ”¶åºå·
+		// è‹¥ç›¸ç­‰åˆ™å°†è‡ªå·±çš„æ¥æ”¶åºå·+1.
 		if(m_nLocalRecvNum*2 == (pHead->uSendNum&0x7F))
 		{
 			m_nLocalRecvNum+=1;
 		}	
 		else if((pHead->uSendNum&0x7F) > m_nLocalRecvNum*2)
 		{
-			// I¸ñÊ½µÄ·¢ËÍĞòºÅ´óÓÚ×Ô¼ºµÄ½ÓÊÕĞòºÅ,·¢ËÍ·½·¢ËÍµÄÒ»Ğ©±¨ÎÄ¶ªÊ§
+			// Iæ ¼å¼çš„å‘é€åºå·å¤§äºè‡ªå·±çš„æ¥æ”¶åºå·,å‘é€æ–¹å‘é€çš„ä¸€äº›æŠ¥æ–‡ä¸¢å¤±
 		}
 		else
 		{
-			// ·¢ËÍ·½³öÏÖÁËÖØ¸´·¢ËÍ
+			// å‘é€æ–¹å‡ºç°äº†é‡å¤å‘é€
 		}
-		// I¸ñÊ½ºÍS¸ñÊ½±¨ÎÄµÄ½ÓÊÕĞòºÅ±íÃ÷ÁË·¢ËÍ¸Ã±¨ÎÄµÄÒ»·½¶ÔÒÑ½ÓÊÕµ½µÄI¸ñÊ½±¨ÎÄµÄÈ·ÈÏ
-		// Èô·¢ËÍ·½·¢ËÍµÄÄ³Ò»I¸ñÊ½±¨ÎÄºó³¤Ê±¼äÎŞ·¨ÔÙ¶Ô·½µÄ½ÓÊÕĞòºÅÖĞÈ·ÈÏ,·¢ÉúÁË±¨ÎÄ¶ªÊ§.
+		// Iæ ¼å¼å’ŒSæ ¼å¼æŠ¥æ–‡çš„æ¥æ”¶åºå·è¡¨æ˜äº†å‘é€è¯¥æŠ¥æ–‡çš„ä¸€æ–¹å¯¹å·²æ¥æ”¶åˆ°çš„Iæ ¼å¼æŠ¥æ–‡çš„ç¡®è®¤
+		// è‹¥å‘é€æ–¹å‘é€çš„æŸä¸€Iæ ¼å¼æŠ¥æ–‡åé•¿æ—¶é—´æ— æ³•å†å¯¹æ–¹çš„æ¥æ”¶åºå·ä¸­ç¡®è®¤,å‘ç”Ÿäº†æŠ¥æ–‡ä¸¢å¤±.
 		m_nRemoteSendNum = pHead->uSendNum ;
 	}
 
-	//È¥µôÇ°Á½¸ö×Ö½ÚµÄ°ü³¤¶È×îĞ¡Îª10¸ö×Ö½Ú²ÅÄÜ½âÎöÊı¾İÖ¡
+	//å»æ‰å‰ä¸¤ä¸ªå­—èŠ‚çš„åŒ…é•¿åº¦æœ€å°ä¸º10ä¸ªå­—èŠ‚æ‰èƒ½è§£ææ•°æ®å¸§
 	if (datalength < 10)
 	{
 		return;
 	}
 
-	if (!(data[6] == ACTCON || data[6] == ACTTERM))		//È¥µô×ÜÕÙ»½È·ÈÏÖ¡ºÍ½áÊøÖ¡µÄ½âÎö
+	if (!(data[6] == ACTCON || data[6] == ACTTERM))		//å»æ‰æ€»å¬å”¤ç¡®è®¤å¸§å’Œç»“æŸå¸§çš„è§£æ
 	{
-		//È¡°ü(È¥µôÇ°Á½¸ö×Ö½ÚµÄ°ü)ÖĞ¿ØÖÆÊı¾İĞÅÏ¢
+		//å–åŒ…(å»æ‰å‰ä¸¤ä¸ªå­—èŠ‚çš„åŒ…)ä¸­æ§åˆ¶æ•°æ®ä¿¡æ¯
 		DATA_PACKHEAD *pdataHead = ( DATA_PACKHEAD* ) &data[4] ;
 
-		unsigned char uFrameClass = pdataHead->cTypeID;					// ÀàĞÍ±êÊ¶·û
-		unsigned short nRTUaddr = (unsigned short)pdataHead->sRTUAddr ;	// RTUµØÖ·/³§Õ¾ĞòºÅ(µØÖ· 2¸ö×Ö½Ú)
-		//¿É±ä½á¹¹ÏŞ¶¨´Ê ¸ßµÍ×Ö½ÚÃ»ÓĞ×ª»»£¬ºóĞø´¦Àí
-		m_nRecvDataSum = pdataHead->cDeterminer & 0x7f;					// ¿É±ä½á¹¹ÏŞ¶¨´ÊµÄµÍ7Î»±íÊ¾½ÓÊÕÊı¾İµÄ¸öÊı
-		int nContType = pdataHead->cDeterminer & 0x80;					// ¿É±ä½á¹¹ÏŞ¶¨´ÊµÄ¸ß1Î»±íÊ¾ºóÃæµÄÊı¾İÊÇÁ¬Ğø·ÇÁ¬Ğø£¬0±íÊ¾·ÇÁ¬Ğø,1±íÊ¾Á¬Ğø
+		unsigned char uFrameClass = pdataHead->cTypeID;					// ç±»å‹æ ‡è¯†ç¬¦
+		unsigned short nRTUaddr = (unsigned short)pdataHead->sRTUAddr ;	// RTUåœ°å€/å‚ç«™åºå·(åœ°å€ 2ä¸ªå­—èŠ‚)
+		//å¯å˜ç»“æ„é™å®šè¯ é«˜ä½å­—èŠ‚æ²¡æœ‰è½¬æ¢ï¼Œåç»­å¤„ç†
+		m_nRecvDataSum = pdataHead->cDeterminer & 0x7f;					// å¯å˜ç»“æ„é™å®šè¯çš„ä½7ä½è¡¨ç¤ºæ¥æ”¶æ•°æ®çš„ä¸ªæ•°
+		int nContType = pdataHead->cDeterminer & 0x80;					// å¯å˜ç»“æ„é™å®šè¯çš„é«˜1ä½è¡¨ç¤ºåé¢çš„æ•°æ®æ˜¯è¿ç»­éè¿ç»­ï¼Œ0è¡¨ç¤ºéè¿ç»­,1è¡¨ç¤ºè¿ç»­
 		char szCode[32]={0};
-		LOG->debug("¿ªÊ¼½âÎöSCADAÊµÊ±Êı¾İ,ÀàĞÍÎª=%u",uFrameClass);
-		LOG->debug("´«ÊäÔ­Òò=%u",pdataHead->cTransReason);
+		LOG->debug("å¼€å§‹è§£æSCADAå®æ—¶æ•°æ®,ç±»å‹ä¸º=%u",uFrameClass);
+		LOG->debug("ä¼ è¾“åŸå› =%u",pdataHead->cTransReason);
 
-		//¸ù¾İÀàĞÍ±êÊ¶·û½âÎö¶ÔÓ¦µÄÊı¾İ
+		//æ ¹æ®ç±»å‹æ ‡è¯†ç¬¦è§£æå¯¹åº”çš„æ•°æ®
 		switch ( uFrameClass )
 		{
 		case 0x00:
 			{
-				LOG->debug("-----------ÊµÊ±Êı¾İÀàĞÍ´íÎó--------------");
+				LOG->debug("-----------å®æ—¶æ•°æ®ç±»å‹é”™è¯¯--------------");
 				break;
 			}
-		case M_SP_NA_1:			//µ¥µãÒ£ĞÅ:Ò£ĞÅÖµ0±íÊ¾·Ö£¬1±íÊ¾ºÏ
+		case M_SP_NA_1:			//å•ç‚¹é¥ä¿¡:é¥ä¿¡å€¼0è¡¨ç¤ºåˆ†ï¼Œ1è¡¨ç¤ºåˆ
 			{
-				LOG->debug("µ¥µãÈ«Ò£ĞÅ¸öÊıÎª=%d",m_nRecvDataSum);
+				LOG->debug("å•ç‚¹å…¨é¥ä¿¡ä¸ªæ•°ä¸º=%d",m_nRecvDataSum);
 
-				//»ñÈ¡µ±Ç°Ê±¼ä
+				//è·å–å½“å‰æ—¶é—´
 				time_t ti;
 				struct tm *tp;
 				ti = time(NULL);
 				tp = localtime(&ti);
 				char chtime[32];
-				//Ê±¼ä¸ñÊ½»¯. 
+				//æ—¶é—´æ ¼å¼åŒ–. 
 				sprintf(chtime,"%04d-%02d-%02d %02d:%02d:%02d",tp->tm_year+1900,tp->tm_mon+1,tp->tm_mday,tp->tm_hour,tp->tm_min,tp->tm_sec);
 
-				//»ñÈ¡´¿Êı¾İÆğÊ¼µØÖ·Ö¸Õë
+				//è·å–çº¯æ•°æ®èµ·å§‹åœ°å€æŒ‡é’ˆ
 				char *realdata;
 				realdata = &data[10];
 
-				if (pdataHead->cTransReason == SPONT)		//¶Ô¶ËÖ÷¶¯ÉÏËÍÒ£ĞÅÖµ
+				if (pdataHead->cTransReason == SPONT)		//å¯¹ç«¯ä¸»åŠ¨ä¸Šé€é¥ä¿¡å€¼
 				{
-					//Ò£ĞÅÊıÁ¬Ğø
+					//é¥ä¿¡æ•°è¿ç»­
 					if (nContType == T_Continuity)
 					{
 						YX_TO_BS yxtbs;
@@ -364,13 +364,13 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 						for (int i=0;i<m_nRecvDataSum;i++)
 						{
-							//È¡Ã¿¸öÒ£ĞÅÖµ
+							//å–æ¯ä¸ªé¥ä¿¡å€¼
 							YX_BS *pYx = (YX_BS*)&realdata[3 + i*sizeof(YX_BS)];
 
-							//Ò£ĞÅÊı¾İÖµ
+							//é¥ä¿¡æ•°æ®å€¼
 							pYx->byValue;
 
-							//±£´æ½âÎöÊı¾İµ½mapÁĞ±íÖĞ
+							//ä¿å­˜è§£ææ•°æ®åˆ°mapåˆ—è¡¨ä¸­
 							YXPOINT_VAL yxpointv;
 							yxpointv.point = nAddr;
 							yxpointv.yxVal  = pYx->byValue;
@@ -378,23 +378,23 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 							m_yxpointval_list.insert(std::pair<int,YXPOINT_VAL>(yxpointv.point,yxpointv));
 
-							//Êı¾İÁ¬ĞøĞÅÏ¢µØÖ·×ÔÔö
+							//æ•°æ®è¿ç»­ä¿¡æ¯åœ°å€è‡ªå¢
 							nAddr++;
 						}
 					}
 
-					//Ò£ĞÅÊı¾İ²»Á¬Ğø
+					//é¥ä¿¡æ•°æ®ä¸è¿ç»­
 					if (nContType == T_NotContinuity)
 					{
 						for (int i=0;i<m_nRecvDataSum;i++)
 						{
-							//È¡Ã¿¸öÒ£ĞÅÖµ
+							//å–æ¯ä¸ªé¥ä¿¡å€¼
 							YX_TO_BS *pYx = (YX_TO_BS*)&realdata[i*sizeof(YX_TO_BS)];
-							//Ò£ĞÅÊı¾İÖµ£ºÃ¿¸öÒ£ĞÅµØÖ·¶¼Òª½âÎö
+							//é¥ä¿¡æ•°æ®å€¼ï¼šæ¯ä¸ªé¥ä¿¡åœ°å€éƒ½è¦è§£æ
 							unsigned int nAddr = getInfoAddr(pYx->szAddr);
 							pYx->byValue;
 
-							//±£´æ½âÎöÊı¾İµ½mapÁĞ±íÖĞ
+							//ä¿å­˜è§£ææ•°æ®åˆ°mapåˆ—è¡¨ä¸­
 							YXPOINT_VAL yxpointv;
 							yxpointv.point = nAddr;
 							yxpointv.yxVal  = pYx->byValue;
@@ -405,9 +405,9 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 						
 					}
 				}
-				else if (pdataHead->cTransReason == INROGEN )	//ÏìÓ¦×ÜÕÙ»½,È«Ò£ĞÅÊı¾İ
+				else if (pdataHead->cTransReason == INROGEN )	//å“åº”æ€»å¬å”¤,å…¨é¥ä¿¡æ•°æ®
 				{
-					//Ò£ĞÅÊıÁ¬Ğø
+					//é¥ä¿¡æ•°è¿ç»­
 					if (nContType == T_Continuity)
 					{
 						YX_TO_BS yxtbs;
@@ -416,13 +416,13 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 						for (int i=0;i<m_nRecvDataSum;i++)
 						{
-							//È¡Ã¿¸öÒ£ĞÅÖµ
+							//å–æ¯ä¸ªé¥ä¿¡å€¼
 							YX_BS *pYx = (YX_BS*)&realdata[3 + i*sizeof(YX_BS)];
 
-							//Ò£ĞÅÊı¾İÖµ
+							//é¥ä¿¡æ•°æ®å€¼
 							pYx->byValue;
 
-							//±£´æ½âÎöÊı¾İµ½mapÁĞ±íÖĞ
+							//ä¿å­˜è§£ææ•°æ®åˆ°mapåˆ—è¡¨ä¸­
 							YXPOINT_VAL yxpointv;
 							yxpointv.point = nAddr;
 							yxpointv.yxVal  = pYx->byValue;
@@ -430,23 +430,23 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 							m_yxpointval_list.insert(std::pair<int,YXPOINT_VAL>(yxpointv.point,yxpointv));
 
-							//Êı¾İÁ¬ĞøĞÅÏ¢µØÖ·×ÔÔö
+							//æ•°æ®è¿ç»­ä¿¡æ¯åœ°å€è‡ªå¢
 							nAddr++;
 						}
 					}
 
-					//Ò£ĞÅÊı¾İ²»Á¬Ğø
+					//é¥ä¿¡æ•°æ®ä¸è¿ç»­
 					if (nContType == T_NotContinuity)
 					{
 						for (int i=0;i<m_nRecvDataSum;i++)
 						{
-							//È¡Ã¿¸öÒ£ĞÅÖµ
+							//å–æ¯ä¸ªé¥ä¿¡å€¼
 							YX_TO_BS *pYx = (YX_TO_BS*)&realdata[i*sizeof(YX_TO_BS)];
-							//Ò£ĞÅÊı¾İÖµ£ºÃ¿¸öÒ£ĞÅµØÖ·¶¼Òª½âÎö
+							//é¥ä¿¡æ•°æ®å€¼ï¼šæ¯ä¸ªé¥ä¿¡åœ°å€éƒ½è¦è§£æ
 							unsigned int nAddr = getInfoAddr(pYx->szAddr);
 							pYx->byValue;
 
-							//±£´æ½âÎöÊı¾İµ½mapÁĞ±íÖĞ
+							//ä¿å­˜è§£ææ•°æ®åˆ°mapåˆ—è¡¨ä¸­
 							YXPOINT_VAL yxpointv;
 							yxpointv.point = nAddr;
 							yxpointv.yxVal  = pYx->byValue;
@@ -457,31 +457,31 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 					}
 				}
 
-				//½ÓÊÕÒ»Ö¡Êı¾İÖ¡ºó·¢SÖ¡
+				//æ¥æ”¶ä¸€å¸§æ•°æ®å¸§åå‘Så¸§
 				sendSFrame();
 			}
 			break;
-		case M_DP_NA_1:		//Ë«µãÒ£ĞÅ:Ò£ĞÅÖµ1±íÊ¾·Ö£¬2±íÊ¾ºÏ,3±íÊ¾Î´Öª×´Ì¬
+		case M_DP_NA_1:		//åŒç‚¹é¥ä¿¡:é¥ä¿¡å€¼1è¡¨ç¤ºåˆ†ï¼Œ2è¡¨ç¤ºåˆ,3è¡¨ç¤ºæœªçŸ¥çŠ¶æ€
 			{
-				LOG->debug("Ë«µãÈ«Ò£ĞÅ¸öÊıÎª=%d",m_nRecvDataSum);
+				LOG->debug("åŒç‚¹å…¨é¥ä¿¡ä¸ªæ•°ä¸º=%d",m_nRecvDataSum);
 
-				//»ñÈ¡µ±Ç°Ê±¼ä
+				//è·å–å½“å‰æ—¶é—´
 				time_t ti;
 				struct tm *tp;
 				ti = time(NULL);
 				tp = localtime(&ti);
 				char chtime[32];
-				//Ê±¼ä¸ñÊ½»¯. 
+				//æ—¶é—´æ ¼å¼åŒ–. 
 				sprintf(chtime,"%04d-%02d-%02d %02d:%02d:%02d",tp->tm_year+1900,tp->tm_mon+1,tp->tm_mday,tp->tm_hour,tp->tm_min,tp->tm_sec);
 
 
-				//»ñÈ¡´¿Êı¾İÆğÊ¼µØÖ·Ö¸Õë
+				//è·å–çº¯æ•°æ®èµ·å§‹åœ°å€æŒ‡é’ˆ
 				char *realdata;
 				realdata = &data[10];
 
-				if (pdataHead->cTransReason == SPONT)		//¶Ô¶ËÖ÷¶¯ÉÏËÍÒ£ĞÅÖµ
+				if (pdataHead->cTransReason == SPONT)		//å¯¹ç«¯ä¸»åŠ¨ä¸Šé€é¥ä¿¡å€¼
 				{
-					//Ò£ĞÅÊıÁ¬Ğø
+					//é¥ä¿¡æ•°è¿ç»­
 					if (nContType == T_Continuity)
 					{
 						YX_TO_BS yxtbs;
@@ -490,13 +490,13 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 						for (int i=0;i<m_nRecvDataSum;i++)
 						{
-							//È¡Ã¿¸öÒ£ĞÅÖµ
+							//å–æ¯ä¸ªé¥ä¿¡å€¼
 							YX_BS *pYx = (YX_BS*)&realdata[3 + i*sizeof(YX_BS)];
 
-							//Ò£ĞÅÊı¾İÖµ
+							//é¥ä¿¡æ•°æ®å€¼
 							pYx->byValue;
 
-							//±£´æ½âÎöÊı¾İµ½mapÁĞ±íÖĞ
+							//ä¿å­˜è§£ææ•°æ®åˆ°mapåˆ—è¡¨ä¸­
 							YXPOINT_VAL yxpointv;
 							yxpointv.point = nAddr;
 							if (pYx->byValue == '1')
@@ -515,23 +515,23 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 							m_yxpointval_list.insert(std::pair<int,YXPOINT_VAL>(yxpointv.point,yxpointv));
 
-							//Êı¾İÁ¬ĞøĞÅÏ¢µØÖ·×ÔÔö
+							//æ•°æ®è¿ç»­ä¿¡æ¯åœ°å€è‡ªå¢
 							nAddr++;
 						}
 					}
 
-					//Ò£ĞÅÊı¾İ²»Á¬Ğø
+					//é¥ä¿¡æ•°æ®ä¸è¿ç»­
 					if (nContType == T_NotContinuity)
 					{
 						for (int i=0;i<m_nRecvDataSum;i++)
 						{
-							//È¡Ã¿¸öÒ£ĞÅÖµ
+							//å–æ¯ä¸ªé¥ä¿¡å€¼
 							YX_TO_BS *pYx = (YX_TO_BS*)&realdata[i*sizeof(YX_TO_BS)];
-							//Ò£ĞÅÊı¾İÖµ£ºÃ¿¸öÒ£ĞÅµØÖ·¶¼Òª½âÎö
+							//é¥ä¿¡æ•°æ®å€¼ï¼šæ¯ä¸ªé¥ä¿¡åœ°å€éƒ½è¦è§£æ
 							unsigned int nAddr = getInfoAddr(pYx->szAddr);
 							pYx->byValue;
 
-							//±£´æ½âÎöÊı¾İµ½mapÁĞ±íÖĞ
+							//ä¿å­˜è§£ææ•°æ®åˆ°mapåˆ—è¡¨ä¸­
 							YXPOINT_VAL yxpointv;
 							yxpointv.point = nAddr;
 							if (pYx->byValue == '1')
@@ -553,9 +553,9 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 					}
 				}
-				else if (pdataHead->cTransReason == INROGEN )	//ÏìÓ¦×ÜÕÙ»½,È«Ò£ĞÅÊı¾İ
+				else if (pdataHead->cTransReason == INROGEN )	//å“åº”æ€»å¬å”¤,å…¨é¥ä¿¡æ•°æ®
 				{
-					//Ò£ĞÅÊıÁ¬Ğø
+					//é¥ä¿¡æ•°è¿ç»­
 					if (nContType == T_Continuity)
 					{
 						YX_TO_BS yxtbs;
@@ -564,13 +564,13 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 						for (int i=0;i<m_nRecvDataSum;i++)
 						{
-							//È¡Ã¿¸öÒ£ĞÅÖµ
+							//å–æ¯ä¸ªé¥ä¿¡å€¼
 							YX_BS *pYx = (YX_BS*)&realdata[3 + i*sizeof(YX_BS)];
 
-							//Ò£ĞÅÊı¾İÖµ
+							//é¥ä¿¡æ•°æ®å€¼
 							pYx->byValue;
 
-							//±£´æ½âÎöÊı¾İµ½mapÁĞ±íÖĞ
+							//ä¿å­˜è§£ææ•°æ®åˆ°mapåˆ—è¡¨ä¸­
 							YXPOINT_VAL yxpointv;
 							yxpointv.point = nAddr;
 							if (pYx->byValue == '1')
@@ -589,23 +589,23 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 
 							m_yxpointval_list.insert(std::pair<int,YXPOINT_VAL>(yxpointv.point,yxpointv));
 
-							//Êı¾İÁ¬ĞøĞÅÏ¢µØÖ·×ÔÔö
+							//æ•°æ®è¿ç»­ä¿¡æ¯åœ°å€è‡ªå¢
 							nAddr++;
 						}
 					}
 
-					//Ò£ĞÅÊı¾İ²»Á¬Ğø
+					//é¥ä¿¡æ•°æ®ä¸è¿ç»­
 					if (nContType == T_NotContinuity)
 					{
 						for (int i=0;i<m_nRecvDataSum;i++)
 						{
-							//È¡Ã¿¸öÒ£ĞÅÖµ
+							//å–æ¯ä¸ªé¥ä¿¡å€¼
 							YX_TO_BS *pYx = (YX_TO_BS*)&realdata[i*sizeof(YX_TO_BS)];
-							//Ò£ĞÅÊı¾İÖµ£ºÃ¿¸öÒ£ĞÅµØÖ·¶¼Òª½âÎö
+							//é¥ä¿¡æ•°æ®å€¼ï¼šæ¯ä¸ªé¥ä¿¡åœ°å€éƒ½è¦è§£æ
 							unsigned int nAddr = getInfoAddr(pYx->szAddr);
 							pYx->byValue;
 							
-							//±£´æ½âÎöÊı¾İµ½mapÁĞ±íÖĞ
+							//ä¿å­˜è§£ææ•°æ®åˆ°mapåˆ—è¡¨ä¸­
 							YXPOINT_VAL yxpointv;
 							yxpointv.point = nAddr;
 							if (pYx->byValue == 1)
@@ -628,7 +628,7 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 					}
 				}
 
-				//½ÓÊÕÒ»Ö¡Êı¾İÖ¡ºó·¢SÖ¡
+				//æ¥æ”¶ä¸€å¸§æ•°æ®å¸§åå‘Så¸§
 				sendSFrame();
 			}
 			break;
@@ -663,7 +663,7 @@ void ProtocolMgr::initDBCimid()
 void ProtocolMgr::getCimidSerialnum()
 {
 	//string sql = "select CimId,SerialNum from cim_serial ;";
-	//¿Æ¶«µÄcimidºÍÌá¹©µÄ¹ØÁªcimidÓĞÇø±ğÇ°Ãæ¼Ó_Breaker_
+	//ç§‘ä¸œçš„cimidå’Œæä¾›çš„å…³è”cimidæœ‰åŒºåˆ«å‰é¢åŠ _Breaker_
 	string sql = "select CONCAT('_Breaker_',CimId) as CimId,SerialNum from cim_serial ;";
 	
 	LISTMAP staList;
@@ -671,7 +671,7 @@ void ProtocolMgr::getCimidSerialnum()
 	staList = App_Dba::instance()->getList(sql.c_str());
 
 
-	// °Ñvector×ªbuff
+	// æŠŠvectorè½¬buff
 	for (int i=0;i<staList.size();i++)
 	{
 		STRMAP record = staList.at(i);
@@ -709,7 +709,7 @@ void ProtocolMgr::setDataRelation()
 		cimniter = m_cimid_num_n_list.find(iter->first);
 		if (cimniter!=m_cimid_num_n_list.end())
 		{
-			//Ìî³ä½âÎöµ½µÄµãºÅ¶ÔÓ¦µÄÉè±¸cimid¶ÔÓ¦µÄyxÖµ
+			//å¡«å……è§£æåˆ°çš„ç‚¹å·å¯¹åº”çš„è®¾å¤‡cimidå¯¹åº”çš„yxå€¼
 			YXCIMID_VAL yxcimidval;
 			yxcimidval.cimid = cimniter->second.cimid;
 			yxcimidval.yxVal = iter->second.yxVal;
@@ -720,15 +720,15 @@ void ProtocolMgr::setDataRelation()
 		}
 	}
 
-	//½«½âÎöµ½µÄÊı¾İ¸üĞÂµ½Êı¾İ¿âÖĞ
+	//å°†è§£æåˆ°çš„æ•°æ®æ›´æ–°åˆ°æ•°æ®åº“ä¸­
 	updateData2DB();
-	//Çå³ı±£´æµÄ½âÎöµãºÅºÍyxÖµ¶ÔÓ¦¹ØÁª¹ØÏµÁĞ±í
+	//æ¸…é™¤ä¿å­˜çš„è§£æç‚¹å·å’Œyxå€¼å¯¹åº”å…³è”å…³ç³»åˆ—è¡¨
 	m_yxpointval_list.clear();
 }
 
 void ProtocolMgr::updateData2DB()
 {
-	//¸üĞÂÊÂ¼şÍ¬²½±í
+	//æ›´æ–°äº‹ä»¶åŒæ­¥è¡¨
 	YXCIMID_VAL_LIST::iterator iter;
 	for (iter=m_yxcimidval_list.begin();iter!=m_yxcimidval_list.end();iter++)
 	{
@@ -738,14 +738,14 @@ void ProtocolMgr::updateData2DB()
 
 		int nret = App_Dba::instance()->execSql(sql.c_str());
 
-		//¸üĞÂÉè±¸×´Ì¬
+		//æ›´æ–°è®¾å¤‡çŠ¶æ€
 		psql = "UPDATE unit_status SET State=%d WHERE UnitCim='%s' ";
 		sql = App_Dba::instance()->formatSql(psql,iter->second.yxVal,iter->second.cimid.c_str());
 
 		int mret = App_Dba::instance()->execSql(sql.c_str());
 	}
 
-	//¸üĞÂÉè±¸×´Ì¬
+	//æ›´æ–°è®¾å¤‡çŠ¶æ€
 
 }
 

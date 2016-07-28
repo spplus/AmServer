@@ -1,4 +1,4 @@
-#include "ticketmsionmgrcmd.h"
+ï»¿#include "ticketmsionmgrcmd.h"
 
 void TicketMsionMgrCmd::exec(sClientMsg* msg)
 {
@@ -28,7 +28,7 @@ void TicketMsionMgrCmd::getUserListbyRoleid(sClientMsg* msg)
 	string rd = req.reqdate();
 
 	string sql;
-	//²éÑ¯ÔËÎ¬½ÇÉ«¶ÔÓ¦µÄÓÃ»§ÁÐ±í
+	//æŸ¥è¯¢è¿ç»´è§’è‰²å¯¹åº”çš„ç”¨æˆ·åˆ—è¡¨
 	char *psql = "select u.ID,u.Name,u.Password,u.RoleId,r.Name as rolename,u.RealName from users u, roles r where u.RoleId=r.ID and u.RoleId=4;";
 
 	sql = App_Dba::instance()->formatSql(psql);
@@ -81,7 +81,7 @@ void TicketMsionMgrCmd::getUserListbyRoleid(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -98,10 +98,10 @@ void TicketMsionMgrCmd::getTicketMsionList(sClientMsg* msg)
 
 	string sql;
 
-	//Èç¹ûÓÃ»§½ÇÉ«ÊÇÔËÎ¬Ô±(id=4)£¬²éÑ¯Ö´ÐÐÈË¶ÔÓ¦µÄ²Ù×÷ÈÎÎñÁÐ±í
+	//å¦‚æžœç”¨æˆ·è§’è‰²æ˜¯è¿ç»´å‘˜(id=4)ï¼ŒæŸ¥è¯¢æ‰§è¡Œäººå¯¹åº”çš„æ“ä½œä»»åŠ¡åˆ—è¡¨
 	if (nRoleid == 4)
 	{
-		//²éÑ¯²Ù×÷ÈÎÎñÁÐ±í
+		//æŸ¥è¯¢æ“ä½œä»»åŠ¡åˆ—è¡¨
 		char *psql = "select tkm.ID,tkm.UserId,(select u.Name FROM users u WHERE tkm.UserId=u.ID) as Usernaem, \
 					 tkm.ActionUserId,(select u.Name FROM users u WHERE tkm.ActionUserId=u.ID) as Actuname,tkm.Name,tkm.PublishTime from ticket_missions tkm where tkm.ActionUserId=%d ;";
 
@@ -109,7 +109,7 @@ void TicketMsionMgrCmd::getTicketMsionList(sClientMsg* msg)
 	}
 	else
 	{
-		//²éÑ¯²Ù×÷ÈÎÎñÁÐ±í
+		//æŸ¥è¯¢æ“ä½œä»»åŠ¡åˆ—è¡¨
 		char *psql = "select tkm.ID,tkm.UserId,(select u.Name FROM users u WHERE tkm.UserId=u.ID) as Usernaem, \
 					 tkm.ActionUserId,(select u.Name FROM users u WHERE tkm.ActionUserId=u.ID) as Actuname,tkm.Name,tkm.PublishTime from ticket_missions tkm where tkm.UserId=%d ;";
 
@@ -170,7 +170,7 @@ void TicketMsionMgrCmd::getTicketMsionList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -189,7 +189,7 @@ void TicketMsionMgrCmd::ticketMsionManager(sClientMsg* msg)
 	PBNS::TicketMgrMsg_Response resp;
 	resp.set_rescode(nret);
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);

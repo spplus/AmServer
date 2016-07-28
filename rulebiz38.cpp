@@ -1,4 +1,4 @@
-#include "rulebiz38.h"
+ï»¿#include "rulebiz38.h"
 #include "rulebiz38-1.h"
 RuleBiz38::RuleBiz38()
 {
@@ -9,13 +9,13 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 {
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
-	// °Ñµ±Ç°Ôª¼ş¼ÓÈëµ½ÒÑ·ÖÎöÁĞ±í
+	// æŠŠå½“å‰å…ƒä»¶åŠ å…¥åˆ°å·²åˆ†æåˆ—è¡¨
 	passNodes.insert(MAPVAL(unitcim,unitcim));
 
-	// 2.¸ù¾İÔª¼şID£¬²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã£¨¿ÉÄÜÊÇÁ½¸ö£©
+	// 2.æ ¹æ®å…ƒä»¶IDï¼ŒæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹ï¼ˆå¯èƒ½æ˜¯ä¸¤ä¸ªï¼‰
 	LISTMAP connIds = getConnIdByUnitsId(unitcim);
 
-	// 3.¶ÔÓ¦µÄµ¥²àÁ¬½Óµã£¨²»ÊÇ²éËùÓĞµÄÁ½¸öÁ¬½Óµã£©
+	// 3.å¯¹åº”çš„å•ä¾§è¿æ¥ç‚¹ï¼ˆä¸æ˜¯æŸ¥æ‰€æœ‰çš„ä¸¤ä¸ªè¿æ¥ç‚¹ï¼‰
 	for (int i = 0 ;i<connIds.size();i++)
 	{
 
@@ -23,7 +23,7 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
-			// ÅĞ¶ÏÊÇ·ñÒÑ¾­²éÕÒ¹ıµÄÁ¬½Óµã£¬Èç¹ûÊÇÔòÌø³ö£¬²»ÊÇÔò¼ÓÈë
+			// åˆ¤æ–­æ˜¯å¦å·²ç»æŸ¥æ‰¾è¿‡çš„è¿æ¥ç‚¹ï¼Œå¦‚æœæ˜¯åˆ™è·³å‡ºï¼Œä¸æ˜¯åˆ™åŠ å…¥
 			if (passNodes.find(connIter->second) != passNodes.end())
 			{
 				continue;
@@ -33,10 +33,10 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				passNodes.insert(MAPVAL(connIter->second,connIter->second));
 			}
 
-			// ¸ù¾İÁ¬½Óµã£¬²éÕÒ¸ÃÁ¬½Óµã¹ØÁªµÄÉè±¸¼¯ºÏ
+			// æ ¹æ®è¿æ¥ç‚¹ï¼ŒæŸ¥æ‰¾è¯¥è¿æ¥ç‚¹å…³è”çš„è®¾å¤‡é›†åˆ
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,COM->i2str(saveid));
 
-			// ±éÀú¸ÃÉè±¸¼¯ºÏ
+			// éå†è¯¥è®¾å¤‡é›†åˆ
 			for (int k = 0;k<unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
@@ -44,7 +44,7 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
-					// ÅĞ¶ÏÊÇ·ñÒÑ¾­×öÎªÆğÊ¼Éè±¸½øĞĞËÑË÷£¬Èç¹ûÊÇÔòÌø¹ı
+					// åˆ¤æ–­æ˜¯å¦å·²ç»åšä¸ºèµ·å§‹è®¾å¤‡è¿›è¡Œæœç´¢ï¼Œå¦‚æœæ˜¯åˆ™è·³è¿‡
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
@@ -55,7 +55,7 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 					}
 				}
 
-				// ±¾´Î²éÑ¯µÄÔª¼şCIMID
+				// æœ¬æ¬¡æŸ¥è¯¢çš„å…ƒä»¶CIMID
 				unitId = unitIter->second;
 				int ret = topoBiz(saveid,unitId,ruleMap,"");
 				if (ret ==1)
@@ -68,8 +68,8 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				}
 				
 				
-				//Ìõ¼şÒ»¡¢¶ş³ÉÁ¢Ê±ËµÃ÷±äÑ¹Æ÷¼ä¸ôÁ¬Í¨ÇÒÁíÒ»±ß½çÎªÄ¸Ïß£¬½ÓÏÂÀ´²éÑ¯Ä¸ÏßÆäËûÁ¬Í¨¼ä¸ôÊÇ·ñº¬ÓĞ±äÑ¹Æ÷¡£²éÑ¯Ä¸ÏßÁíÒ»²àµÄÁ¬½Óµã
-				// ÅĞ¶ÏÌõ¼şÒ»£¬Ìõ¼ş¶şÊÇ·ñ³ÉÁ¢
+				//æ¡ä»¶ä¸€ã€äºŒæˆç«‹æ—¶è¯´æ˜å˜å‹å™¨é—´éš”è¿é€šä¸”å¦ä¸€è¾¹ç•Œä¸ºæ¯çº¿ï¼Œæ¥ä¸‹æ¥æŸ¥è¯¢æ¯çº¿å…¶ä»–è¿é€šé—´éš”æ˜¯å¦å«æœ‰å˜å‹å™¨ã€‚æŸ¥è¯¢æ¯çº¿å¦ä¸€ä¾§çš„è¿æ¥ç‚¹
+				// åˆ¤æ–­æ¡ä»¶ä¸€ï¼Œæ¡ä»¶äºŒæ˜¯å¦æˆç«‹
 
 				R_ITERATOR iter1 = ruleMap.find(1);
 				R_ITERATOR iter2 = ruleMap.find(2);
@@ -80,7 +80,7 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 					r.topoByUnit(saveid,m_unitCim,passNodes,ruleMap);
 				}
 
-				// ¹æÔò±»´¥·¢
+				// è§„åˆ™è¢«è§¦å‘
 				if (ruleMap.size() == 0)
 				{
 					return true;
@@ -101,14 +101,14 @@ int RuleBiz38::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 	if (bean.unittype() == eBREAKER)
 	{
-		// Èç¹ûÎª¿ª¹ØÇÒ¶Ï¿ª£¬Ö±½ÓÍË³öÂß¼­£¬²»Î¥±³¹æÔò
+		// å¦‚æœä¸ºå¼€å…³ä¸”æ–­å¼€ï¼Œç›´æ¥é€€å‡ºé€»è¾‘ï¼Œä¸è¿èƒŒè§„åˆ™
 		if (bean.state() == 0)
 		{
 			return 2;
 		}
 		else
 		{
-			// Èç¹ûÎª¿ª¹ØÇÒ±ÕºÏ£¬Ìõ¼şÒ»³ÉÁ¢
+			// å¦‚æœä¸ºå¼€å…³ä¸”é—­åˆï¼Œæ¡ä»¶ä¸€æˆç«‹
 			COM->triggerRule(ruleMap,1);
 			m_unitCim = bean.cimid();
 			return 0;
@@ -117,7 +117,7 @@ int RuleBiz38::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}	
 	else if (bean.unittype() == eBUS)
 	{
-		// Èç¹ûÎªÄ¸Ïß£¬Ìõ¼ş¶ş³ÉÁ¢
+		// å¦‚æœä¸ºæ¯çº¿ï¼Œæ¡ä»¶äºŒæˆç«‹
 		COM->triggerRule(ruleMap,2);
 		
 		return 0;

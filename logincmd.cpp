@@ -1,9 +1,9 @@
-#include "logincmd.h"
+ï»¿#include "logincmd.h"
 #include "buff/msgbody.pb.h"
 
 void LoginCmd::exec(sClientMsg* msg)
 {
-	// 1.°ÑÏûÏ¢ÄÚÈÝÐòÁÐ»¯Îª¶ÔÓÚµÄbuff ½á¹¹
+	// 1.æŠŠæ¶ˆæ¯å†…å®¹åºåˆ—åŒ–ä¸ºå¯¹äºŽçš„buff ç»“æž„
 	PBNS::UserLoginMsg_Request res;
 	res.ParseFromArray(msg->data,msg->length);
 
@@ -11,14 +11,14 @@ void LoginCmd::exec(sClientMsg* msg)
 	string pwd = res.userpwd();
 
 
-	// 2.»ñÈ¡Êý¾Ý¿âÁ¬½Ó
-	// 3.Ö´ÐÐSQL
-	// 4.×é×°·µ»Ø½á¹û
-	// 5.°Ñ½á¹ûbuff ÐòÁÐ»¯Îªstring
-	// 6.µ÷ÓÃ·µ»ØÄÚÈÝµ½¿Í»§¶Ë
+	// 2.èŽ·å–æ•°æ®åº“è¿žæŽ¥
+	// 3.æ‰§è¡ŒSQL
+	// 4.ç»„è£…è¿”å›žç»“æžœ
+	// 5.æŠŠç»“æžœbuff åºåˆ—åŒ–ä¸ºstring
+	// 6.è°ƒç”¨è¿”å›žå†…å®¹åˆ°å®¢æˆ·ç«¯
 	//string data = "hello client";
 
-	// Í¨¹ýÊý¾Ý¿â½øÐÐµÇÂ¼ÓÃ»§ÑéÖ¤ SELECT ID,RoleId,Name,Password,RealName FROM users where name='admin' and Password='202cb962ac59075b964b07152d234b70'
+	// é€šè¿‡æ•°æ®åº“è¿›è¡Œç™»å½•ç”¨æˆ·éªŒè¯ SELECT ID,RoleId,Name,Password,RealName FROM users where name='admin' and Password='202cb962ac59075b964b07152d234b70'
 	string sql ;
 	char *psql = "SELECT ID,RoleId,Name,Password,RealName FROM users where name='%s' and Password='%s' ";
 	sql = App_Dba::instance()->formatSql(psql,res.username().c_str(),res.userpwd().c_str());
@@ -65,7 +65,7 @@ void LoginCmd::exec(sClientMsg* msg)
 
 	}
 
-	// Èç¹ûµÇÂ½³É¹¦£¬Ôò¼á³ÖÊÇ·ñÓÐCIMÎÄ¼þÐèÒª¸üÐÂ
+	// å¦‚æžœç™»é™†æˆåŠŸï¼Œåˆ™åšæŒæ˜¯å¦æœ‰CIMæ–‡ä»¶éœ€è¦æ›´æ–°
 	if (usersatelist.size() > 0)
 	{
 		char *psql = "select count(*) as count from system_config where isnew=1";
@@ -82,7 +82,7 @@ void LoginCmd::exec(sClientMsg* msg)
 	}
 	
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	rep.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);

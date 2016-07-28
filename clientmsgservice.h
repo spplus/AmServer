@@ -1,9 +1,9 @@
-#ifndef __RECVTASK_H__
+ï»¿#ifndef __RECVTASK_H__
 #define __RECVTASK_H__
 
 /************************************************************************/
 /* 
-	DESC:	×÷Îª·şÎñÆ÷£¬½ÓÊÕµ½µÄ¿Í»§¶ËÏûÏ¢´¦Àí·şÎñ.
+	DESC:	ä½œä¸ºæœåŠ¡å™¨ï¼Œæ¥æ”¶åˆ°çš„å®¢æˆ·ç«¯æ¶ˆæ¯å¤„ç†æœåŠ¡.
 	DATE:	2016-04-20
 	AUTHOR:	YUANLS
 */
@@ -18,11 +18,11 @@
 class ClientMsgService :public ACE_Task<ACE_MT_SYNCH>
 {
 public:
-	// Æô¶¯·şÎñ
+	// å¯åŠ¨æœåŠ¡
 	void		start();
 	void		stop();
 
-	// °ÑÏûÏ¢¼ÓÈëµ½ÏûÏ¢¶ÓÁĞ
+	// æŠŠæ¶ˆæ¯åŠ å…¥åˆ°æ¶ˆæ¯é˜Ÿåˆ—
 	int		put(ACE_Message_Block* mb);
 
 protected:
@@ -30,7 +30,7 @@ protected:
 	
 private:
 
-	// ÏûÏ¢½âÎö£¬ÔÙ´Î½øĞĞĞ­Òé½âÎö£¬·ÖÀë³öÊı¾İÇø£¬½»ÓÉÒµÎñ´¦Àí³É½øĞĞ´¦Àí
+	// æ¶ˆæ¯è§£æï¼Œå†æ¬¡è¿›è¡Œåè®®è§£æï¼Œåˆ†ç¦»å‡ºæ•°æ®åŒºï¼Œäº¤ç”±ä¸šåŠ¡å¤„ç†æˆè¿›è¡Œå¤„ç†
 	void	parseData(ACE_Message_Block* mb);
 
 private:

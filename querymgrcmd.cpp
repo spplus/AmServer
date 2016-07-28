@@ -1,4 +1,4 @@
-#include "querymgrcmd.h"
+ï»¿#include "querymgrcmd.h"
 
 
 void QueryMgrCmd::exec(sClientMsg* msg)
@@ -37,13 +37,13 @@ void QueryMgrCmd::queryCricleList(sClientMsg* msg)
 	int nSvid = req.saveid();
 	std::string saveid = COM->i2str(nSvid);
 	
-	//¿ªÊ¼»·Â·²éÑ¯ÍØÆË
+	//å¼€å§‹ç¯è·¯æŸ¥è¯¢æ‹“æ‰‘
 	cricleTopo(nSvid);
 
 
 	PBNS::CircleListMsg_Response resp;
 
-	//×éºÏÄ¸Ïß²éÑ¯Ìõ¼ş
+	//ç»„åˆæ¯çº¿æŸ¥è¯¢æ¡ä»¶
 	string buss;
 	for (int i = 0;i<m_buslist.size();i++)
 	{
@@ -56,7 +56,7 @@ void QueryMgrCmd::queryCricleList(sClientMsg* msg)
 	}
 	else
 	{
-		// ·µ»Øµ½¿Í»§¶Ë
+		// è¿”å›åˆ°å®¢æˆ·ç«¯
 		string data;
 		resp.SerializeToString(&data);
 		App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -65,7 +65,7 @@ void QueryMgrCmd::queryCricleList(sClientMsg* msg)
 	}
 
 	string sql;
-	//²éÑ¯Ä¸ÏßÃû³ÆºÍ¶ÔÓ¦³§Õ¾Ãû³Æ
+	//æŸ¥è¯¢æ¯çº¿åç§°å’Œå¯¹åº”å‚ç«™åç§°
 	char *psql = "select ut.CimId,ut.Name,ut.StationCim,(select stn.Name from stations stn where stn.CimId=ut.StationCim ) as StationName from units ut where ut.UnitType=2 and ut.CimId in (%s);";
 
 	sql = App_Dba::instance()->formatSql(psql,buss.c_str());
@@ -105,7 +105,7 @@ void QueryMgrCmd::queryCricleList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›åˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -117,11 +117,11 @@ void QueryMgrCmd::queryCricleList(sClientMsg* msg)
 
 void QueryMgrCmd::cricleTopo(int saveid)
 {
-	// ÒÑ¾­×ö¸öÆğµã·ÖÎöµÄÉè±¸ID¼¯ºÏ
+	// å·²ç»åšä¸ªèµ·ç‚¹åˆ†æçš„è®¾å¤‡IDé›†åˆ
 	STRMAP passedNodes;
 
 	string sql;
-	//²éÑ¯ËùÓĞ¿ª¹Ø¡¢µ¶Õ¢cimid
+	//æŸ¥è¯¢æ‰€æœ‰å¼€å…³ã€åˆ€é—¸cimid
 	char *psql = "select CimId from units where UnitType in (0,1) ;";
 
 	LISTMAP bekswhList = App_Dba::instance()->getList(psql);
@@ -131,13 +131,13 @@ void QueryMgrCmd::cricleTopo(int saveid)
 		MAP_ITERATOR iter = saveMap.find("CimId");
 		if(iter != saveMap.end())
 		{
-			//Ä¸Ïß¼ÇÂ¼Êı³õÊ¼ÉèÖÃÎª0
+			//æ¯çº¿è®°å½•æ•°åˆå§‹è®¾ç½®ä¸º0
 			m_busCount = 0;
 
-			//ÉèÖÃÆğÊ¼¿ª¹Øµ¶Õ¢cimid
+			//è®¾ç½®èµ·å§‹å¼€å…³åˆ€é—¸cimid
 			m_brkswhCim = iter->second;
 
-			//¸ù¾İ¿ª¹Ø¡¢µ¶Õ¢Ôª¼ş½øĞĞ»·Â·ÍØÆË
+			//æ ¹æ®å¼€å…³ã€åˆ€é—¸å…ƒä»¶è¿›è¡Œç¯è·¯æ‹“æ‰‘
 			cricleTopoByUnit(saveid,iter->second,passedNodes);
 
 		}
@@ -149,23 +149,23 @@ void QueryMgrCmd::cricleTopoByUnit(int saveid,string unitcim,STRMAP& passNodes)
 {
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
-	// °Ñµ±Ç°Ôª¼ş¼ÓÈëµ½ÒÑ·ÖÎöÁĞ±í
+	// æŠŠå½“å‰å…ƒä»¶åŠ å…¥åˆ°å·²åˆ†æåˆ—è¡¨
 	passNodes.insert(MAPVAL(unitcim,unitcim));
 
-	// 2.¸ù¾İÔª¼şID£¬²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã£¨¿ÉÄÜÊÇÁ½¸ö£©
+	// 2.æ ¹æ®å…ƒä»¶IDï¼ŒæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹ï¼ˆå¯èƒ½æ˜¯ä¸¤ä¸ªï¼‰
 	LISTMAP connIds = getConnIdByUnitsId(unitcim);
 
-	// 3.¶ÔÓ¦µÄµ¥²àÁ¬½Óµã£¨²»ÊÇ²éËùÓĞµÄÁ½¸öÁ¬½Óµã£©
+	// 3.å¯¹åº”çš„å•ä¾§è¿æ¥ç‚¹ï¼ˆä¸æ˜¯æŸ¥æ‰€æœ‰çš„ä¸¤ä¸ªè¿æ¥ç‚¹ï¼‰
 	for (int i = 0; i < connIds.size();i++)
 	{
 		STRMAP connMap = connIds.at(i);
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
-			// ¸ù¾İÁ¬½Óµã£¬²éÕÒ¸ÃÁ¬½Óµã¹ØÁªµÄÉè±¸¼¯ºÏ
+			// æ ¹æ®è¿æ¥ç‚¹ï¼ŒæŸ¥æ‰¾è¯¥è¿æ¥ç‚¹å…³è”çš„è®¾å¤‡é›†åˆ
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,COM->i2str(saveid));
 
-			// ±éÀú¸ÃÉè±¸¼¯ºÏ
+			// éå†è¯¥è®¾å¤‡é›†åˆ
 			for (int k = 0;k < unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
@@ -173,58 +173,58 @@ void QueryMgrCmd::cricleTopoByUnit(int saveid,string unitcim,STRMAP& passNodes)
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
-					// ÅĞ¶ÏÊÇ·ñÒÑ¾­×öÎªÆğÊ¼Éè±¸½øĞĞËÑË÷£¬Èç¹ûÊÇÔòÌø¹ı
+					// åˆ¤æ–­æ˜¯å¦å·²ç»åšä¸ºèµ·å§‹è®¾å¤‡è¿›è¡Œæœç´¢ï¼Œå¦‚æœæ˜¯åˆ™è·³è¿‡
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
 					}
 				}
 
-				// ±¾´Î²éÑ¯µÄÔª¼şCIMID
+				// æœ¬æ¬¡æŸ¥è¯¢çš„å…ƒä»¶CIMID
 				unitId = unitIter->second;
 
-				// Ôª¼şÀàĞÍ
+				// å…ƒä»¶ç±»å‹
 				int unitType = COM->getIval(unitMap,"UnitType");
 
-				// Ôª¼ş×´Ì¬
+				// å…ƒä»¶çŠ¶æ€
 				int state = COM->getIval(unitMap,"State");
 
 				if (unitType == eTRANSFORMER || ((unitType == eBREAKER||unitType == eSWITCH) && state == 0))
 				{
-					//ÖØĞÂÑ­»·Ê±Ä¸Ïß¸öÊıÇå0
+					//é‡æ–°å¾ªç¯æ—¶æ¯çº¿ä¸ªæ•°æ¸…0
 					m_busCount = 0;
 					m_buslist.clear();
 
-					// ±äÑ¹Æ÷¡¢¶Ï¿ªµÄ¿ª¹ØºÍµ¶Õ¢Îª¸ÃÌõÂ·±éÀúµÄÖÕµã
+					// å˜å‹å™¨ã€æ–­å¼€çš„å¼€å…³å’Œåˆ€é—¸ä¸ºè¯¥æ¡è·¯éå†çš„ç»ˆç‚¹
 					continue;
 				}
-				else if (unitType == eBUS)		//Èç¹ûÉè±¸¼¯ºÏÖĞÓĞÄ¸Ïß
+				else if (unitType == eBUS)		//å¦‚æœè®¾å¤‡é›†åˆä¸­æœ‰æ¯çº¿
 				{
 					m_busCount++;
 
 					string buscim = unitId;
-					//±£´æÄ¸Ïß¼ÇÂ¼
+					//ä¿å­˜æ¯çº¿è®°å½•
 					m_buslist.push_back(unitId);
 				}
-				else if (m_brkswhCim == unitId && (m_busCount>1))		//±éÀúµ±Ç°cimidµÈÓÚÆğÊ¼cimidÇÒÄ¸ÏßÀÛ¼ÆÊı´óÓÚ1±íÊ¾»·Â·ĞÎ³É
+				else if (m_brkswhCim == unitId && (m_busCount>1))		//éå†å½“å‰cimidç­‰äºèµ·å§‹cimidä¸”æ¯çº¿ç´¯è®¡æ•°å¤§äº1è¡¨ç¤ºç¯è·¯å½¢æˆ
 				{
 					return;
 				}
 				else
 				{
-					//µİ¹é
+					//é€’å½’
 					cricleTopoByUnit(saveid,unitId,passNodes);
 				}
 			}
 		}
 
-		// Ê×´ÎÍØÆË£¬Ö»ÍØÆËµ¥²àÁ¬½Óµã
+		// é¦–æ¬¡æ‹“æ‰‘ï¼Œåªæ‹“æ‰‘å•ä¾§è¿æ¥ç‚¹
 		if (m_isFirst)
 		{
 			break;
 		}
 
-		// ±ê¼ÇÎªµÚÒ»´ÎÍê³É
+		// æ ‡è®°ä¸ºç¬¬ä¸€æ¬¡å®Œæˆ
 		m_isFirst = false;
 	}
 
@@ -271,7 +271,7 @@ PBNS::StateBean QueryMgrCmd::getUnitByCim(int saveid,string unitcim)
 	}
 	else
 	{
-		LOG->warn("Êı¾İ´íÎó£¬Í¬Ò»´æµµÏÂÃæÓĞ¶à¸öÏàÍ¬cimµÄÔª¼ş:%s",unitcim.c_str());
+		LOG->warn("æ•°æ®é”™è¯¯ï¼ŒåŒä¸€å­˜æ¡£ä¸‹é¢æœ‰å¤šä¸ªç›¸åŒcimçš„å…ƒä»¶:%s",unitcim.c_str());
 	}
 
 	return bean;
@@ -289,7 +289,7 @@ LISTMAP QueryMgrCmd::getConnIdByUnitsId(string unitid)
 LISTMAP QueryMgrCmd::getUnitsByConnId(string connid,string saveid)
 {
 
-	// ÎÊÌâ£º¹ØÁª²éÑ¯Éè±¸×´Ì¬µÄÊ±ºò£¬²»ÓÃ¿¼ÂÇsaveidÃ´£¿unit_status±íÖĞ£¬Í¬Ò»¸öunit¿ÉÄÜ»áÓĞ¶àÌõ¼ÇÂ¼£¬ÒÔÄÄÌì¼ÇÂ¼Îª×¼ÄØ£¿
+	// é—®é¢˜ï¼šå…³è”æŸ¥è¯¢è®¾å¤‡çŠ¶æ€çš„æ—¶å€™ï¼Œä¸ç”¨è€ƒè™‘saveidä¹ˆï¼Ÿunit_statusè¡¨ä¸­ï¼ŒåŒä¸€ä¸ªunitå¯èƒ½ä¼šæœ‰å¤šæ¡è®°å½•ï¼Œä»¥å“ªå¤©è®°å½•ä¸ºå‡†å‘¢ï¼Ÿ
 	LISTMAP unitsList ;
 	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,"\
 		"c.State,d.VolValue from (select UnitCim from Relations where ConnCim='%s') a left join "\
@@ -309,7 +309,7 @@ void QueryMgrCmd::querySignList(sClientMsg* msg)
 	string rd = req.reqdate();
 
 	string sql;
-	//²éÑ¯¹ÒÅÆÁĞ±í
+	//æŸ¥è¯¢æŒ‚ç‰Œåˆ—è¡¨
 	char *psql = "SELECT us.UnitCim,(SELECT ut.Name from units ut where ut.CimId=us.UnitCim) as unitName,us.StationCim, \
 		(SELECT st.Name from stations st WHERE st.CimId=us.StationCim) stationName, \
 		(SELECT ut.UnitType from units ut where ut.CimId=us.UnitCim) unitType from unit_status us where us.IsBoard = 1;";
@@ -358,7 +358,7 @@ void QueryMgrCmd::querySignList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›åˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -375,7 +375,7 @@ void QueryMgrCmd::queryGSwitchList(sClientMsg* msg)
 	string rd = req.reqdate();
 
 	string sql;
-	//²éÑ¯½ÓµØÁĞ±í
+	//æŸ¥è¯¢æ¥åœ°åˆ—è¡¨
 	char *psql = "SELECT us.UnitCim,(SELECT ut.Name from units ut where ut.CimId=us.UnitCim) as unitName,us.StationCim, \
 				 (SELECT st.Name from stations st WHERE st.CimId=us.StationCim) stationName, \
 				 (SELECT ut.UnitType from units ut where ut.CimId=us.UnitCim) unitType from unit_status us where us.IsGround = 1;";
@@ -424,7 +424,7 @@ void QueryMgrCmd::queryGSwitchList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›åˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -446,7 +446,7 @@ void QueryMgrCmd::queryEventList(sClientMsg* msg)
 
 	//select sye.UnitId,sye.EventValue,sye.SynTime,us.Name,us.UnitType,st.CimId as stioncim,st.Name as stionname from syn_events sye,units us,stations st where sye.UnitId=us.CimId and us.StationCim=st.CimId
 	string sql;
-	//²éÑ¯¹ÒÅÆÁĞ±í
+	//æŸ¥è¯¢æŒ‚ç‰Œåˆ—è¡¨
 	char *psql = "select sye.UnitId,sye.EventValue,sye.SynTime,us.Name,us.UnitType,st.CimId as StionCim,st.Name as StionName \
 		from syn_events sye,units us,stations st where sye.UnitId=us.CimId and us.StationCim=st.CimId ;";
 
@@ -505,7 +505,7 @@ void QueryMgrCmd::queryEventList(sClientMsg* msg)
 		}
 	}	
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›åˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);

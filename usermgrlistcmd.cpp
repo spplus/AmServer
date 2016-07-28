@@ -1,4 +1,4 @@
-#include "usermgrlistcmd.h"
+ï»¿#include "usermgrlistcmd.h"
 #include "buff/msgbody.pb.h"
 
 void UserMgrListCmd::exec(sClientMsg* msg)
@@ -29,7 +29,7 @@ void UserMgrListCmd::getUserList(sClientMsg* msg)
 	string rd = req.reqdate();
 
 	string sql;
-	//²éÑ¯ÓÃ»§ÁÐ±í
+	//æŸ¥è¯¢ç”¨æˆ·åˆ—è¡¨
 	char *psql = "select u.ID,u.Name,u.Password,u.RoleId,r.Name as rolename,u.RealName from users u, roles r where u.RoleId=r.ID;";
 
 	sql = App_Dba::instance()->formatSql(psql);
@@ -83,7 +83,7 @@ void UserMgrListCmd::getUserList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -95,7 +95,7 @@ void UserMgrListCmd::getUserRoleList(sClientMsg* msg)
 	req.ParseFromArray(msg->data,msg->length);
 
 	string sql;
-	//²é¿´ÓÃ»§½ÇÉ«ÁÐ±í
+	//æŸ¥çœ‹ç”¨æˆ·è§’è‰²åˆ—è¡¨
 	char *psql = "select id,Name from roles;";
 
 	sql = App_Dba::instance()->formatSql(psql);
@@ -125,7 +125,7 @@ void UserMgrListCmd::getUserRoleList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -145,7 +145,7 @@ void UserMgrListCmd::userManager(sClientMsg* msg)
 	PBNS::UserMgrMsg_Response resp;
 	resp.set_rescode(nret);
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);

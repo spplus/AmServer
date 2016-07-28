@@ -1,4 +1,4 @@
-#include "stationmgrcmd.h"
+ï»¿#include "stationmgrcmd.h"
 
 
 void StationMgrcmd::exec(sClientMsg* msg)
@@ -33,7 +33,7 @@ void StationMgrcmd::getStationTypeList(sClientMsg* msg)
 
 	PBNS::StationTypeMsg_Response res;
 
-	// °Ñvector×ªbuff
+	// æŠŠvectorè½¬buff
 	for (int i=0;i<staList.size();i++)
 	{
 		STRMAP record = staList.at(i);
@@ -59,7 +59,7 @@ void StationMgrcmd::getStationTypeList(sClientMsg* msg)
 
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	res.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -79,7 +79,7 @@ void StationMgrcmd::stationTypeManager(sClientMsg* msg)
 	PBNS::StationTypeMgrMsg_Response resp;
 	resp.set_rescode(nret);
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -89,14 +89,14 @@ void StationMgrcmd::stationTypeManager(sClientMsg* msg)
 
 void StationMgrcmd::getStationList(sClientMsg* msg)
 {
-	// ²éÑ¯³§Õ¾ÁÐ±í
+	// æŸ¥è¯¢åŽ‚ç«™åˆ—è¡¨
 	string sql = "select id, CategoryId, CimId,Name,CurrentName,Path from stations;" ;
 
 	LISTMAP stateList;
 	stateList = App_Dba::instance()->getList(sql.c_str());
 
 	PBNS::StationListMsg_Response resp;
-	// °Ñvector×ªbuff
+	// æŠŠvectorè½¬buff
 	for (int i=0;i<stateList.size();i++)
 	{
 		STRMAP record = stateList.at(i);
@@ -140,7 +140,7 @@ void StationMgrcmd::getStationList(sClientMsg* msg)
 		}
 	}
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
@@ -172,7 +172,7 @@ void StationMgrcmd::stationManager(sClientMsg* msg)
 	PBNS::StationMgrMsg_Response resp;
 	resp.set_rescode(nsuccess);
 
-	// ·µ»Øµ½¿Í»§¶Ë
+	// è¿”å›žåˆ°å®¢æˆ·ç«¯
 	string data;
 	resp.SerializeToString(&data);
 	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);

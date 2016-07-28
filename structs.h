@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:	¶¨Òå½á¹¹Ìå.
+	DESC:	å®šä¹‰ç»“æ„ä½“.
 	DATE:	2016-04-20
 	AUTHOR:YUANLS
 */
@@ -11,10 +11,10 @@
 
 struct sClientMsg 
 {
-	unsigned int	connectId;		// Á¬½ÓID
-	unsigned int	length;				// ÏûÏ¢³¤¶È
-	unsigned int	type;				// ÏûÏ¢ÀàĞÍ
-	char*				data;					// ÏûÏ¢ÄÚÈİ
+	unsigned int	connectId;		// è¿æ¥ID
+	unsigned int	length;				// æ¶ˆæ¯é•¿åº¦
+	unsigned int	type;				// æ¶ˆæ¯ç±»å‹
+	char*				data;					// æ¶ˆæ¯å†…å®¹
 
 	sClientMsg()
 	{

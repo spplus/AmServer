@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-		DESC:	µ¶Õ¢À­ºÏÉè±¸£¬½ûÖ¹²Ù×÷.
+		DESC:	åˆ€é—¸æ‹‰åˆè®¾å¤‡ï¼Œç¦æ­¢æ“ä½œ.
 		DATE:	2016-06-29
 		AUTHOR:	YUANLS
 */
@@ -22,7 +22,7 @@ private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */);
 
 private:
-	// ¿Í»§¶Ë²Ù×÷ÀàĞÍ
+	// å®¢æˆ·ç«¯æ“ä½œç±»å‹
 	int				m_optype;
 
 	vector<PBNS::StateBean>		m_switchList;

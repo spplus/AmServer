@@ -1,4 +1,4 @@
-#include "rulebiz5-1.h"
+ï»¿#include "rulebiz5-1.h"
 
 RuleBiz5_1::RuleBiz5_1()
 {
@@ -9,7 +9,7 @@ int RuleBiz5_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationci
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// Èç¹û½á¹ûÔª¼ş°üº¬Á½¸ö±ÕºÏµÄµ¶Õ¢£¬Âú×ãÌõ¼şÎå£¬¹æÔò±»´¥·¢¡£
+	// å¦‚æœç»“æœå…ƒä»¶åŒ…å«ä¸¤ä¸ªé—­åˆçš„åˆ€é—¸ï¼Œæ»¡è¶³æ¡ä»¶äº”ï¼Œè§„åˆ™è¢«è§¦å‘ã€‚
 	if (bean.unittype() == eSWITCH)
 	{
 		count++;
@@ -18,7 +18,7 @@ int RuleBiz5_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationci
 		{
 			return 4;
 		}
-		// ·µ»Øfalse£¬Í£Ö¹¼ÌĞøÍØÆË
+		// è¿”å›falseï¼Œåœæ­¢ç»§ç»­æ‹“æ‰‘
 		return 0;
 	}
 	else

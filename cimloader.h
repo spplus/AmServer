@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:	CIMÎÄ¼ş½âÎö£¬Èë¿â.
+	DESC:	CIMæ–‡ä»¶è§£æï¼Œå…¥åº“.
 	DATE:	2016-07-24
 	AUTHOR:	YUANLS
 */
@@ -18,34 +18,34 @@ public:
 
 private:
 	int		cim2db();
-	void		save_log(char *buf);							//±£´æ³ÌĞòÔËĞĞ¼ÇÂ¼ÈÕÖ¾ĞÅÏ¢
+	void		save_log(char *buf);							//ä¿å­˜ç¨‹åºè¿è¡Œè®°å½•æ—¥å¿—ä¿¡æ¯
 
-	int		saveBaseVoltage();								//±£´æ»ù´¡µçÑ¹
-	int		saveSubstation();								//±£´æ³§Õ¾ĞÅÏ¢
-	int		saveVollevel();									//±£´æµçÑ¹µÈ¼¶
+	int		saveBaseVoltage();								//ä¿å­˜åŸºç¡€ç”µå‹
+	int		saveSubstation();								//ä¿å­˜å‚ç«™ä¿¡æ¯
+	int		saveVollevel();									//ä¿å­˜ç”µå‹ç­‰çº§
 
-	int		saveBreaker();									//±£´æ¶ÏÂ·Æ÷
-	int		saveDisconnector();								//±£´æµ¶Õ¢
-	int		saveGrdDisconnector();							//±£´æ½ÓµØµ¶Õ¢
-	int		saveBusbarSection();							//±£´æÄ¸Ïß
-	int		saveCompensator();								//±£´æµçÈİ
-	int		saveEnergyConsumer();							//±£´æ¸ººÉ
-	int		saveSynchronousMachine();						//±£´æ·¢µç»ú
-	int		savePotentialTransformer();						//±£´æµçÑ¹»¥¸ĞÆ÷
-	int		savePowerTransformer();							//±£´æ±äÑ¹Æ÷
-	int		saveACLineSegment();							//±£´æÏßÂ·
+	int		saveBreaker();									//ä¿å­˜æ–­è·¯å™¨
+	int		saveDisconnector();								//ä¿å­˜åˆ€é—¸
+	int		saveGrdDisconnector();							//ä¿å­˜æ¥åœ°åˆ€é—¸
+	int		saveBusbarSection();							//ä¿å­˜æ¯çº¿
+	int		saveCompensator();								//ä¿å­˜ç”µå®¹
+	int		saveEnergyConsumer();							//ä¿å­˜è´Ÿè·
+	int		saveSynchronousMachine();						//ä¿å­˜å‘ç”µæœº
+	int		savePotentialTransformer();						//ä¿å­˜ç”µå‹äº’æ„Ÿå™¨
+	int		savePowerTransformer();							//ä¿å­˜å˜å‹å™¨
+	int		saveACLineSegment();							//ä¿å­˜çº¿è·¯
 
-	int		saveTransformerWinding();						//±£´æ±äÑ¹Æ÷ÈÆ×é
-	int		saveRelateLine();								//±£´æ½ø³öÏßÕ¾µã¹ØÏµ±í
-	int		saveConnectivityNode();							//±£´æÁ¬½Óµã±í
-	int		saveTerminalRelation();							//±£´æÁ¬½Ó¹ØÏµ±í
-	int		saveUnitStatus();								//ÉèÖÃÔª¼ş³õÊ¼×´Ì¬ĞÅÏ¢
+	int		saveTransformerWinding();						//ä¿å­˜å˜å‹å™¨ç»•ç»„
+	int		saveRelateLine();								//ä¿å­˜è¿›å‡ºçº¿ç«™ç‚¹å…³ç³»è¡¨
+	int		saveConnectivityNode();							//ä¿å­˜è¿æ¥ç‚¹è¡¨
+	int		saveTerminalRelation();							//ä¿å­˜è¿æ¥å…³ç³»è¡¨
+	int		saveUnitStatus();								//è®¾ç½®å…ƒä»¶åˆå§‹çŠ¶æ€ä¿¡æ¯
 
-	// »ñÈ¡µ±Ç°Ê±¼ä
+	// è·å–å½“å‰æ—¶é—´
 private:
-	//±£´æÈÕÖ¾Â·¾¶ĞÅÏ¢
-	char				m_log[10240];										//±£´æ³ÌĞòÖĞ²úÉúµÄlog
-	ParseXML	parseXML;									//½âÎöÀà¶ÔÏó
+	//ä¿å­˜æ—¥å¿—è·¯å¾„ä¿¡æ¯
+	char				m_log[10240];										//ä¿å­˜ç¨‹åºä¸­äº§ç”Ÿçš„log
+	ParseXML	parseXML;									//è§£æç±»å¯¹è±¡
 };
 
 

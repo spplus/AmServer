@@ -1,4 +1,4 @@
-
+ï»¿
 #include <stdio.h>
 #include <stdarg.h>
 #include <sys/timeb.h>
@@ -24,12 +24,12 @@
 static void * pthr_cleaner_process(void * arg);
 
 /*-----------------------------------------------------------------------
-* name:		³õÊ¼»¯ÈÕÖ¾ÏµÍ³²ÎÊı
-* input:	fdir  -- ÈÕÖ¾ÎÄ¼ş¸ùÄ¿Â¼
-*			_media  -- ÈÕÖ¾Ã½Ìå
-*			_level  -- ÈÕÖ¾¼¶±ğ
-*			_cleaner_switch  -- ÈÕÖ¾ÇåÀí¿ª¹Ø
-*			_saved_month  -- ÈÕÖ¾±£´æÔÂÊı
+* name:		åˆå§‹åŒ–æ—¥å¿—ç³»ç»Ÿå‚æ•°
+* input:	fdir  -- æ—¥å¿—æ–‡ä»¶æ ¹ç›®å½•
+*			_media  -- æ—¥å¿—åª’ä½“
+*			_level  -- æ—¥å¿—çº§åˆ«
+*			_cleaner_switch  -- æ—¥å¿—æ¸…ç†å¼€å…³
+*			_saved_month  -- æ—¥å¿—ä¿å­˜æœˆæ•°
 * output:	NONE
 * return:	NONE
 *-----------------------------------------------------------------------*/
@@ -48,12 +48,12 @@ void Logger::init_logger(const char * _fdir, unsigned int _media, unsigned int _
 }
 
 /*-----------------------------------------------------------------------
-* name:		³õÊ¼»¯ÈÕÖ¾ÏµÍ³
-* 			Ã¿´ÎÏµÍ³µ÷ÓÃ´ËÈÕÖ¾ÀàÊ± ĞèÒªµ÷ÓÃ´Ëº¯Êı³õÊ¼»¯ÈÕÖ¾ÏµÍ³
+* name:		åˆå§‹åŒ–æ—¥å¿—ç³»ç»Ÿ
+* 			æ¯æ¬¡ç³»ç»Ÿè°ƒç”¨æ­¤æ—¥å¿—ç±»æ—¶ éœ€è¦è°ƒç”¨æ­¤å‡½æ•°åˆå§‹åŒ–æ—¥å¿—ç³»ç»Ÿ
 * input:	NONE
 * output:	NONE
-* return:	-1 -- Ê§°Ü
-* 			 1 -- ³É¹¦
+* return:	-1 -- å¤±è´¥
+* 			 1 -- æˆåŠŸ
 *-----------------------------------------------------------------------*/
 int Logger::open_logger()
 {
@@ -61,19 +61,19 @@ int Logger::open_logger()
 	ACE_OS::memset(this->filename_, 0x00, sizeof(this->filename_));
 	ACE_OS::memset(this->fullpath_, 0x00, sizeof(this->fullpath_));
 
-	/*´´½¨¸ùÄ¿Â¼*/
+	/*åˆ›å»ºæ ¹ç›®å½•*/
 	if (ACE_OS::strlen(this->parentdir_) <= 0)
 		ACE_OS::sprintf(this->parentdir_, "%s",HP_LOG_FILEDIR);
 	if (this->mkdir(this->parentdir_) < 0)
 	{
-		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("(%P|%t) Create root dir£º'%s' failed\n"), this->parentdir_), -1);
+		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("(%P|%t) Create root dirï¼š'%s' failed\n"), this->parentdir_), -1);
 	}
 	if (this->parentdir_[ACE_OS::strlen(this->parentdir_)-1] != '/')
 	{
 		ACE_OS::sprintf(this->parentdir_, "%s/", this->parentdir_);
 	}
 
-	/*¼ì²âÈÕÖ¾Ä¿Â¼£¬Í¬Ê±³õÊ¼»¯this->filedir_*/
+	/*æ£€æµ‹æ—¥å¿—ç›®å½•ï¼ŒåŒæ—¶åˆå§‹åŒ–this->filedir_*/
 	this->check_subdir(this->parentdir_);
 
 	this->create_filename(this->filename_);
@@ -86,13 +86,13 @@ int Logger::open_logger()
 	}
 	else
 	{
-		chmod(this->fullpath_,S_IRWXU|S_IRWXG|S_IRWXO); /*¿ª·ÅÈ¨ÏŞ*/
+		chmod(this->fullpath_,S_IRWXU|S_IRWXG|S_IRWXO); /*å¼€æ”¾æƒé™*/
 	}
 
-	/*Æô¶¯ÈÕÖ¾ÏµÍ³*/
+	/*å¯åŠ¨æ—¥å¿—ç³»ç»Ÿ*/
 	this->active_ = true;
 
-	/*Æô¶¯ÈÕÖ¾´¦ÀíÏß³Ì*/
+	/*å¯åŠ¨æ—¥å¿—å¤„ç†çº¿ç¨‹*/
 	if (this->activate() == -1)
 	{
 		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("(%P|%t) Logger activate failed \n")), -1);
@@ -100,7 +100,7 @@ int Logger::open_logger()
 
 	if (cleaner_switch_)
 	{
-		/*Æô¶¯ÈÕÖ¾ÇåÀíÏß³Ì*/
+		/*å¯åŠ¨æ—¥å¿—æ¸…ç†çº¿ç¨‹*/
 		if (ACE_Thread_Manager::instance()->spawn_n(1,
 			(ACE_THR_FUNC)pthr_cleaner_process,/*Execute task one*/
 			this, /*arguments*/
@@ -114,7 +114,7 @@ int Logger::open_logger()
 }
 
 /*-----------------------------------------------------------------------
-* name:		¹Ø±ÕÈÕÖ¾ÏµÍ³
+* name:		å…³é—­æ—¥å¿—ç³»ç»Ÿ
 * input:	NONE
 * output:	NONE
 * return:	NONE
@@ -133,11 +133,11 @@ void Logger::close_logger()
 }
 
 /*-----------------------------------------------------------------------
-* name:		ÔØÈëÅäÖÃÎÄ¼ş
-* input:	_config_filename  -- ÈÕÖ¾ÎÄ¼şÂ·¾¶
+* name:		è½½å…¥é…ç½®æ–‡ä»¶
+* input:	_config_filename  -- æ—¥å¿—æ–‡ä»¶è·¯å¾„
 * output:	NONE
-* return:	-1 -- Ê§°Ü
-* 			1 -- ³É¹¦
+* return:	-1 -- å¤±è´¥
+* 			1 -- æˆåŠŸ
 *-----------------------------------------------------------------------*/
 int Logger::load_config(const char * _config_filename)
 {
@@ -162,7 +162,7 @@ int Logger::load_config(const char * _config_filename)
 		ACE_ERROR_RETURN ((LM_ERROR, ACE_TEXT("(%P|%t) %p\n"), ACE_TEXT ("Can't open [LOGGER] section")), -1);
 	}
 
-	/*ÈÕÖ¾Êä³ö¸ùÂ·¾¶*/
+	/*æ—¥å¿—è¾“å‡ºæ ¹è·¯å¾„*/
 	if (config.get_string_value(status_section, ACE_TEXT(HP_LOG_CONF_LOGFILEDIR), str) != -1)
 	{
 		if (str.length()>0 && str.c_str()[str.length()-1]!='/')
@@ -188,7 +188,7 @@ int Logger::load_config(const char * _config_filename)
 		ACE_DEBUG((LM_ERROR, ACE_TEXT("(%P|%t) [%s]->'%s' does not exist, default value is (%s)\n"), HP_LOG_CONF_SECTION, HP_LOG_CONF_LOGFILEDIR, this->parentdir_));
 	}
 
-	/*ÈÕÖ¾Êä³öÃ½Ìå  0£ºÆÁÄ»  1£ºÎÄ¼ş  2£ºÆÁÄ»+ÎÄ¼ş*/
+	/*æ—¥å¿—è¾“å‡ºåª’ä½“  0ï¼šå±å¹•  1ï¼šæ–‡ä»¶  2ï¼šå±å¹•+æ–‡ä»¶*/
 	if (config.get_string_value(status_section, ACE_TEXT(HP_LOG_CONF_LOGMEDIA), str) != -1)
 	{
 		try
@@ -213,7 +213,7 @@ int Logger::load_config(const char * _config_filename)
 		ACE_DEBUG((LM_ERROR, ACE_TEXT("(%P|%t) [%s]->'%s' does not exist, default value is (%d)\n"), HP_LOG_CONF_SECTION, HP_LOG_CONF_LOGMEDIA, this->media_));
 	}
 
-	/*ÈÕÖ¾´òÓ¡¼¶±ğ  0£ºERROR  1£ºWARN  2£ºMESSAGE  3£ºDEBUG*/
+	/*æ—¥å¿—æ‰“å°çº§åˆ«  0ï¼šERROR  1ï¼šWARN  2ï¼šMESSAGE  3ï¼šDEBUG*/
 	if (config.get_string_value(status_section, ACE_TEXT(HP_LOG_CONF_LOGLEVEL), str) != -1)
 	{
 		try
@@ -238,7 +238,7 @@ int Logger::load_config(const char * _config_filename)
 		ACE_DEBUG((LM_ERROR, ACE_TEXT("(%P|%t) [%s]->'%s' does not exist, default value is (%d)\n"), HP_LOG_CONF_SECTION, HP_LOG_CONF_LOGLEVEL, this->level_));
 	}
 
-	/*ÈÕÖ¾ÇåÀí¿ª¹Ø  1£º¿ª£¬0£º¹Ø*/
+	/*æ—¥å¿—æ¸…ç†å¼€å…³  1ï¼šå¼€ï¼Œ0ï¼šå…³*/
 	if (config.get_string_value(status_section, ACE_TEXT(HP_LOG_CONF_LOGCLEANER), str) != -1)
 	{
 		try
@@ -263,7 +263,7 @@ int Logger::load_config(const char * _config_filename)
 		ACE_DEBUG((LM_ERROR, ACE_TEXT("(%P|%t) [%s]->'%s' does not exist, default value is (%d)\n"), HP_LOG_CONF_SECTION, HP_LOG_CONF_LOGCLEANER, this->cleaner_switch_));
 	}
 
-	/*ÈÕÖ¾±£´æÔÂÊı£¬ÈÕÖ¾ÇåÀí¿ªÊ±ÓĞĞ§  0£º±íÊ¾²»É¾³ı*/
+	/*æ—¥å¿—ä¿å­˜æœˆæ•°ï¼Œæ—¥å¿—æ¸…ç†å¼€æ—¶æœ‰æ•ˆ  0ï¼šè¡¨ç¤ºä¸åˆ é™¤*/
 	if (config.get_string_value(status_section, ACE_TEXT(HP_LOG_CONF_LOGSAVEDMONTH), str) != -1)
 	{
 		try
@@ -294,53 +294,53 @@ int Logger::load_config(const char * _config_filename)
 /**********************************************************************************************************************************/
 
 /*-----------------------------------------------------------------------
-* name:		½¨Á¢Ä¿Â¼
-* input:	_fdir  -- Ä¿Â¼
+* name:		å»ºç«‹ç›®å½•
+* input:	_fdir  -- ç›®å½•
 * output:
-* return:	>0  -- ĞÂ½¨Ä¿Â¼
-* 			=0  -- Ä¿Â¼ÒÑ´æÔÚ
-* 			<0  -- ´´½¨Ê§°Ü
+* return:	>0  -- æ–°å»ºç›®å½•
+* 			=0  -- ç›®å½•å·²å­˜åœ¨
+* 			<0  -- åˆ›å»ºå¤±è´¥
 *-----------------------------------------------------------------------*/
 int Logger::mkdir(const char * _fdir)
 {
-	if (_fdir == NULL || ACE_OS::strlen(_fdir) <= 0) return -1; /*ÎÄ¼şÃû´íÎó*/
-	if (ACE_OS::access(_fdir, F_OK) >= 0) return 0; /*Ä¿Â¼ÒÑ´æÔÚ*/
-	if (ACE_OS::mkdir(_fdir, S_IRWXU) < 0) /*½¨Á¢Ä¿Â¼Ê§°Ü*/
+	if (_fdir == NULL || ACE_OS::strlen(_fdir) <= 0) return -1; /*æ–‡ä»¶åé”™è¯¯*/
+	if (ACE_OS::access(_fdir, F_OK) >= 0) return 0; /*ç›®å½•å·²å­˜åœ¨*/
+	if (ACE_OS::mkdir(_fdir, S_IRWXU) < 0) /*å»ºç«‹ç›®å½•å¤±è´¥*/
 	{
 		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("%p\n to %s"), ACE_TEXT("mkdir"), _fdir), -1);
 	}
-	/*½¨Á¢Ä¿Â¼³É¹¦*/
-	chmod(_fdir, S_IRWXU|S_IRWXG|S_IRWXO); /*¿ª·ÅÈ¨ÏŞ*/
+	/*å»ºç«‹ç›®å½•æˆåŠŸ*/
+	chmod(_fdir, S_IRWXU|S_IRWXG|S_IRWXO); /*å¼€æ”¾æƒé™*/
 	return 1;
 }
 
 /*-----------------------------------------------------------------------
-* name:		É¾³ıÄ¿Â¼»òÎÄ¼ş
-* input:	_fdir  -- Ä¿Â¼»òÎÄ¼şÂ·¾¢
+* name:		åˆ é™¤ç›®å½•æˆ–æ–‡ä»¶
+* input:	_fdir  -- ç›®å½•æˆ–æ–‡ä»¶è·¯åŠ²
 * output:
-* return:	>0  -- É¾³ı³É¹¦
-* 			=0  -- Ä¿Â¼²»´æÔÚ
-* 			<0  -- É¾³ıÊ§°Ü
+* return:	>0  -- åˆ é™¤æˆåŠŸ
+* 			=0  -- ç›®å½•ä¸å­˜åœ¨
+* 			<0  -- åˆ é™¤å¤±è´¥
 *-----------------------------------------------------------------------*/
 int Logger::rmdir(const char * _fdir)
 {
-	if (_fdir == NULL || ACE_OS::strlen(_fdir) <= 0) return -1; /*ÎÄ¼şÃû´íÎó*/
-	if (ACE_OS::access(_fdir, F_OK) < 0) return 0; /*Ä¿Â¼²»´æÔÚ*/
+	if (_fdir == NULL || ACE_OS::strlen(_fdir) <= 0) return -1; /*æ–‡ä»¶åé”™è¯¯*/
+	if (ACE_OS::access(_fdir, F_OK) < 0) return 0; /*ç›®å½•ä¸å­˜åœ¨*/
 	if (ACE_OS::rmdir(_fdir) < 0)
 	{
 		ACE_ERROR_RETURN((LM_ERROR, ACE_TEXT("%p/n to %s"), ACE_TEXT("rmdir"), _fdir), -1);
 	}
-	/*É¾³ıÄ¿Â¼³É¹¦*/
+	/*åˆ é™¤ç›®å½•æˆåŠŸ*/
 	return 1;
 }
 
 /*-----------------------------------------------------------------------
-* name:		¼ì²âÄ¿Â¼
-* input:	_fdir  -- ÈÕÖ¾¸ùÄ¿Â¼
+* name:		æ£€æµ‹ç›®å½•
+* input:	_fdir  -- æ—¥å¿—æ ¹ç›®å½•
 * output:
-* return:	>0  -- ĞÂ½¨Ä¿Â¼
-* 			=0  -- Ä¿Â¼ÎŞ±ä»¯
-* 			<0  -- Ê§°Ü
+* return:	>0  -- æ–°å»ºç›®å½•
+* 			=0  -- ç›®å½•æ— å˜åŒ–
+* 			<0  -- å¤±è´¥
 *-----------------------------------------------------------------------*/
 int Logger::check_subdir(const char * _fdir)
 {
@@ -393,9 +393,9 @@ int Logger::check_subdir(const char * _fdir)
 }
 
 /*-----------------------------------------------------------------------
-* name:		´´½¨Ò»¸öÈÕÖ¾ÎÄ¼ş×ÓÄ¿Â¼Ãû
-* input:	_level  -- Ä¿Â¼¼¶±ğ
-* output:	_subdir  -- ×ÓÄ¿Â¼Ãû×Ö·û´®
+* name:		åˆ›å»ºä¸€ä¸ªæ—¥å¿—æ–‡ä»¶å­ç›®å½•å
+* input:	_level  -- ç›®å½•çº§åˆ«
+* output:	_subdir  -- å­ç›®å½•åå­—ç¬¦ä¸²
 * return:
 *-----------------------------------------------------------------------*/
 void Logger::create_subdirname(char * _subdir, int _level)
@@ -430,9 +430,9 @@ void Logger::create_subdirname(char * _subdir, int _level)
 }
 
 /*-----------------------------------------------------------------------
-* name:		´´½¨ÈÕÖ¾ÎÄ¼şÃûºóĞøÊ±¼ä×Ö·û´®
+* name:		åˆ›å»ºæ—¥å¿—æ–‡ä»¶ååç»­æ—¶é—´å­—ç¬¦ä¸²
 * input:
-* output:	_filename  -- ÈÕÖ¾ÎÄ¼şÃû+ºóĞøÊ±¼ä×Ö·û´®
+* output:	_filename  -- æ—¥å¿—æ–‡ä»¶å+åç»­æ—¶é—´å­—ç¬¦ä¸²
 * return:
 *-----------------------------------------------------------------------*/
 void Logger::create_filename(char * _filename)
@@ -460,9 +460,9 @@ void Logger::create_filename(char * _filename)
 }
 
 /*-----------------------------------------------------------------------
-* name:		È¡ÈÕÖ¾¼¶±ğ
-* input:	_var_log_level  -- ÈÕÖ¾¼¶±ğ
-* output:	_level  -- ÈÕÖ¾¼¶±ğ
+* name:		å–æ—¥å¿—çº§åˆ«
+* input:	_var_log_level  -- æ—¥å¿—çº§åˆ«
+* output:	_level  -- æ—¥å¿—çº§åˆ«
 * return:
 *-----------------------------------------------------------------------*/
 void Logger::getloglevel(int _var_log_level, char * _level)
@@ -488,9 +488,9 @@ void Logger::getloglevel(int _var_log_level, char * _level)
 }
 
 /*-----------------------------------------------------------------------
-* name:		È¡µ±Ç°Ê±¼ä£¬Êä³ö³¤¶È23
+* name:		å–å½“å‰æ—¶é—´ï¼Œè¾“å‡ºé•¿åº¦23
 * input:
-* output:	_stime  -- Ê±¼ä×Ö·û´®
+* output:	_stime  -- æ—¶é—´å­—ç¬¦ä¸²
 * return:
 *-----------------------------------------------------------------------*/
 void Logger::currenttime(char * _stime)
@@ -506,12 +506,12 @@ void Logger::currenttime(char * _stime)
 /**********************************************************************************************************************************/
 
 /*-----------------------------------------------------------------------
-* name:		ÆÁÄ»´òÓ¡
-* input:	fmt  -- ´ø¸ñÊ½×Ö·û´®
+* name:		å±å¹•æ‰“å°
+* input:	fmt  -- å¸¦æ ¼å¼å­—ç¬¦ä¸²
 * 			
 * output:
-* return:	 -1 -- Ê§°Ü
-* 			>=0 -- Êä³ö×Ö·ûÊı
+* return:	 -1 -- å¤±è´¥
+* 			>=0 -- è¾“å‡ºå­—ç¬¦æ•°
 *-----------------------------------------------------------------------*/
 int Logger::to_screen(const char * fmt)
 {
@@ -525,12 +525,12 @@ int Logger::to_screen(const char * fmt)
 }
 
 /*-----------------------------------------------------------------------
-* name:		ÎÄ¼ş´òÓ¡
-* input:	fmt  -- ´ø¸ñÊ½×Ö·û´®
+* name:		æ–‡ä»¶æ‰“å°
+* input:	fmt  -- å¸¦æ ¼å¼å­—ç¬¦ä¸²
 * 			
 * output:
-* return:	 -1 -- Ê§°Ü
-* 			>=0 -- Êä³ö×Ö·ûÊı
+* return:	 -1 -- å¤±è´¥
+* 			>=0 -- è¾“å‡ºå­—ç¬¦æ•°
 *-----------------------------------------------------------------------*/
 int Logger::to_file(const char * fmt)
 {
@@ -563,9 +563,9 @@ int Logger::to_file(const char * fmt)
 /**********************************************************************************************************************************/
 
 /*-----------------------------------------------------------------------
-* name:		errorÈÕÖ¾
-* input:	fmt  -- ´ø¸ñÊ½×Ö·û´®
-* 			...  -- ²»¶¨²ÎÊıÁĞ±í
+* name:		erroræ—¥å¿—
+* input:	fmt  -- å¸¦æ ¼å¼å­—ç¬¦ä¸²
+* 			...  -- ä¸å®šå‚æ•°åˆ—è¡¨
 * output:
 * return:
 *-----------------------------------------------------------------------*/
@@ -609,9 +609,9 @@ void Logger::error(const char * fmt, ...)
 }
 
 /*-----------------------------------------------------------------------
-* name:		warnÈÕÖ¾
-* input:	fmt  -- ´ø¸ñÊ½×Ö·û´®
-* 			...  -- ²»¶¨²ÎÊıÁĞ±í
+* name:		warnæ—¥å¿—
+* input:	fmt  -- å¸¦æ ¼å¼å­—ç¬¦ä¸²
+* 			...  -- ä¸å®šå‚æ•°åˆ—è¡¨
 * output:
 * return:
 *-----------------------------------------------------------------------*/
@@ -656,9 +656,9 @@ void Logger::warn(const char * fmt, ...)
 }
 
 /*-----------------------------------------------------------------------
-* name:		messageÈÕÖ¾
-* input:	fmt  -- ´ø¸ñÊ½×Ö·û´®
-* 			...  -- ²»¶¨²ÎÊıÁĞ±í
+* name:		messageæ—¥å¿—
+* input:	fmt  -- å¸¦æ ¼å¼å­—ç¬¦ä¸²
+* 			...  -- ä¸å®šå‚æ•°åˆ—è¡¨
 * output:
 * return:
 *-----------------------------------------------------------------------*/
@@ -702,9 +702,9 @@ void Logger::message(const char * fmt, ...)
 }
 
 /*-----------------------------------------------------------------------
-* name:		debugÈÕÖ¾
-* input:	fmt  -- ´ø¸ñÊ½×Ö·û´®
-* 			...  -- ²»¶¨²ÎÊıÁĞ±í
+* name:		debugæ—¥å¿—
+* input:	fmt  -- å¸¦æ ¼å¼å­—ç¬¦ä¸²
+* 			...  -- ä¸å®šå‚æ•°åˆ—è¡¨
 * output:
 * return:
 *-----------------------------------------------------------------------*/
@@ -748,9 +748,9 @@ void Logger::debug(const char * fmt, ...)
 }
 
 /*-----------------------------------------------------------------------
-* name:		ÒÔÖ¸¶¨¸ñÊ½´òÓ¡£¬²»Ôö¼ÓÆäËûĞÅÏ¢
-* input:	fmt  -- ´ø¸ñÊ½×Ö·û´®
-* 			...  -- ²»¶¨²ÎÊıÁĞ±í
+* name:		ä»¥æŒ‡å®šæ ¼å¼æ‰“å°ï¼Œä¸å¢åŠ å…¶ä»–ä¿¡æ¯
+* input:	fmt  -- å¸¦æ ¼å¼å­—ç¬¦ä¸²
+* 			...  -- ä¸å®šå‚æ•°åˆ—è¡¨
 * output:
 * return:
 *-----------------------------------------------------------------------*/
@@ -784,10 +784,10 @@ void Logger::printf(const char * fmt, ...)
 }
 
 /*-----------------------------------------------------------------------
-* name:		Ã¶¾Ù»º´æ
-* input:	_buff  -- »º´æ
-* 			_size  -- »º´æ´óĞ¡
-*			_type  -- Êä³öÀàĞÍ£¬1£º½ÓÊÕ£¬2£º·¢ËÍ£¬ÆäËû£ºÎŞ
+* name:		æšä¸¾ç¼“å­˜
+* input:	_buff  -- ç¼“å­˜
+* 			_size  -- ç¼“å­˜å¤§å°
+*			_type  -- è¾“å‡ºç±»å‹ï¼Œ1ï¼šæ¥æ”¶ï¼Œ2ï¼šå‘é€ï¼Œå…¶ä»–ï¼šæ— 
 * output:
 * return:
 *-----------------------------------------------------------------------*/
@@ -804,15 +804,15 @@ void Logger::dump(const char * _buf, size_t _size, int _type)
 	switch (_type)
 	{
 	case 1:
-		ACE_OS::sprintf(_level, "½ÓÊÕ(%d)£º[", _size);
+		ACE_OS::sprintf(_level, "æ¥æ”¶(%d)ï¼š[", _size);
 		break;
 
 	case 2:
-		ACE_OS::sprintf(_level, "·¢ËÍ(%d)£º[", _size);
+		ACE_OS::sprintf(_level, "å‘é€(%d)ï¼š[", _size);
 		break;
 
 	default:
-		ACE_OS::sprintf(_level, "±¨ÎÄ(%d)£º[", _size);
+		ACE_OS::sprintf(_level, "æŠ¥æ–‡(%d)ï¼š[", _size);
 		break;
 	}
 
@@ -892,10 +892,10 @@ int Logger::svc(void)
 			}
 		}
 
-		/*Êı¾İ´¦Àí½áÊø±ØĞèÊÍ·ÅÄÚ´æ*/
+		/*æ•°æ®å¤„ç†ç»“æŸå¿…éœ€é‡Šæ”¾å†…å­˜*/
 		mb->release();
 
-		/*ÅĞ¶Ïµ±Ç°Â·¾¶£¬ÅĞ¶ÏÎÄ¼ş´óĞ¡*/
+		/*åˆ¤æ–­å½“å‰è·¯å¾„ï¼Œåˆ¤æ–­æ–‡ä»¶å¤§å°*/
 		ACE_FILE_Info finfo;
 		this->fp_.get_info(finfo);
 		if (this->check_subdir(this->parentdir_) > 0 || finfo.size_ > HP_LOG_MAX_FILESIZE)
@@ -910,7 +910,7 @@ int Logger::svc(void)
 			}
 			else
 			{
-				chmod(this->fullpath_, S_IRWXU|S_IRWXG|S_IRWXO); /*¿ª·ÅÈ¨ÏŞ*/
+				chmod(this->fullpath_, S_IRWXU|S_IRWXG|S_IRWXO); /*å¼€æ”¾æƒé™*/
 			}
 		}
 	}
@@ -920,7 +920,7 @@ int Logger::svc(void)
 }
 
 /*-----------------------------------------------------------------------
-* name:		ÈÕÖ¾ÇåÀíÏß³Ì
+* name:		æ—¥å¿—æ¸…ç†çº¿ç¨‹
 * input:
 * output:	arg  -- void *
 * return:
@@ -931,23 +931,23 @@ static void * pthr_cleaner_process(void * arg)
 	time_t timep;
 	struct tm * p;
 
-	time_t curr_timep; /*µ±Ç°¼ì²âÊ±¼ä*/
-	time_t last_timep; /*ÉÏÒ»´Î¼ì²âÊ±¼ä*/
+	time_t curr_timep; /*å½“å‰æ£€æµ‹æ—¶é—´*/
+	time_t last_timep; /*ä¸Šä¸€æ¬¡æ£€æµ‹æ—¶é—´*/
 
-	char rm_year[4+1], rm_month[2+1]; /*´ıÉ¾³ıÄêÔÂ*/
-	char rm_dir[HP_LOG_MAX_NAMESIZE]; /*´ıÉ¾³ıÄ¿Â¼Â·¾¶*/
-	int c_year, c_month; /*µ±Ç°ÄêÔÂ*/
+	char rm_year[4+1], rm_month[2+1]; /*å¾…åˆ é™¤å¹´æœˆ*/
+	char rm_dir[HP_LOG_MAX_NAMESIZE]; /*å¾…åˆ é™¤ç›®å½•è·¯å¾„*/
+	int c_year, c_month; /*å½“å‰å¹´æœˆ*/
 
 	Logger * logger_0 = (Logger *)arg;
 	if (logger_0 == NULL)
 	{
-		ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) logger clear error£¬param error,clear thread exit.\n")));
+		ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) logger clear errorï¼Œparam error,clear thread exit.\n")));
 		return 0;
 	}
 
 	last_timep = ACE_OS::gettimeofday().sec();
 
-	ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) *** logger clear thread running,file dir:[%s]£¬saving month:[%d] ***\n"), logger_0->parentdir_, logger_0->saved_month_));
+	ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) *** logger clear thread running,file dir:[%s]ï¼Œsaving month:[%d] ***\n"), logger_0->parentdir_, logger_0->saved_month_));
 
 	while (logger_0->get_active() == true)
 	{
@@ -965,7 +965,7 @@ static void * pthr_cleaner_process(void * arg)
 		}
 
 		curr_timep = ACE_OS::gettimeofday().sec();
-		if ((curr_timep-last_timep) < 300) /*300Ãë = 5·ÖÖÓ*/
+		if ((curr_timep-last_timep) < 300) /*300ç§’ = 5åˆ†é’Ÿ*/
 		{
 			rqt.tv_sec = 1;
 			rqt.tv_nsec = 0;
@@ -976,7 +976,7 @@ static void * pthr_cleaner_process(void * arg)
 
 		if (ACE_OS::strlen(logger_0->parentdir_) <= 0)
 		{
-			ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) logger clear thread exption£¬invalid dir.\n")));
+			ACE_DEBUG((LM_DEBUG, ACE_TEXT("(%P|%t) logger clear thread exptionï¼Œinvalid dir.\n")));
 			break;
 		}
 		if (logger_0->parentdir_[ACE_OS::strlen(logger_0->parentdir_)-1] != '/')
@@ -988,13 +988,13 @@ static void * pthr_cleaner_process(void * arg)
 		ACE_OS::memset(rm_month, 0x00, sizeof(rm_month));
 		ACE_OS::memset(rm_dir, 0x00, sizeof(rm_dir));
 
-		/*È¡µ±Ç°ÄêÔÂ*/
+		/*å–å½“å‰å¹´æœˆ*/
 		timep = ACE_OS::gettimeofday().sec();
 		p = ACE_OS::localtime(&timep);
 		c_year = (1900+p->tm_year);
 		c_month = (1+p->tm_mon);
 
-		/*È¡´ıÉ¾³ıÄêÔÂ*/
+		/*å–å¾…åˆ é™¤å¹´æœˆ*/
 		if (c_month <= (logger_0->saved_month_+1))
 		{
 			ACE_OS::sprintf(rm_year, "%04d", c_year-1);
@@ -1006,7 +1006,7 @@ static void * pthr_cleaner_process(void * arg)
 			ACE_OS::sprintf(rm_month, "%02d", c_month-(logger_0->saved_month_+1));
 		}
 
-		/*É¾³ı*/
+		/*åˆ é™¤*/
 		if (ACE_OS::strcmp(rm_month, "12") == 0)
 		{
 			ACE_OS::sprintf(rm_dir, "%s%s", logger_0->parentdir_, rm_year);

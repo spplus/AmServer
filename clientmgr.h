@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:	±£³Ö¿Í»§¶ËÁ¬½ÓÁĞ±í.
+	DESC:	ä¿æŒå®¢æˆ·ç«¯è¿æ¥åˆ—è¡¨.
 	DATE:	2016-04-20
 	AUTHOR:	YUANLS
 */
@@ -25,20 +25,20 @@ class ClientMgr
 public:
 	ClientMgr();
 
-	// Á¬½Ó¹ÜÀí
+	// è¿æ¥ç®¡ç†
 	unsigned int add(ClientHandler* client);
 	void del(unsigned int connid);
 	ClientHandler* get(unsigned int connid);
 
-	// ·¢ËÍÊı¾İ
+	// å‘é€æ•°æ®
 	int			sendData(unsigned int connid,string data,int msgtype);
 
 private:
 
-	// Êı¾İ´ò°ü
+	// æ•°æ®æ‰“åŒ…
 	PacketParser	m_pack;
 
-	// Á¬½ÓID£¬µİÔö
+	// è¿æ¥IDï¼Œé€’å¢
 	unsigned int	m_connectId;
 	CMAP			m_clientList;
 };

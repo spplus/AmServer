@@ -1,16 +1,16 @@
-#include "packetparser.h"
+ï»¿#include "packetparser.h"
 #include "defines.h"
 
 sClientMsg* PacketParser::decoder(char* data,int datalength)
 {
-	// ÏûÏ¢±êÊ¶Í·
+	// æ¶ˆæ¯æ ‡è¯†å¤´
 	unsigned short head;
 	unsigned short end;
 	int pos = 0;
 	ACE_OS::memcpy(&head,data+pos,FRAME_TAG__LEN);
 	pos += FRAME_TAG__LEN;
 
-	// ÅĞ¶ÏÏûÏ¢Í·Ê±ºòÕıÈ·
+	// åˆ¤æ–­æ¶ˆæ¯å¤´æ—¶å€™æ­£ç¡®
 	if (head != FRAM_TAG_HEAD)
 	{
 		LOG->warn("Invalid frame head tag :%d",head);
@@ -19,22 +19,22 @@ sClientMsg* PacketParser::decoder(char* data,int datalength)
 
 	sClientMsg* pmsg = new sClientMsg;
 
-	// ½âÎöÏûÏ¢ÀàĞÍ
+	// è§£ææ¶ˆæ¯ç±»å‹
 	ACE_OS::memcpy(&pmsg->type,data+pos,DATA_TYPE_LEN);
 	pos += DATA_TYPE_LEN;
 
-	// ½âÎöÊı¾İÇøÄÚÈİ
-	// Êı¾İÇø³¤¶È 
+	// è§£ææ•°æ®åŒºå†…å®¹
+	// æ•°æ®åŒºé•¿åº¦ 
 	int datalen = datalength - FRAME_TAG__LEN-DATA_TYPE_LEN-FRAME_TAG__LEN;
 	pmsg->data = new char[datalen];
 	
-	// ¿½±´ÏûÏ¢³¤¶È
+	// æ‹·è´æ¶ˆæ¯é•¿åº¦
 	ACE_OS::memcpy(pmsg->data,data+pos,datalen);
 	pos += datalen;
 
 	pmsg->length = datalen;
 
-	// ÏûÏ¢Î²
+	// æ¶ˆæ¯å°¾
 	ACE_OS::memcpy(&end,data+pos,FRAME_TAG__LEN);
 	pos += FRAME_TAG__LEN;
 
@@ -44,30 +44,30 @@ sClientMsg* PacketParser::decoder(char* data,int datalength)
 char* PacketParser::encoder(string data,int msgtype,int &outlengh)
 {
 	
-	// ´ò°üºó×Ü×Ü³¤¶È = °üÄÚÈİ×Ü³¤¶È+ÏûÏ¢Í·³¤¶È+ÏûÏ¢ÀàĞÍ³¤¶È+ÏûÏ¢Î²³¤¶È
+	// æ‰“åŒ…åæ€»æ€»é•¿åº¦ = åŒ…å†…å®¹æ€»é•¿åº¦+æ¶ˆæ¯å¤´é•¿åº¦+æ¶ˆæ¯ç±»å‹é•¿åº¦+æ¶ˆæ¯å°¾é•¿åº¦
 	outlengh = data.length()+FRAME_HEAD_LEN+FRAME_TAG__LEN+DATA_TYPE_LEN+FRAME_TAG__LEN;
 
-	// ·ÖÅä´ò°üºóµÄÏûÏ¢»º³åÇø
+	// åˆ†é…æ‰“åŒ…åçš„æ¶ˆæ¯ç¼“å†²åŒº
 	char * buff = new char[outlengh];
 	int pos = 0;
 	
-	// ÏûÏ¢×Ü³¤¶È
+	// æ¶ˆæ¯æ€»é•¿åº¦
 	ACE_OS::memcpy(buff+pos,&outlengh,FRAME_HEAD_LEN);
 	pos += FRAME_HEAD_LEN;
 
-	// ÏûÏ¢Í·
+	// æ¶ˆæ¯å¤´
 	ACE_OS::memcpy(buff+pos,&FRAM_TAG_HEAD,FRAME_TAG__LEN);
 	pos += FRAME_TAG__LEN;
 
-	// ÏûÏ¢ÀàĞÍ
+	// æ¶ˆæ¯ç±»å‹
 	ACE_OS::memcpy(buff+pos,&msgtype,DATA_TYPE_LEN);
 	pos += DATA_TYPE_LEN;
 
-	// ÏûÏ¢ÄÚÈİ
+	// æ¶ˆæ¯å†…å®¹
 	ACE_OS::memcpy(buff+pos,data.c_str(),data.length());
 	pos += data.length();
 
-	// ÏûÏ¢Î²
+	// æ¶ˆæ¯å°¾
 	ACE_OS::memcpy(buff+pos,&FRAME_TAG_END,FRAME_TAG__LEN);
 	pos += FRAME_TAG__LEN;
 

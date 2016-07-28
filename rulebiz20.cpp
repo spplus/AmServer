@@ -1,10 +1,10 @@
-#include "rulebiz20.h"
+ï»¿#include "rulebiz20.h"
 
 int RuleBiz20::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// 1.Èç¹ûÎªµ¶Õ¢»ò¿ª¹ØÇÒ±ÕºÏ£¬¼ÌĞø±éÀú£¬¶Ï¿ªÔòÖÕÖ¹
+	// 1.å¦‚æœä¸ºåˆ€é—¸æˆ–å¼€å…³ä¸”é—­åˆï¼Œç»§ç»­éå†ï¼Œæ–­å¼€åˆ™ç»ˆæ­¢
 	if (bean.unittype() == eSWITCH || bean.unittype() == eBREAKER)
 	{
 		if (bean.state() == 1)
@@ -19,19 +19,19 @@ int RuleBiz20::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}
 	else if (bean.unittype() == eLINE && bean.ispower() == 1)
 	{
-		// Èç¹ûÎª½ø³öÏßÇÒÎªÏà¶ÔµçÔ´µã,Âú×ãÌõ¼şÒ»
+		// å¦‚æœä¸ºè¿›å‡ºçº¿ä¸”ä¸ºç›¸å¯¹ç”µæºç‚¹,æ»¡è¶³æ¡ä»¶ä¸€
 		R_ITERATOR iter = ruleMap.find(1);
 		if (iter != ruleMap.end())
 		{
 			COM->triggerRule(ruleMap,1);
 
-			// ±£´æ±¾´ÎÍØÆËµÄÆğÊ¼Ôª¼şµÄÕ¾µãCIM
+			// ä¿å­˜æœ¬æ¬¡æ‹“æ‰‘çš„èµ·å§‹å…ƒä»¶çš„ç«™ç‚¹CIM
 			m_stationCim.push_back(stationcim);
 		}
 		else
 		{
 			
-			// Èç¹ûÔÙ´Î±éÀúµ½½ø³öÏßÇÒÎªÏà¶ÔµçÔ´µã£¬²¢ÇÒ¸Ã´Î±éÀúÆğÊ¼Ôª¼ş¶ÔÓ¦µÄÕ¾µãcimÓëÖ®Ç°¼ÇÂ¼µÄ²»Í¬£¬Âú×ãÌõ¼ş¶ş£»
+			// å¦‚æœå†æ¬¡éå†åˆ°è¿›å‡ºçº¿ä¸”ä¸ºç›¸å¯¹ç”µæºç‚¹ï¼Œå¹¶ä¸”è¯¥æ¬¡éå†èµ·å§‹å…ƒä»¶å¯¹åº”çš„ç«™ç‚¹cimä¸ä¹‹å‰è®°å½•çš„ä¸åŒï¼Œæ»¡è¶³æ¡ä»¶äºŒï¼›
 			if (m_stationCim.size()>0)
 			{
 				if(m_stationCim.at(0) != stationcim)
@@ -49,7 +49,7 @@ int RuleBiz20::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 		return 0;
 	}
 	
-	// ÅĞ¶ÏÌõ¼şÊÇ·ñÈ«²¿´¥·¢£¬Èç¹ûÊÇÔò·µ»Ø£¬¹æÔò´¥·¢
+	// åˆ¤æ–­æ¡ä»¶æ˜¯å¦å…¨éƒ¨è§¦å‘ï¼Œå¦‚æœæ˜¯åˆ™è¿”å›ï¼Œè§„åˆ™è§¦å‘
 	if (ruleMap.size()>0)
 	{
 		return 1;

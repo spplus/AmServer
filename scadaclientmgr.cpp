@@ -1,38 +1,38 @@
-#include "scadaclientmgr.h"
+ï»¿#include "scadaclientmgr.h"
 #include "confmgr.h"
 
 void ScadaClientMgr::init()
 {
-	// ¶ÁÈ¡ÅäÖÃĞÅÏ¢
+	// è¯»å–é…ç½®ä¿¡æ¯
 	int port = ACE_OS::atoi(App_Config::instance()->getValue(SERVER_ROOT,"ScadaPort").c_str());
 	string addr = App_Config::instance()->getValue(SERVER_ROOT,"ScadaAddr");
 
-	//¼ÓÔØ×ÜÕÙ»½·¢ËÍÃüÁîÖÜÆÚ
+	//åŠ è½½æ€»å¬å”¤å‘é€å‘½ä»¤å‘¨æœŸ
 	int	nAllCall =  ACE_OS::atoi(App_Config::instance()->getValue(SERVER_ROOT,"MAllCall").c_str());
 
-	//×ÜÕÙ»½RTUµØÖ·
+	//æ€»å¬å”¤RTUåœ°å€
 	int nrtu = ACE_OS::atoi(App_Config::instance()->getValue(SERVER_ROOT,"RtuAddr").c_str());
 	unsigned short nRtuaddr = nrtu;
 
 	m_svrAddr.set(port,addr.c_str());
 
-	// ´´½¨ÏûÏ¢½ÓÊÕÈÎÎñ
+	// åˆ›å»ºæ¶ˆæ¯æ¥æ”¶ä»»åŠ¡
 	m_rTask = new RecvTask();
 	m_tcpClient.setRecvTask(m_rTask);
 
-	// ¶¨Ê±Æ÷´¦ÀíÆ÷
+	// å®šæ—¶å™¨å¤„ç†å™¨
 	m_kpHandler.setClient(&m_tcpClient);
 
-	//×ÜÕÙ»½·¢ËÍÃüÁî¶¨Ê±Æ÷
+	//æ€»å¬å”¤å‘é€å‘½ä»¤å®šæ—¶å™¨
 	m_proMgr.setClient(&m_tcpClient);
 
-	//ÉèÖÃ×ÜÕÙ»½RTUµØÖ·
+	//è®¾ç½®æ€»å¬å”¤RTUåœ°å€
 	m_proMgr.setRtuAddr(nRtuaddr);
 
-	//ÉèÖÃ¶¨Ê±ÖÜÆÚ
+	//è®¾ç½®å®šæ—¶å‘¨æœŸ
 	m_proMgr.setCallAll(nAllCall);
 
-	//³õÊ¼»¯Êı¾İ¿âÖĞÊı¾İÈ¡Êı¾İ
+	//åˆå§‹åŒ–æ•°æ®åº“ä¸­æ•°æ®å–æ•°æ®
 	m_proMgr.initDBCimid();
 
 }

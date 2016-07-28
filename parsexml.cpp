@@ -1,4 +1,4 @@
-#include "parsexml.h"
+ï»¿#include "parsexml.h"
 
 
 ParseXML::ParseXML(void)
@@ -19,68 +19,68 @@ void ParseXML::loadXML(std::string filename,int factype)
 	xml_document<> doc;
 	doc.parse<0>(fdoc.data());
 
-	//»ñÈ¡¸ù½Úµã
+	//è·å–æ ¹èŠ‚ç‚¹
 	xml_node<>* root = doc.first_node();
 
 
-	//½âÎö»ù´¡µçÑ¹ĞÅÏ¢
+	//è§£æåŸºç¡€ç”µå‹ä¿¡æ¯
 	parseBaseVoltages(root,factype);
 
-	//½âÎö³§Õ¾ĞÅÏ¢
+	//è§£æå‚ç«™ä¿¡æ¯
 	parseSubStation(root,factype);
 
-	//½âÎöµçÑ¹µÈ¼¶ĞÅÏ¢:¹ØÁª³§Õ¾¶ÔÓ¦µÄ»ù´¡µçÑ¹
+	//è§£æç”µå‹ç­‰çº§ä¿¡æ¯:å…³è”å‚ç«™å¯¹åº”çš„åŸºç¡€ç”µå‹
 	parseVoltagLevel(root,factype);
 	
-	//½âÎö¼ä¸ôĞÅÏ¢
+	//è§£æé—´éš”ä¿¡æ¯
 	parseBay(root,factype);
 
-	//½âÎö¶ËµãĞÅÏ¢
+	//è§£æç«¯ç‚¹ä¿¡æ¯
 	parseTerminal(root,factype);
 
-	//½âÎöÁ¬½ÓµãĞÅÏ¢
+	//è§£æè¿æ¥ç‚¹ä¿¡æ¯
 	parseConnectivityNode(root,factype);
 
-	//½âÎö¶ÏÂ·Æ÷ĞÅÏ¢
+	//è§£ææ–­è·¯å™¨ä¿¡æ¯
 	parseBreaker(root,factype);
 
-	//½âÎöµ¶Õ¢ĞÅÏ¢
+	//è§£æåˆ€é—¸ä¿¡æ¯
 	parseDisconnector(root,factype);
 
-	//½âÎö½ÓµØµ¶Õ¢ĞÅÏ¢
+	//è§£ææ¥åœ°åˆ€é—¸ä¿¡æ¯
 	parseGrdDisconnector(root,factype);
 
-	//½âÎöÄ¸ÏßĞÅÏ¢
+	//è§£ææ¯çº¿ä¿¡æ¯
 	parseBusbarSection(root,factype);
 
-	//½âÎöµçÈİÆ÷ĞÅÏ¢
+	//è§£æç”µå®¹å™¨ä¿¡æ¯
 	parseCompensator(root,factype);
 
-	//½âÎö¸ººÉĞÅÏ¢
+	//è§£æè´Ÿè·ä¿¡æ¯
 	parseEnergyConsumer(root,factype);
 
-	//½âÎö·¢µç»úĞÅÏ¢
+	//è§£æå‘ç”µæœºä¿¡æ¯
 	parseSynchronousMachine(root,factype);
 
-	//½âÎöµçÑ¹»¥¸ĞÆ÷ĞÅÏ¢
+	//è§£æç”µå‹äº’æ„Ÿå™¨ä¿¡æ¯
 	parsePotentialTransformer(root,factype);
 
-	//½âÎö±äÑ¹Æ÷ĞÅÏ¢
+	//è§£æå˜å‹å™¨ä¿¡æ¯
 	parsePowerTransformer(root,factype);
 
-	//½âÎö±äÑ¹Æ÷ÈÆ×éĞÅÏ¢
+	//è§£æå˜å‹å™¨ç»•ç»„ä¿¡æ¯
 	parseTransformerWinding(root,factype);
 
-	//´¦Àí±äÑ¹Æ÷
+	//å¤„ç†å˜å‹å™¨
 	dealPowerTransformer();
 
-	//´¦Àí±äÑ¹Æ÷ÈÆ×é
+	//å¤„ç†å˜å‹å™¨ç»•ç»„
 	dealTransformerWinding();
 
-	//½âÎöÏßÂ·ĞÅÏ¢
+	//è§£æçº¿è·¯ä¿¡æ¯
 	parseACLineSegment(root,factype);
 
-	//´¦Àí¶Ëµã¹ØÁª¹ØÏµ±í
+	//å¤„ç†ç«¯ç‚¹å…³è”å…³ç³»è¡¨
 	dealTerminalRelation();
 /**/
 	return;
@@ -90,7 +90,7 @@ void ParseXML::loadXML(std::string filename,int factype)
 int ParseXML::parseBaseVoltages(xml_node<>* parnode,int factype)
 {
 
-	xml_node<>* pBaseVoltage = parnode->first_node(CIM_BVOL);			//»ñÈ¡<cim:BaseVoltage>½Úµã
+	xml_node<>* pBaseVoltage = parnode->first_node(CIM_BVOL);			//è·å–<cim:BaseVoltage>èŠ‚ç‚¹
 	if (!pBaseVoltage)
 	{
 		return RC_FAILURE;
@@ -100,11 +100,11 @@ int ParseXML::parseBaseVoltages(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pBVol = parnode->first_node(CIM_BVOL);pBVol != NULL; pBVol=pBVol->next_sibling(CIM_BVOL))
 	{
-		//È¡»ù´¡µçÑ¹CIMID
+		//å–åŸºç¡€ç”µå‹CIMID
 		std::string strid = pBVol->first_attribute(RDFID)->value();
 
 		std::string strbvname = "";
-		//µçÑ¹µÈ¼¶cimÎÄ¼şÖĞÃ»ÓĞÃû³Æ×Ö¶Î,Ö»ÓĞÄÏÈğ³§¼ÒÓĞ
+		//ç”µå‹ç­‰çº§cimæ–‡ä»¶ä¸­æ²¡æœ‰åç§°å­—æ®µ,åªæœ‰å—ç‘å‚å®¶æœ‰
 		if (factype == FACNARI)
 		{
 			strbvname = pBVol->first_node(CIM_NARI_BVOL_NAME)->value();
@@ -115,7 +115,7 @@ int ParseXML::parseBaseVoltages(xml_node<>* parnode,int factype)
 			strbvname = pBVol->first_node(CIM_IES_BVOL_NAME)->value();
 		}
 
-		//È¡»ù´¡µçÑ¹¶ÔÓ¦Öµ
+		//å–åŸºç¡€ç”µå‹å¯¹åº”å€¼
 		xml_node<>* pNalVol = pBVol->first_node(CIM_BVOL_NALVOL);
 		std::string strnval = pNalVol->value();
 
@@ -135,7 +135,7 @@ int ParseXML::parseBaseVoltages(xml_node<>* parnode,int factype)
 
 int ParseXML::parseSubStation(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pSubStation = parnode->first_node(CIM_SUBSTATION);			//»ñÈ¡<cim:Substation>½Úµã
+	xml_node<>* pSubStation = parnode->first_node(CIM_SUBSTATION);			//è·å–<cim:Substation>èŠ‚ç‚¹
 	if (!pSubStation)
 	{
 		return RC_FAILURE;
@@ -145,14 +145,14 @@ int ParseXML::parseSubStation(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pStation = parnode->first_node(CIM_SUBSTATION);pStation != NULL; pStation=pStation->next_sibling(CIM_SUBSTATION))
 	{
-		//È¡³§Õ¾CIMID
+		//å–å‚ç«™CIMID
 		std::string strid = pStation->first_attribute(RDFID)->value();
 
-		//È¡³§Õ¾Ãû³Æ
+		//å–å‚ç«™åç§°
 		xml_node<>* pStaname = pStation->first_node(CIM_NAMING_NAME);
 		std::string strname = pStaname->value();
 
-		//È¡³§Õ¾±ğÃû
+		//å–å‚ç«™åˆ«å
 		std::string stralsname = "";
 		if (factype == FACNARI || factype == FACKEDONG || factype == FACDONGFANG)
 		{
@@ -179,7 +179,7 @@ int ParseXML::parseSubStation(xml_node<>* parnode,int factype)
 
 int ParseXML::parseVoltagLevel(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pVoltagLevel = parnode->first_node(CIM_VOLEVEL);			//»ñÈ¡<cim:VoltageLevel>½Úµã
+	xml_node<>* pVoltagLevel = parnode->first_node(CIM_VOLEVEL);			//è·å–<cim:VoltageLevel>èŠ‚ç‚¹
 	if (!pVoltagLevel)
 	{
 		return RC_FAILURE;
@@ -189,7 +189,7 @@ int ParseXML::parseVoltagLevel(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pVolevel = parnode->first_node(CIM_VOLEVEL);pVolevel != NULL; pVolevel=pVolevel->next_sibling(CIM_VOLEVEL))
 	{
-		//È¡µçÑ¹µÈ¼¶CIMID
+		//å–ç”µå‹ç­‰çº§CIMID
 		std::string strid = pVolevel->first_attribute(RDFID)->value();
 
 		std::string strname = "";
@@ -198,15 +198,15 @@ int ParseXML::parseVoltagLevel(xml_node<>* parnode,int factype)
 
 		if (factype == FACNARI || factype == FACKEDONG || factype == FACDONGFANG || factype == FACJICHENGDZ)
 		{
-			//È¡µçÑ¹µÈ¼¶Ãû³Æ
+			//å–ç”µå‹ç­‰çº§åç§°
 			xml_node<>* pVolevelname = pVolevel->first_node(CIM_NAMING_NAME);
 			strname = pVolevelname->value();
 
-			//È¡¹ØÁª³§Õ¾CIMID
+			//å–å…³è”å‚ç«™CIMID
 			strstationid = pVolevel->first_node(CIM_VOLEVEL_STATION)->first_attribute(RDFRESOURCE)->value();
 			strstationid = strstationid.substr(1,strstationid.length()-1);
 
-			//È¡¹ØÁª»ù´¡µçÑ¹
+			//å–å…³è”åŸºç¡€ç”µå‹
 			strbvid = pVolevel->first_node(CIM_VOLEVEL_BVOL)->first_attribute(RDFRESOURCE)->value();
 			strbvid = strbvid.substr(1,strbvid.length()-1);
 		}
@@ -225,7 +225,7 @@ int ParseXML::parseVoltagLevel(xml_node<>* parnode,int factype)
 
 int ParseXML::parseBay(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pBayy = parnode->first_node(CIM_BAY);			//»ñÈ¡<cim:Bay>½Úµã
+	xml_node<>* pBayy = parnode->first_node(CIM_BAY);			//è·å–<cim:Bay>èŠ‚ç‚¹
 	if (!pBayy)
 	{
 		return RC_FAILURE;
@@ -235,13 +235,13 @@ int ParseXML::parseBay(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pBay = parnode->first_node(CIM_BAY);pBay != NULL; pBay=pBay->next_sibling(CIM_BAY))
 	{
-		//È¡¼ä¸ôCIMID
+		//å–é—´éš”CIMID
 		std::string strid = pBay->first_attribute(RDFID)->value();
 
-		//È¡¼ä¸ôÃû³Æ
+		//å–é—´éš”åç§°
 		std::string strname = pBay->first_node(CIM_NAMING_NAME)->value();
 
-		//È¡¼ä¸ô¶ÔÓ¦¹ØÁªµÄ³§Õ¾CIMID
+		//å–é—´éš”å¯¹åº”å…³è”çš„å‚ç«™CIMID
 		std::string strfacid = pBay->first_node(CIM_BAY_MOF_STATION)->first_attribute(RDFRESOURCE)->value();
 		strfacid = strfacid.substr(1,strfacid.length()-1);
 
@@ -258,7 +258,7 @@ int ParseXML::parseBay(xml_node<>* parnode,int factype)
 
 int ParseXML::parseTerminal(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pTerminal = parnode->first_node(CIM_TERMINAL);			//»ñÈ¡<cim:Terminal>½Úµã
+	xml_node<>* pTerminal = parnode->first_node(CIM_TERMINAL);			//è·å–<cim:Terminal>èŠ‚ç‚¹
 	if (!pTerminal)
 	{
 		return RC_FAILURE;
@@ -268,16 +268,16 @@ int ParseXML::parseTerminal(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pTminal = parnode->first_node(CIM_TERMINAL);pTminal != NULL; pTminal=pTminal->next_sibling(CIM_TERMINAL))
 	{
-		//È¡¶ËµãCIMID
+		//å–ç«¯ç‚¹CIMID
 		std::string strid = pTminal->first_attribute(RDFID)->value();
 
-		//È¡¶ËµãÃû³Æ
+		//å–ç«¯ç‚¹åç§°
 		std::string strname = pTminal->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strcdeqment = "";
 		std::string strnode = "";
 
-		//È¡¶Ëµã¹ØÁªµÄÁ¬½ÓµãCIMID
+		//å–ç«¯ç‚¹å…³è”çš„è¿æ¥ç‚¹CIMID
 		xml_node<>* pCNode = pTminal->first_node(CIM_TERMINAL_CONDNODE);
 		if (pCNode)
 		{
@@ -285,7 +285,7 @@ int ParseXML::parseTerminal(xml_node<>* parnode,int factype)
 			strnode = strnode.substr(1,strnode.length()-1);
 		}
 		
-		//È¡¶Ëµã¹ØÁªµÄÔª¼şCIMID
+		//å–ç«¯ç‚¹å…³è”çš„å…ƒä»¶CIMID
 		xml_node<>* pCdeqment = pTminal->first_node(CIM_TERMINAL_CONDEQMENT);
 		if (pCdeqment)
 		{
@@ -308,7 +308,7 @@ int ParseXML::parseTerminal(xml_node<>* parnode,int factype)
 
 int ParseXML::parseConnectivityNode(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pConnectivityNode = parnode->first_node(CIM_CONNECT_NODE);			//»ñÈ¡<cim:ConnectivityNode>½Úµã
+	xml_node<>* pConnectivityNode = parnode->first_node(CIM_CONNECT_NODE);			//è·å–<cim:ConnectivityNode>èŠ‚ç‚¹
 	if (!pConnectivityNode)
 	{
 		return RC_FAILURE;
@@ -318,15 +318,15 @@ int ParseXML::parseConnectivityNode(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pCNode = parnode->first_node(CIM_CONNECT_NODE);pCNode != NULL; pCNode=pCNode->next_sibling(CIM_CONNECT_NODE))
 	{
-		//È¡Á¬½ÓµãCIMID
+		//å–è¿æ¥ç‚¹CIMID
 		std::string strid = pCNode->first_attribute(RDFID)->value();
 
-		//È¡Á¬½ÓµãÃû³Æ
+		//å–è¿æ¥ç‚¹åç§°
 		std::string strname = pCNode->first_node(CIM_NAMING_NAME)->value();
 
 		std::string stvlcimid = "";
 
-		//È¡Á¬½Óµã¹ØÁªµÄµçÑ¹µÈ¼¶cimid
+		//å–è¿æ¥ç‚¹å…³è”çš„ç”µå‹ç­‰çº§cimid
 		stvlcimid = pCNode->first_node(CIM_CONNECT_NODE_MOFEQMNET)->first_attribute(RDFRESOURCE)->value();
 		stvlcimid = stvlcimid.substr(1,stvlcimid.length()-1);
 
@@ -352,7 +352,7 @@ int ParseXML::parseConnectivityNode(xml_node<>* parnode,int factype)
 
 int ParseXML::parseBreaker(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pBreaker = parnode->first_node(CIM_BREAKER);			//»ñÈ¡<cim:Breaker>½Úµã
+	xml_node<>* pBreaker = parnode->first_node(CIM_BREAKER);			//è·å–<cim:Breaker>èŠ‚ç‚¹
 	if (!pBreaker)
 	{
 		return RC_FAILURE;
@@ -362,10 +362,10 @@ int ParseXML::parseBreaker(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pBker = parnode->first_node(CIM_BREAKER);pBker != NULL; pBker=pBker->next_sibling(CIM_BREAKER))
 	{
-		//È¡¶ÏÂ·Æ÷CIMID
+		//å–æ–­è·¯å™¨CIMID
 		std::string strid = pBker->first_attribute(RDFID)->value();
 
-		//È¡¶ÏÂ·Æ÷Ãû³Æ
+		//å–æ–­è·¯å™¨åç§°
 		std::string strname = pBker->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strbvid = "";
@@ -375,11 +375,11 @@ int ParseXML::parseBreaker(xml_node<>* parnode,int factype)
 
 		if (factype == FACNARI)
 		{
-			//È¡¹ØÁª»ù´¡µçÑ¹
+			//å–å…³è”åŸºç¡€ç”µå‹
 			strbvid = pBker->first_node(CIM_CONDTEQPMENT_BVAL)->first_attribute(RDFRESOURCE)->value();
 			strbvid = strbvid.substr(1,strbvid.length()-1);
 
-			//È¡¶ÏÂ·Æ÷¹ØÁªBAYµÄcimid
+			//å–æ–­è·¯å™¨å…³è”BAYçš„cimid
 			strbayid = pBker->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 			strbayid = strbayid.substr(1,strbayid.length()-1);
 
@@ -399,7 +399,7 @@ int ParseXML::parseBreaker(xml_node<>* parnode,int factype)
 
 		if (factype == FACKEDONG || factype == FACDONGFANG || factype == FACJICHENGDZ)
 		{
-			//È¡¶ÏÂ·Æ÷¹ØÁªµçÑ¹µÈ¼¶µÄcimid
+			//å–æ–­è·¯å™¨å…³è”ç”µå‹ç­‰çº§çš„cimid
 			strvolevid = pBker->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 			strvolevid = strvolevid.substr(1,strvolevid.length()-1);
 
@@ -425,7 +425,7 @@ int ParseXML::parseBreaker(xml_node<>* parnode,int factype)
 
 int ParseXML::parseDisconnector(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pDiscnntor = parnode->first_node(CIM_DISCTOR);			//»ñÈ¡<cim:Disconnector>½Úµã
+	xml_node<>* pDiscnntor = parnode->first_node(CIM_DISCTOR);			//è·å–<cim:Disconnector>èŠ‚ç‚¹
 	if (!pDiscnntor)
 	{
 		return RC_FAILURE;
@@ -435,10 +435,10 @@ int ParseXML::parseDisconnector(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pDisctor = parnode->first_node(CIM_DISCTOR);pDisctor != NULL; pDisctor=pDisctor->next_sibling(CIM_DISCTOR))
 	{
-		//È¡µ¶Õ¢CIMID
+		//å–åˆ€é—¸CIMID
 		std::string strid = pDisctor->first_attribute(RDFID)->value();
 
-		//È¡µ¶Õ¢Ãû³Æ
+		//å–åˆ€é—¸åç§°
 		std::string strname = pDisctor->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strbvid = "";
@@ -448,11 +448,11 @@ int ParseXML::parseDisconnector(xml_node<>* parnode,int factype)
 
 		if (factype == FACNARI)
 		{
-			//È¡¹ØÁª»ù´¡µçÑ¹
+			//å–å…³è”åŸºç¡€ç”µå‹
 			strbvid = pDisctor->first_node(CIM_CONDTEQPMENT_BVAL)->first_attribute(RDFRESOURCE)->value();
 			strbvid = strbvid.substr(1,strbvid.length()-1);
 
-			//È¡µ¶Õ¢¹ØÁªBAYµÄcimid
+			//å–åˆ€é—¸å…³è”BAYçš„cimid
 			strbayid = pDisctor->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 			strbayid = strbayid.substr(1,strbayid.length()-1);
 
@@ -472,7 +472,7 @@ int ParseXML::parseDisconnector(xml_node<>* parnode,int factype)
 
 		if (factype == FACKEDONG || factype == FACDONGFANG || factype == FACJICHENGDZ)
 		{
-			//È¡¹ØÁªµçÑ¹µÈ¼¶
+			//å–å…³è”ç”µå‹ç­‰çº§
 			strvolevid = pDisctor->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 			strvolevid = strvolevid.substr(1,strvolevid.length()-1);
 
@@ -497,7 +497,7 @@ int ParseXML::parseDisconnector(xml_node<>* parnode,int factype)
 
 int ParseXML::parseGrdDisconnector(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pGrdDiscnntor = parnode->first_node(CIM_GRD_DISCTOR);			//»ñÈ¡<cim:GroundDisconnector>½Úµã
+	xml_node<>* pGrdDiscnntor = parnode->first_node(CIM_GRD_DISCTOR);			//è·å–<cim:GroundDisconnector>èŠ‚ç‚¹
 	if (!pGrdDiscnntor)
 	{
 		return RC_FAILURE;
@@ -507,10 +507,10 @@ int ParseXML::parseGrdDisconnector(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pGrdDisctor = parnode->first_node(CIM_GRD_DISCTOR);pGrdDisctor != NULL; pGrdDisctor=pGrdDisctor->next_sibling(CIM_GRD_DISCTOR))
 	{
-		//È¡µ¶Õ¢CIMID
+		//å–åˆ€é—¸CIMID
 		std::string strid = pGrdDisctor->first_attribute(RDFID)->value();
 
-		//È¡µ¶Õ¢Ãû³Æ
+		//å–åˆ€é—¸åç§°
 		std::string strname = pGrdDisctor->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strbvid = "";
@@ -520,11 +520,11 @@ int ParseXML::parseGrdDisconnector(xml_node<>* parnode,int factype)
 
 		if (factype == FACNARI)
 		{
-			//È¡¹ØÁª»ù´¡µçÑ¹
+			//å–å…³è”åŸºç¡€ç”µå‹
 			strbvid = pGrdDisctor->first_node(CIM_CONDTEQPMENT_BVAL)->first_attribute(RDFRESOURCE)->value();
 			strbvid = strbvid.substr(1,strbvid.length()-1);
 
-			//È¡¶ÏÂ·Æ÷¹ØÁªBAYµÄcimid
+			//å–æ–­è·¯å™¨å…³è”BAYçš„cimid
 			strbayid = pGrdDisctor->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 			strbayid = strbayid.substr(1,strbayid.length()-1);
 
@@ -544,7 +544,7 @@ int ParseXML::parseGrdDisconnector(xml_node<>* parnode,int factype)
 
 		if (factype == FACKEDONG || factype == FACDONGFANG || factype == FACJICHENGDZ)
 		{
-			//È¡¹ØÁªµçÑ¹µÈ¼¶
+			//å–å…³è”ç”µå‹ç­‰çº§
 			strvolevid = pGrdDisctor->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 			strvolevid = strvolevid.substr(1,strvolevid.length()-1);
 
@@ -570,7 +570,7 @@ int ParseXML::parseGrdDisconnector(xml_node<>* parnode,int factype)
 
 int ParseXML::parseBusbarSection(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pBusbar = parnode->first_node(CIM_BUS);			//»ñÈ¡<cim:BusbarSection>½Úµã
+	xml_node<>* pBusbar = parnode->first_node(CIM_BUS);			//è·å–<cim:BusbarSection>èŠ‚ç‚¹
 	if (!pBusbar)
 	{
 		return RC_FAILURE;
@@ -580,15 +580,15 @@ int ParseXML::parseBusbarSection(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pBus = parnode->first_node(CIM_BUS);pBus != NULL; pBus=pBus->next_sibling(CIM_BUS))
 	{
-		//È¡Ä¸ÏßCIMID
+		//å–æ¯çº¿CIMID
 		std::string strid = pBus->first_attribute(RDFID)->value();
 
-		//È¡Ä¸ÏßÃû³Æ
+		//å–æ¯çº¿åç§°
 		std::string strname = pBus->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strvolevid = "";
 
-		//È¡¹ØÁªµçÑ¹µÈ¼¶
+		//å–å…³è”ç”µå‹ç­‰çº§
 		strvolevid = pBus->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 		strvolevid = strvolevid.substr(1,strvolevid.length()-1);
 
@@ -612,7 +612,7 @@ int ParseXML::parseBusbarSection(xml_node<>* parnode,int factype)
 
 int ParseXML::parseCompensator(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pCompensator = parnode->first_node(CIM_COMPENSATOR);			//»ñÈ¡<cim:Compensator>½Úµã
+	xml_node<>* pCompensator = parnode->first_node(CIM_COMPENSATOR);			//è·å–<cim:Compensator>èŠ‚ç‚¹
 	if (!pCompensator)
 	{
 		return RC_FAILURE;
@@ -622,15 +622,15 @@ int ParseXML::parseCompensator(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pCompstor = parnode->first_node(CIM_COMPENSATOR);pCompstor != NULL; pCompstor=pCompstor->next_sibling(CIM_COMPENSATOR))
 	{
-		//È¡Ä¸ÏßCIMID
+		//å–æ¯çº¿CIMID
 		std::string strid = pCompstor->first_attribute(RDFID)->value();
 
-		//È¡Ä¸ÏßÃû³Æ
+		//å–æ¯çº¿åç§°
 		std::string strname = pCompstor->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strvolevid = "";
 
-		//È¡¹ØÁªµçÑ¹µÈ¼¶
+		//å–å…³è”ç”µå‹ç­‰çº§
 		strvolevid = pCompstor->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 		strvolevid = strvolevid.substr(1,strvolevid.length()-1);
 
@@ -654,7 +654,7 @@ int ParseXML::parseCompensator(xml_node<>* parnode,int factype)
 
 int ParseXML::parseEnergyConsumer(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pEnergy = parnode->first_node(CIM_ENERGY_CONSUMER);			//»ñÈ¡<cim:EnergyConsumer>½Úµã
+	xml_node<>* pEnergy = parnode->first_node(CIM_ENERGY_CONSUMER);			//è·å–<cim:EnergyConsumer>èŠ‚ç‚¹
 	if (!pEnergy)
 	{
 		return RC_FAILURE;
@@ -664,15 +664,15 @@ int ParseXML::parseEnergyConsumer(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pEngy = parnode->first_node(CIM_ENERGY_CONSUMER);pEngy != NULL; pEngy=pEngy->next_sibling(CIM_ENERGY_CONSUMER))
 	{
-		//È¡·¢µç»úCIMID
+		//å–å‘ç”µæœºCIMID
 		std::string strid = pEngy->first_attribute(RDFID)->value();
 
-		//È¡·¢µç»úÃû³Æ
+		//å–å‘ç”µæœºåç§°
 		std::string strname = pEngy->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strvolevid = "";
 
-		//È¡¹ØÁªµçÑ¹µÈ¼¶
+		//å–å…³è”ç”µå‹ç­‰çº§
 		strvolevid = pEngy->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 		strvolevid = strvolevid.substr(1,strvolevid.length()-1);
 
@@ -696,7 +696,7 @@ int ParseXML::parseEnergyConsumer(xml_node<>* parnode,int factype)
 
 int ParseXML::parseSynchronousMachine(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pSynchronousMachine = parnode->first_node(CIM_SYNC_HRUS_MACHINE);			//»ñÈ¡<cim:SynchronousMachine>½Úµã
+	xml_node<>* pSynchronousMachine = parnode->first_node(CIM_SYNC_HRUS_MACHINE);			//è·å–<cim:SynchronousMachine>èŠ‚ç‚¹
 	if (!pSynchronousMachine)
 	{
 		return RC_FAILURE;
@@ -706,15 +706,15 @@ int ParseXML::parseSynchronousMachine(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pSyncMachine = parnode->first_node(CIM_SYNC_HRUS_MACHINE);pSyncMachine != NULL; pSyncMachine=pSyncMachine->next_sibling(CIM_SYNC_HRUS_MACHINE))
 	{
-		//È¡·¢µç»úCIMID
+		//å–å‘ç”µæœºCIMID
 		std::string strid = pSyncMachine->first_attribute(RDFID)->value();
 
-		//È¡·¢µç»úÃû³Æ
+		//å–å‘ç”µæœºåç§°
 		std::string strname = pSyncMachine->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strvolevid = "";
 
-		//È¡¹ØÁªµçÑ¹µÈ¼¶
+		//å–å…³è”ç”µå‹ç­‰çº§
 		xml_node<>* pVolev = pSyncMachine->first_node(CIM_EQPMENT_MOF_QPTCONT);
 		if (pVolev)
 		{
@@ -741,7 +741,7 @@ int ParseXML::parseSynchronousMachine(xml_node<>* parnode,int factype)
 
 int ParseXML::parsePotentialTransformer(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pPtrans = parnode->first_node(CIM_PT);			//»ñÈ¡<cim:PotentialTransformer>½Úµã
+	xml_node<>* pPtrans = parnode->first_node(CIM_PT);			//è·å–<cim:PotentialTransformer>èŠ‚ç‚¹
 	if (!pPtrans)
 	{
 		return RC_FAILURE;
@@ -751,15 +751,15 @@ int ParseXML::parsePotentialTransformer(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pPT = parnode->first_node(CIM_PT);pPT != NULL; pPT=pPT->next_sibling(CIM_PT))
 	{
-		//È¡µçÑ¹»¥¸ĞÆ÷CIMID
+		//å–ç”µå‹äº’æ„Ÿå™¨CIMID
 		std::string strid = pPT->first_attribute(RDFID)->value();
 
-		//È¡µçÑ¹»¥¸ĞÆ÷Ãû³Æ
+		//å–ç”µå‹äº’æ„Ÿå™¨åç§°
 		std::string strname = pPT->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strvolevid = "";
 
-		//È¡¹ØÁªµçÑ¹µÈ¼¶
+		//å–å…³è”ç”µå‹ç­‰çº§
 		strvolevid = pPT->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 		strvolevid = strvolevid.substr(1,strvolevid.length()-1);
 
@@ -783,7 +783,7 @@ int ParseXML::parsePotentialTransformer(xml_node<>* parnode,int factype)
 
 int ParseXML::parsePowerTransformer(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pPowerTrasf = parnode->first_node(CIM_POWER_TRANSFMER);			//»ñÈ¡<cim:PowerTransformer>½Úµã
+	xml_node<>* pPowerTrasf = parnode->first_node(CIM_POWER_TRANSFMER);			//è·å–<cim:PowerTransformer>èŠ‚ç‚¹
 	if (!pPowerTrasf)
 	{
 		return RC_FAILURE;
@@ -793,15 +793,15 @@ int ParseXML::parsePowerTransformer(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pPowertf = parnode->first_node(CIM_POWER_TRANSFMER);pPowertf != NULL; pPowertf=pPowertf->next_sibling(CIM_POWER_TRANSFMER))
 	{
-		//È¡±äÑ¹Æ÷CIMID
+		//å–å˜å‹å™¨CIMID
 		std::string strid = pPowertf->first_attribute(RDFID)->value();
 
-		//È¡±äÑ¹Æ÷Ãû³Æ
+		//å–å˜å‹å™¨åç§°
 		std::string strname = pPowertf->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strstationid = "";
 
-		//È¡±äÑ¹Æ÷¶ÔÓ¦³§Õ¾cimid
+		//å–å˜å‹å™¨å¯¹åº”å‚ç«™cimid
 		strstationid = pPowertf->first_node(CIM_EQPMENT_MOF_QPTCONT)->first_attribute(RDFRESOURCE)->value();
 		strstationid = strstationid.substr(1,strstationid.length()-1);
 
@@ -820,7 +820,7 @@ int ParseXML::parsePowerTransformer(xml_node<>* parnode,int factype)
 
 int ParseXML::parseTransformerWinding(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pTransfwind = parnode->first_node(CIM_TRANSFMER_WINDING);			//»ñÈ¡<cim:TransformerWinding>½Úµã
+	xml_node<>* pTransfwind = parnode->first_node(CIM_TRANSFMER_WINDING);			//è·å–<cim:TransformerWinding>èŠ‚ç‚¹
 	if (!pTransfwind)
 	{
 		return RC_FAILURE;
@@ -830,10 +830,10 @@ int ParseXML::parseTransformerWinding(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pTransfw = parnode->first_node(CIM_TRANSFMER_WINDING);pTransfw != NULL; pTransfw=pTransfw->next_sibling(CIM_TRANSFMER_WINDING))
 	{
-		//È¡±äÑ¹Æ÷ÈÆ×éCIMID
+		//å–å˜å‹å™¨ç»•ç»„CIMID
 		std::string strid = pTransfw->first_attribute(RDFID)->value();
 
-		//È¡±äÑ¹Æ÷ÈÆ×éÃû³Æ
+		//å–å˜å‹å™¨ç»•ç»„åç§°
 		std::string strname = pTransfw->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strtype = "";
@@ -842,7 +842,7 @@ int ParseXML::parseTransformerWinding(xml_node<>* parnode,int factype)
 		std::string strptf = "";
 		std::string strvolevid = "";
 
-		//Çø±äÑ¹Æ÷ÈÆ×é¶ÔÓ¦µÄµ±Ç°²à(¸ß¡¢ÖĞ¡¢µÍ)
+		//åŒºå˜å‹å™¨ç»•ç»„å¯¹åº”çš„å½“å‰ä¾§(é«˜ã€ä¸­ã€ä½)
 		xml_node<>* pType = pTransfw->first_node(CIM_TRANSFMER_WINDING_TYPE);
 		if (pType)
 		{
@@ -851,7 +851,7 @@ int ParseXML::parseTransformerWinding(xml_node<>* parnode,int factype)
 			strtype = strtype.substr(nsize+1,strtype.length()-nsize-1);
 		}	
 
-		//È¡±äÑ¹Æ÷ÈÆ×é¶ÔÓ¦ËùÊô±äÑ¹Æ÷cimid
+		//å–å˜å‹å™¨ç»•ç»„å¯¹åº”æ‰€å±å˜å‹å™¨cimid
 		xml_node<>* pPtformer = pTransfw->first_node(CIM_TRANSFW_MOF_POWERTF);
 		if (pPtformer)
 		{
@@ -859,7 +859,7 @@ int ParseXML::parseTransformerWinding(xml_node<>* parnode,int factype)
 			strptf = strptf.substr(1,strptf.length()-1);
 		}
 
-		//È¡±äÑ¹Æ÷ÈÆ×é¶ÔÓ¦µçÑ¹µÈ¼¶
+		//å–å˜å‹å™¨ç»•ç»„å¯¹åº”ç”µå‹ç­‰çº§
 		xml_node<>* pVolev = pTransfw->first_node(CIM_EQPMENT_MOF_QPTCONT);
 		if (pVolev)
 		{
@@ -941,36 +941,36 @@ int ParseXML::dealTransformerWinding()
 		{
 			if (ptfiter->first == tfwiter->second.ptfcimid)
 			{
-				//¸ßÑ¹
+				//é«˜å‹
 				if (tfwiter->second.tfwtype == STR_PRIMARY)
 				{
 					strprimcimid = tfwiter->second.tfwcimid;
 					strprimbvid = tfwiter->second.bvcimid;
 				}
 
-				//ÖĞÑ¹
+				//ä¸­å‹
 				if (tfwiter->second.tfwtype == STR_SECONDARY)
 				{
 					strpscndcimid = tfwiter->second.tfwcimid;
 					strpscndbvid = tfwiter->second.bvcimid;
 				}
 
-				//µÍÑ¹
+				//ä½å‹
 				if (tfwiter->second.tfwtype == STR_TERTIARY)
 				{
 					strptertcimid = tfwiter->second.tfwcimid;
 					strptertbvid = tfwiter->second.bvcimid;
 				}
 
-				//¶Ô±äÑ¹Æ÷ÏÂÓĞ¼¸¸ö±äÑ¹Æ÷ÈÆ×é½øĞĞ¼ÆÊı
+				//å¯¹å˜å‹å™¨ä¸‹æœ‰å‡ ä¸ªå˜å‹å™¨ç»•ç»„è¿›è¡Œè®¡æ•°
 				nCont++;
 			}
 		}
 
-		//±äÑ¹Æ÷ÎªÁ½È¦±ä
+		//å˜å‹å™¨ä¸ºä¸¤åœˆå˜
 		if (nCont == 2)
 		{
-			//¸ßÑ¹²à¶ÔÓ¦Öµ
+			//é«˜å‹ä¾§å¯¹åº”å€¼
 			TransformerWinding_Units tfwdingg;
 			tfwdingg.tfwcimid = strprimcimid;
 			tfwdingg.ptfcimid = ptfiter->first;
@@ -979,7 +979,7 @@ int ParseXML::dealTransformerWinding()
 			tfwdingg.wdgrade = 1;
 			mapTransformerWindingUnt.insert(std::pair<std::string,TransformerWinding_Units>(strprimcimid,tfwdingg));
 
-			//µÍÑ¹²à¶ÔÓ¦Öµ
+			//ä½å‹ä¾§å¯¹åº”å€¼
 			TransformerWinding_Units tfwdingd;
 			tfwdingd.tfwcimid = strpscndcimid;
 			tfwdingd.ptfcimid = ptfiter->first;
@@ -989,10 +989,10 @@ int ParseXML::dealTransformerWinding()
 			mapTransformerWindingUnt.insert(std::pair<std::string,TransformerWinding_Units>(strpscndcimid,tfwdingd));
 		}
 
-		//±äÑ¹Æ÷ÎªÁ½È¦±ä
+		//å˜å‹å™¨ä¸ºä¸¤åœˆå˜
 		if (nCont == 3)
 		{
-			//¸ßÑ¹²à¶ÔÓ¦Öµ
+			//é«˜å‹ä¾§å¯¹åº”å€¼
 			TransformerWinding_Units tfwdingg;
 			tfwdingg.tfwcimid = strprimcimid;
 			tfwdingg.ptfcimid = ptfiter->first;
@@ -1001,7 +1001,7 @@ int ParseXML::dealTransformerWinding()
 			tfwdingg.wdgrade = 1;
 			mapTransformerWindingUnt.insert(std::pair<std::string,TransformerWinding_Units>(strprimcimid,tfwdingg));
 
-			//ÖĞÑ¹²à¶ÔÓ¦Öµ
+			//ä¸­å‹ä¾§å¯¹åº”å€¼
 			TransformerWinding_Units tfwdingz;
 			tfwdingz.tfwcimid = strpscndcimid;
 			tfwdingz.ptfcimid = ptfiter->first;
@@ -1010,7 +1010,7 @@ int ParseXML::dealTransformerWinding()
 			tfwdingz.wdgrade = 2;
 			mapTransformerWindingUnt.insert(std::pair<std::string,TransformerWinding_Units>(strpscndcimid,tfwdingz));
 
-			//µÍÑ¹²à¶ÔÓ¦Öµ
+			//ä½å‹ä¾§å¯¹åº”å€¼
 			TransformerWinding_Units tfwdingd;
 			tfwdingd.tfwcimid = strptertcimid;
 			tfwdingd.ptfcimid = ptfiter->first;
@@ -1028,7 +1028,7 @@ int ParseXML::dealTransformerWinding()
 
 int ParseXML::parseACLineSegment(xml_node<>* parnode,int factype)
 {
-	xml_node<>* pACLineSegment = parnode->first_node(CIM_ACLINESGT);			//»ñÈ¡<cim:ACLineSegment>½Úµã
+	xml_node<>* pACLineSegment = parnode->first_node(CIM_ACLINESGT);			//è·å–<cim:ACLineSegment>èŠ‚ç‚¹
 	if (!pACLineSegment)
 	{
 		return RC_FAILURE;
@@ -1038,10 +1038,10 @@ int ParseXML::parseACLineSegment(xml_node<>* parnode,int factype)
 
 	for (xml_node<>* pACLine = parnode->first_node(CIM_ACLINESGT);pACLine != NULL; pACLine=pACLine->next_sibling(CIM_ACLINESGT))
 	{
-		//È¡½»Á÷Ïß¶ÎCIMID
+		//å–äº¤æµçº¿æ®µCIMID
 		std::string strid = pACLine->first_attribute(RDFID)->value();
 
-		//È¡½»Á÷Ïß¶ÎÃû³Æ
+		//å–äº¤æµçº¿æ®µåç§°
 		std::string strname = pACLine->first_node(CIM_NAMING_NAME)->value();
 
 		std::string strbvid = "";
@@ -1049,17 +1049,17 @@ int ParseXML::parseACLineSegment(xml_node<>* parnode,int factype)
 		std::string strscimid = "";
 		std::string strecimid = "";
 
-		//È¡½»Á÷Ïß¶Î¹ØÁªµÄ»ù´¡µçÑ¹cimid
+		//å–äº¤æµçº¿æ®µå…³è”çš„åŸºç¡€ç”µå‹cimid
 		strbvid = pACLine->first_node(CIM_CONDTEQPMENT_BVAL)->first_attribute(RDFRESOURCE)->value();
 		strbvid = strbvid.substr(1,strbvid.length()-1);
 
 		if (factype == FACNARI)
 		{
-			//È¡½»Á÷Ïß¶ÎÒ»¶Ë¶ÔÓ¦³§Õ¾cimid
+			//å–äº¤æµçº¿æ®µä¸€ç«¯å¯¹åº”å‚ç«™cimid
 			strscimid = pACLine->first_node(CIM_NARI_ACLINSGT_ST)->first_attribute(RDFRESOURCE)->value();
 			strscimid = strscimid.substr(1,strscimid.length()-1);
 
-			//È¡½»Á÷Ïß¶ÎÁíÒ»¶Ë¶ÔÓ¦³§Õ¾cimid
+			//å–äº¤æµçº¿æ®µå¦ä¸€ç«¯å¯¹åº”å‚ç«™cimid
 			strecimid = pACLine->first_node(CIM_NARI_ACLINSGT_END)->first_attribute(RDFRESOURCE)->value();
 			strecimid = strecimid.substr(1,strecimid.length()-1);
 
@@ -1075,11 +1075,11 @@ int ParseXML::parseACLineSegment(xml_node<>* parnode,int factype)
 
 		if (factype == FACJICHENGDZ)
 		{
-			//È¡½»Á÷Ïß¶ÎÒ»¶Ë¶ÔÓ¦³§Õ¾cimid
+			//å–äº¤æµçº¿æ®µä¸€ç«¯å¯¹åº”å‚ç«™cimid
 			strscimid = pACLine->first_node(CIM_ACLINSGT_FROM)->first_attribute(RDFRESOURCE)->value();
 			strscimid = strscimid.substr(1,strscimid.length()-1);
 
-			//È¡½»Á÷Ïß¶ÎÁíÒ»¶Ë¶ÔÓ¦³§Õ¾cimid
+			//å–äº¤æµçº¿æ®µå¦ä¸€ç«¯å¯¹åº”å‚ç«™cimid
 			strecimid = pACLine->first_node(CIM_ACLINSGT_TO)->first_attribute(RDFRESOURCE)->value();
 			strecimid = strecimid.substr(1,strecimid.length()-1);
 
@@ -1101,11 +1101,11 @@ int ParseXML::parseACLineSegment(xml_node<>* parnode,int factype)
 
 		if (factype==FACKEDONG || factype==FACDONGFANG)
 		{
-			//È¡½»Á÷Ïß¶ÎÒ»¶Ë¶ÔÓ¦¶Ëµãcimid
+			//å–äº¤æµçº¿æ®µä¸€ç«¯å¯¹åº”ç«¯ç‚¹cimid
 			strtml1cimid = pACLine->first_node(CIM_CDEQMENT_TERMINALS)->first_attribute(RDFRESOURCE)->value();
 			strtml1cimid = strtml1cimid.substr(1,strtml1cimid.length()-1);
 
-			//È¡½»Á÷Ïß¶ÎÁíÒ»¶Ë¶ÔÓ¦¶Ëµãcimid
+			//å–äº¤æµçº¿æ®µå¦ä¸€ç«¯å¯¹åº”ç«¯ç‚¹cimid
 			strtml2cimid = pACLine->last_node(CIM_CDEQMENT_TERMINALS)->first_attribute(RDFRESOURCE)->value();
 			strtml2cimid = strtml2cimid.substr(1,strtml2cimid.length()-1);
 
@@ -1113,7 +1113,7 @@ int ParseXML::parseACLineSegment(xml_node<>* parnode,int factype)
 			std::map<std::string,ConnectivityNode>::iterator nodeiter;
 			std::map<std::string,VoltageLevel>::iterator vliter;
 
-			//È¡¹ØÁªÒ»²à¶Ëµã
+			//å–å…³è”ä¸€ä¾§ç«¯ç‚¹
 			tmliter = mapTerminal.find(strtml1cimid);
 			if (tmliter != mapTerminal.end())
 			{
@@ -1126,7 +1126,7 @@ int ParseXML::parseACLineSegment(xml_node<>* parnode,int factype)
 				}
 			}
 			
-			//È¡¹ØÁªÁíÒ»²à¶Ëµã
+			//å–å…³è”å¦ä¸€ä¾§ç«¯ç‚¹
 			tmliter = mapTerminal.find(strtml2cimid);
 			if (tmliter != mapTerminal.end())
 			{
@@ -1169,7 +1169,7 @@ int ParseXML::dealTerminalRelation()
 
 	for (tmliter=mapTerminal.begin();tmliter!=mapTerminal.end();tmliter++)
 	{
-		//ÅĞ¶Ï¶ËµãÊÇ·ñ¹ØÁªÔª¼şcimidÈôÃ»ÓĞÌø³öµ±Ç°Ñ­»·
+		//åˆ¤æ–­ç«¯ç‚¹æ˜¯å¦å…³è”å…ƒä»¶cimidè‹¥æ²¡æœ‰è·³å‡ºå½“å‰å¾ªç¯
 		if (tmliter->second.cdcimid == "")
 		{
 			continue;
@@ -1193,8 +1193,8 @@ int ParseXML::dealTerminalRelation()
 			Tmlrelat.nodecimid = nodecimid;
 			Tmlrelat.tmlport = 0;
 
-			//µ±¶ËµãÖĞ¶ÔÓ¦¹ØÁªµÄÔª¼şcimidÏàµÈÊ±£¬ËµÃ÷µ±Ç°mapÖĞÓĞÁËÍ¬Ôª¼şÖĞµÄÒ»²à¶Ëµã£¬ËùÒÔ´ËÊ±ÔÙ²åÈë±íÊ¾´ËÔª¼şµÄÁíÒ»¶Ë
-			/* //´Ë·½·¨Ğ§ÂÊ²î
+			//å½“ç«¯ç‚¹ä¸­å¯¹åº”å…³è”çš„å…ƒä»¶cimidç›¸ç­‰æ—¶ï¼Œè¯´æ˜å½“å‰mapä¸­æœ‰äº†åŒå…ƒä»¶ä¸­çš„ä¸€ä¾§ç«¯ç‚¹ï¼Œæ‰€ä»¥æ­¤æ—¶å†æ’å…¥è¡¨ç¤ºæ­¤å…ƒä»¶çš„å¦ä¸€ç«¯
+			/* //æ­¤æ–¹æ³•æ•ˆç‡å·®
 			trlaiter = mapTerminalRelation.begin();
 			for (;trlaiter != mapTerminalRelation.end();trlaiter++)
 			{
@@ -1205,8 +1205,8 @@ int ParseXML::dealTerminalRelation()
 				}
 			}*/
 
-			//²éÕÒÁÙÊ±mapÖĞÊÇ·ñÒÑ¾­±£´æÁË¶ËµãÖĞ¶ÔÓ¦¹ØÁªµÄÔª¼şcimid£¬ÈôÃ»ÓĞÔò²åÈë½øÈ¥ÎªÒÔºó¶ËµãÁíÒ»²àµÄ¹ØÁªµÄÔª¼şcimidÏàµÈÊ±ÓÃµ½
-			//µ±¶ËµãÖĞ¶ÔÓ¦¹ØÁªµÄÔª¼şcimidÏàµÈÊ±£¬ËµÃ÷µ±Ç°mapÖĞÓĞÁËÍ¬Ôª¼şÖĞµÄÒ»²à¶Ëµã£¬ËùÒÔ´ËÊ±ÔÙ²åÈë±íÊ¾´ËÔª¼şµÄÁíÒ»¶Ë
+			//æŸ¥æ‰¾ä¸´æ—¶mapä¸­æ˜¯å¦å·²ç»ä¿å­˜äº†ç«¯ç‚¹ä¸­å¯¹åº”å…³è”çš„å…ƒä»¶cimidï¼Œè‹¥æ²¡æœ‰åˆ™æ’å…¥è¿›å»ä¸ºä»¥åç«¯ç‚¹å¦ä¸€ä¾§çš„å…³è”çš„å…ƒä»¶cimidç›¸ç­‰æ—¶ç”¨åˆ°
+			//å½“ç«¯ç‚¹ä¸­å¯¹åº”å…³è”çš„å…ƒä»¶cimidç›¸ç­‰æ—¶ï¼Œè¯´æ˜å½“å‰mapä¸­æœ‰äº†åŒå…ƒä»¶ä¸­çš„ä¸€ä¾§ç«¯ç‚¹ï¼Œæ‰€ä»¥æ­¤æ—¶å†æ’å…¥è¡¨ç¤ºæ­¤å…ƒä»¶çš„å¦ä¸€ç«¯
 			tempiter = mapTemp.find(tmliter->second.cdcimid);
 			if (tempiter != mapTemp.end())
 			{

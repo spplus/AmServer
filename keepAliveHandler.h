@@ -1,4 +1,4 @@
-#ifndef __KEEPALIVEHANDLER_H__
+﻿#ifndef __KEEPALIVEHANDLER_H__
 #define __KEEPALIVEHANDLER_H__
 
 #include "ace/Event_Handler.h"

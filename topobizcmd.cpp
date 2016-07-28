@@ -1,4 +1,4 @@
-#include "topobizcmd.h"
+ï»¿#include "topobizcmd.h"
 #include "confmgr.h"
 #include "cimloader.h"
 #include "rulebiz1.h"
@@ -31,13 +31,13 @@ void TopoBizCmd::exec(sClientMsg* msg)
 {
 	switch (msg->type)
 	{
-	case CMD_TOPO_ENTIRE:		// ÕûÕ¾ÍØÆË
+	case CMD_TOPO_ENTIRE:		// æ•´ç«™æ‹“æ‰‘
 		topoEntire(msg);
 		break;
-	case CMD_TOPO_BREAKER_CHANGE:		// ¿ª¹Ø±äÎ»
+	case CMD_TOPO_BREAKER_CHANGE:		// å¼€å…³å˜ä½
 		topoOnBreakerChange(msg);
 		break;
-	case CMD_CHECK_PASS:					// ¹æÔòĞ£ÑéÍ¨¹ı
+	case CMD_CHECK_PASS:					// è§„åˆ™æ ¡éªŒé€šè¿‡
 		topoOnBreakerChange(msg);
 		break;
 	default:
@@ -51,10 +51,10 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 	{
 		return;
 	}
-	// ÒÑ¾­×ö¹ıÆğµã·ÖÎöµÄÉè±¸ID¼¯ºÏ
+	// å·²ç»åšè¿‡èµ·ç‚¹åˆ†æçš„è®¾å¤‡IDé›†åˆ
 	STRMAP passedNodes;
 
-	// 1.²éÑ¯ËùÓĞ·¢µç»úÉè±¸
+	// 1.æŸ¥è¯¢æ‰€æœ‰å‘ç”µæœºè®¾å¤‡
 	string sql ;
 	char * p = "select CimId,StationCim as StationId from units where UnitType=%d union all select "\
 		"UnitCim as CimId,StationCim as StationId  from related_line where IsPower=1";
@@ -83,12 +83,12 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 
 		if (unittype ==eGENERATOR)
 		{
-			// ¸ù¾İÔª¼ş½øĞĞÍØÆË´øµç×´Ì¬
+			// æ ¹æ®å…ƒä»¶è¿›è¡Œæ‹“æ‰‘å¸¦ç”µçŠ¶æ€
 			topoByUnitId(saveid,powerid,stationid,passedNodes);
 		}
 		else if (unittype == eGROUNDSWITCH)
 		{
-			// ÍØÆË½ÓµØ
+			// æ‹“æ‰‘æ¥åœ°
 			topoByGround(saveid,powerid,stationid,passedNodes);
 		}
 		
@@ -98,7 +98,7 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 
 void TopoBizCmd::loadCim()
 {
-	// ÅĞ¶ÏÊÇ·ñÓĞ¸üĞÂ
+	// åˆ¤æ–­æ˜¯å¦æœ‰æ›´æ–°
 	char *psql = "select id, count(*) as count from system_config where isnew=1";
 	LISTMAP countList = DBA->getList(psql);
 	if (countList.size() > 0)
@@ -113,18 +113,18 @@ void TopoBizCmd::loadCim()
 			cimname += "/";
 			cimname +=  App_Config::instance()->getValue(CIM_ROOT,CIM_NAME);
 			
-			// Èç¹ûµ¼¿â³É¹¦£¬Ôò¸üĞÂÏµÍ³±êÖ¾Î»0
+			// å¦‚æœå¯¼åº“æˆåŠŸï¼Œåˆ™æ›´æ–°ç³»ç»Ÿæ ‡å¿—ä½0
 			if(cloader.Load(cimname,factype) == 0)
 			{
 				psql = "update system_config set IsNew=0,ModifyTime=now() where id=%d";
 				string sql = DBA->formatSql(psql,COM->getIval(countMap,"id"));
 				if (DBA->execSql(sql.c_str()) <=0 )
 				{
-					LOG->warn("¸üĞÂCIMÎÄ¼ş±ä¸ü±êÖ¾Ê§°Ü");
+					LOG->warn("æ›´æ–°CIMæ–‡ä»¶å˜æ›´æ ‡å¿—å¤±è´¥");
 				}
 				else
 				{
-					LOG->message("¸üĞÂCIMÎÄ¼ş±ä¸ü±êÖ¾³É¹¦");
+					LOG->message("æ›´æ–°CIMæ–‡ä»¶å˜æ›´æ ‡å¿—æˆåŠŸ");
 				}
 			}
 		}
@@ -134,10 +134,10 @@ void TopoBizCmd::loadCim()
 void TopoBizCmd::topoEntire(sClientMsg *msg)
 {
 
-	// µ¼CIM
+	// å¯¼CIM
 	loadCim();
 
-	// ¼ì²é×´Ì¬±íÓĞÃ»ÓĞispowerµÈÓÚ2µÄ¼ÇÂ¼£¬Èç¹ûÃ»ÓĞËµÃ÷ÉĞÎ´µ¼ÈëcimÊı¾İ£¬Ôò²»Ö´ĞĞÍØÆË·ÖÎö
+	// æ£€æŸ¥çŠ¶æ€è¡¨æœ‰æ²¡æœ‰ispowerç­‰äº2çš„è®°å½•ï¼Œå¦‚æœæ²¡æœ‰è¯´æ˜å°šæœªå¯¼å…¥cimæ•°æ®ï¼Œåˆ™ä¸æ‰§è¡Œæ‹“æ‰‘åˆ†æ
 	int count = 0;
 	char* psql = "select count(*) as count from unit_status where IsPower=2 ";
 	LISTMAP countList = App_Dba::instance()->getList(psql);
@@ -151,13 +151,13 @@ void TopoBizCmd::topoEntire(sClientMsg *msg)
 		}
 	}
 
-	// Èç¹ûÃ»ÓĞ£¬Ôò²»Ö´ĞĞÍØÆË·ÖÎö
+	// å¦‚æœæ²¡æœ‰ï¼Œåˆ™ä¸æ‰§è¡Œæ‹“æ‰‘åˆ†æ
 	if (count<=0)
 	{
 		return;
 	}
 
-	// ²éÑ¯ËùÓĞ¶ÏÃæ
+	// æŸ¥è¯¢æ‰€æœ‰æ–­é¢
 	psql = "select id from virtual_saves ";
 	LISTMAP saveList = App_Dba::instance()->getList(psql);
 	for (int i = 0;i<saveList.size();i++)
@@ -166,10 +166,10 @@ void TopoBizCmd::topoEntire(sClientMsg *msg)
 		MAP_ITERATOR iter = saveMap.find("id");
 		if(iter != saveMap.end())
 		{
-			// ÍØÆË´øµç×´Ì¬
+			// æ‹“æ‰‘å¸¦ç”µçŠ¶æ€
 			topoBySaveId(iter->second,eGENERATOR);
 
-			// ÍØÆË½ÓµØ×´Ì¬
+			// æ‹“æ‰‘æ¥åœ°çŠ¶æ€
 			//topoBySaveId(iter->second,eGROUNDSWITCH);
 		}
 	}
@@ -199,7 +199,7 @@ LISTMAP TopoBizCmd::getStationIdByLineId(string unitid,string stationid)
 LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 {
 
-	// ÎÊÌâ£º¹ØÁª²éÑ¯Éè±¸×´Ì¬µÄÊ±ºò£¬²»ÓÃ¿¼ÂÇsaveidÃ´£¿unit_status±íÖĞ£¬Í¬Ò»¸öunit¿ÉÄÜ»áÓĞ¶àÌõ¼ÇÂ¼£¬ÒÔÄÄÌì¼ÇÂ¼Îª×¼ÄØ£¿
+	// é—®é¢˜ï¼šå…³è”æŸ¥è¯¢è®¾å¤‡çŠ¶æ€çš„æ—¶å€™ï¼Œä¸ç”¨è€ƒè™‘saveidä¹ˆï¼Ÿunit_statusè¡¨ä¸­ï¼ŒåŒä¸€ä¸ªunitå¯èƒ½ä¼šæœ‰å¤šæ¡è®°å½•ï¼Œä»¥å“ªå¤©è®°å½•ä¸ºå‡†å‘¢ï¼Ÿ
 	LISTMAP unitsList ;
 	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,"\
 		"c.State,d.VolValue,d.Color from (select UnitCim from Relations where ConnCim='%s') a left join "\
@@ -213,20 +213,20 @@ LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 
 void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMAP& passNodes)
 {
-	// °Ñµ±Ç°Ôª¼ş¼ÓÈëµ½ÒÑ·ÖÎöÁĞ±í
+	// æŠŠå½“å‰å…ƒä»¶åŠ å…¥åˆ°å·²åˆ†æåˆ—è¡¨
 	passNodes.insert(MAPVAL(unitid,unitid));
 
-	// 2.¸ù¾İÔª¼şID£¬²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã£¨¿ÉÄÜÊÇÁ½¸ö£©
+	// 2.æ ¹æ®å…ƒä»¶IDï¼ŒæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹ï¼ˆå¯èƒ½æ˜¯ä¸¤ä¸ªï¼‰
 	LISTMAP connIds = getConnIdByUnitsId(unitid);
 
-	// 3.¸ù¾İÁ¬½ÓµãIDÔÚÁ¬½Ó¹ØÏµ±í²éÑ¯¹ØÁªµÄÉè±¸
+	// 3.æ ¹æ®è¿æ¥ç‚¹IDåœ¨è¿æ¥å…³ç³»è¡¨æŸ¥è¯¢å…³è”çš„è®¾å¤‡
 	for (int j = 0;j<connIds.size();j++)
 	{
 		STRMAP connMap = connIds.at(j);
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
-			// ÅĞ¶ÏÊÇ·ñÒÑ¾­²éÕÒ¹ıµÄÁ¬½Óµã£¬Èç¹ûÊÇÔòÌø³ö£¬²»ÊÇÔò¼ÓÈë
+			// åˆ¤æ–­æ˜¯å¦å·²ç»æŸ¥æ‰¾è¿‡çš„è¿æ¥ç‚¹ï¼Œå¦‚æœæ˜¯åˆ™è·³å‡ºï¼Œä¸æ˜¯åˆ™åŠ å…¥
 			if (passNodes.find(connIter->second) != passNodes.end())
 			{
 				continue;
@@ -237,10 +237,10 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 			}
 
 
-			// ¸ù¾İÁ¬½Óµã£¬²éÕÒ¸ÃÁ¬½Óµã¹ØÁªµÄÉè±¸¼¯ºÏ
+			// æ ¹æ®è¿æ¥ç‚¹ï¼ŒæŸ¥æ‰¾è¯¥è¿æ¥ç‚¹å…³è”çš„è®¾å¤‡é›†åˆ
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
 
-			// ±éÀú¸ÃÉè±¸¼¯ºÏ
+			// éå†è¯¥è®¾å¤‡é›†åˆ
 			for (int k = 0;k<unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
@@ -248,7 +248,7 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
-					// ÅĞ¶ÏÊÇ·ñÒÑ¾­×öÎªÆğÊ¼Éè±¸½øĞĞËÑË÷£¬Èç¹ûÊÇÔòÌø¹ı
+					// åˆ¤æ–­æ˜¯å¦å·²ç»åšä¸ºèµ·å§‹è®¾å¤‡è¿›è¡Œæœç´¢ï¼Œå¦‚æœæ˜¯åˆ™è·³è¿‡
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
@@ -259,16 +259,16 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 					}
 				}
 
-				// ±¾´Î²éÑ¯µÄÔª¼şCIMID
+				// æœ¬æ¬¡æŸ¥è¯¢çš„å…ƒä»¶CIMID
 				unitId = unitIter->second;
 
-				// ²éÑ¯Ôª¼şÀàĞÍ
+				// æŸ¥è¯¢å…ƒä»¶ç±»å‹
 				unitIter = unitMap.find("UnitType");
 
-				// Éè±¸ÀàĞÍ
+				// è®¾å¤‡ç±»å‹
 				int etype ;
 
-				// ±ê¼ÇÊ±ºòĞèÒªÍØÆË 0 ĞèÒªÍØÆË£¬1 ²»ĞèÒªÍØÆË
+				// æ ‡è®°æ—¶å€™éœ€è¦æ‹“æ‰‘ 0 éœ€è¦æ‹“æ‰‘ï¼Œ1 ä¸éœ€è¦æ‹“æ‰‘
 				int flag = 0;
 
 				if (unitIter != unitMap.end())
@@ -276,22 +276,22 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 					etype = str2i(unitIter->second);
 					if (etype == eBREAKER || etype == eSWITCH)
 					{
-						// 4.Èç¹û¸ÃÉè±¸ÎªÎª¿ª¹Ø£¬µ¶Õ¢£¬±ÕºÏ¼´Îª´øµç£¬·ñÔòÎª²»´øµç£»
+						// 4.å¦‚æœè¯¥è®¾å¤‡ä¸ºä¸ºå¼€å…³ï¼Œåˆ€é—¸ï¼Œé—­åˆå³ä¸ºå¸¦ç”µï¼Œå¦åˆ™ä¸ºä¸å¸¦ç”µï¼›
 						unitIter = unitMap.find("State");
 						if (unitIter != unitMap.end())
 						{
 							int state = str2i(unitIter->second);
 							if (state == 1)
 							{
-								// ¸üĞÂ¸ÃÉè±¸´øµç×´Ì¬Îª´øµç
+								// æ›´æ–°è¯¥è®¾å¤‡å¸¦ç”µçŠ¶æ€ä¸ºå¸¦ç”µ
 								updateIsElectricByUnitId(saveid,unitId,1);
 							}
 							else
 							{
-								// 6.Èç¹û¸ÃÉè±¸Îª¿ª¹Ø£¬ÇÒÎª¶Ï¿ª£¬Ôò²»ÓÃÔÙ±éÀú¸ÃÉè±¸µÄ¹ØÁªÉè±¸£»
+								// 6.å¦‚æœè¯¥è®¾å¤‡ä¸ºå¼€å…³ï¼Œä¸”ä¸ºæ–­å¼€ï¼Œåˆ™ä¸ç”¨å†éå†è¯¥è®¾å¤‡çš„å…³è”è®¾å¤‡ï¼›
 								updateIsElectricByUnitId(saveid,unitId,0);
 
-								// ±ê¼Ç²»ĞèÒªÍØÆË
+								// æ ‡è®°ä¸éœ€è¦æ‹“æ‰‘
 								flag = 1;
 							}
 						}
@@ -299,12 +299,12 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 					}
 					else
 					{
-						// 5.Èç¹û¸ÃÉè±¸²»ÊÇ¿ª¹ØÉè±¸£¬ÔòÉèÖÃÎª´øµç£»
+						// 5.å¦‚æœè¯¥è®¾å¤‡ä¸æ˜¯å¼€å…³è®¾å¤‡ï¼Œåˆ™è®¾ç½®ä¸ºå¸¦ç”µï¼›
 						updateIsElectricByUnitId(saveid,unitId,1);
 					}
 				}
 
-				// Èç¹ûµ±Ç°Éè±¸Îª½ø³öÏß£¬Ôòµ½½ø³öÏß¹ØÁª¹ØÏµ±íÖĞ£¬²é³ö½ø³öÏß¹ØÁªµÄÁíÒ»¶ËÕ¾µãID£¬¸üĞÂ×´Ì¬±íÖĞ½ø³öÏßÔÚ¸ÃÕ¾µãÎªÏà¶ÔµçÔ´µã
+				// å¦‚æœå½“å‰è®¾å¤‡ä¸ºè¿›å‡ºçº¿ï¼Œåˆ™åˆ°è¿›å‡ºçº¿å…³è”å…³ç³»è¡¨ä¸­ï¼ŒæŸ¥å‡ºè¿›å‡ºçº¿å…³è”çš„å¦ä¸€ç«¯ç«™ç‚¹IDï¼Œæ›´æ–°çŠ¶æ€è¡¨ä¸­è¿›å‡ºçº¿åœ¨è¯¥ç«™ç‚¹ä¸ºç›¸å¯¹ç”µæºç‚¹
 				if (etype == eLINE)
 				{
 					LISTMAP stationList = getStationIdByLineId(unitId,stationid);
@@ -320,12 +320,12 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 
 				}
 
-				// ÅĞ¶ÏÊÇ·ñÎª¿çÕ¾µã
+				// åˆ¤æ–­æ˜¯å¦ä¸ºè·¨ç«™ç‚¹
 				unitIter = unitMap.find("StationId");
 				//if (unitIter != unitMap.end())
 				//{
 
-				//	// Èç¹û¸Ã´Î±éÀú³öµÄÉè±¸Õ¾µãIDÓëÆğÊ¼Éè±¸µÄÕ¾µãID²»ÏàÍ¬£¬ÇÒ¸ÃÉè±¸Îª½ø³öÏß£¬Ôò±ê¼Ç¸Ã½ø³öÏßÎªÏà¶ÔµçÔ´µã£»
+				//	// å¦‚æœè¯¥æ¬¡éå†å‡ºçš„è®¾å¤‡ç«™ç‚¹IDä¸èµ·å§‹è®¾å¤‡çš„ç«™ç‚¹IDä¸ç›¸åŒï¼Œä¸”è¯¥è®¾å¤‡ä¸ºè¿›å‡ºçº¿ï¼Œåˆ™æ ‡è®°è¯¥è¿›å‡ºçº¿ä¸ºç›¸å¯¹ç”µæºç‚¹ï¼›
 				//	if (str2i(unitIter->second) != str2i(stationid))
 				//	{
 				//		if (etype == eLine)
@@ -338,13 +338,13 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 				string sId;
 				if (unitIter != unitMap.end())
 				{
-					// Õ¾µãID
+					// ç«™ç‚¹ID
 					sId = unitIter->second;
 				}
 				
 				if (flag != 1)
 				{
-					// µİ¹é£¬ÒÔ¸ÃÔª¼şÎªÆğµã½øĞĞÖØĞÂ±éÀú
+					// é€’å½’ï¼Œä»¥è¯¥å…ƒä»¶ä¸ºèµ·ç‚¹è¿›è¡Œé‡æ–°éå†
 					topoByUnitId(saveid,unitid,sId,passNodes);
 				}
 				
@@ -357,20 +357,20 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 
 void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMAP& passNodes)
 {
-	// °Ñµ±Ç°Ôª¼ş¼ÓÈëµ½ÒÑ·ÖÎöÁĞ±í
+	// æŠŠå½“å‰å…ƒä»¶åŠ å…¥åˆ°å·²åˆ†æåˆ—è¡¨
 	passNodes.insert(MAPVAL(unitid,unitid));
 
-	// 2.¸ù¾İÔª¼şID£¬²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã£¨¿ÉÄÜÊÇÁ½¸ö£©
+	// 2.æ ¹æ®å…ƒä»¶IDï¼ŒæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹ï¼ˆå¯èƒ½æ˜¯ä¸¤ä¸ªï¼‰
 	LISTMAP connIds = getConnIdByUnitsId(unitid);
 
-	// 3.¸ù¾İÁ¬½ÓµãIDÔÚÁ¬½Ó¹ØÏµ±í²éÑ¯¹ØÁªµÄÉè±¸
+	// 3.æ ¹æ®è¿æ¥ç‚¹IDåœ¨è¿æ¥å…³ç³»è¡¨æŸ¥è¯¢å…³è”çš„è®¾å¤‡
 	for (int j = 0;j<connIds.size();j++)
 	{
 		STRMAP connMap = connIds.at(j);
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
-			// ÅĞ¶ÏÊÇ·ñÒÑ¾­²éÕÒ¹ıµÄÁ¬½Óµã£¬Èç¹ûÊÇÔòÌø³ö£¬²»ÊÇÔò¼ÓÈë
+			// åˆ¤æ–­æ˜¯å¦å·²ç»æŸ¥æ‰¾è¿‡çš„è¿æ¥ç‚¹ï¼Œå¦‚æœæ˜¯åˆ™è·³å‡ºï¼Œä¸æ˜¯åˆ™åŠ å…¥
 			if (passNodes.find(connIter->second) != passNodes.end())
 			{
 				continue;
@@ -381,10 +381,10 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 			}
 
 
-			// ¸ù¾İÁ¬½Óµã£¬²éÕÒ¸ÃÁ¬½Óµã¹ØÁªµÄÉè±¸¼¯ºÏ
+			// æ ¹æ®è¿æ¥ç‚¹ï¼ŒæŸ¥æ‰¾è¯¥è¿æ¥ç‚¹å…³è”çš„è®¾å¤‡é›†åˆ
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
 
-			// ±éÀú¸ÃÉè±¸¼¯ºÏ
+			// éå†è¯¥è®¾å¤‡é›†åˆ
 			for (int k = 0;k<unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
@@ -392,7 +392,7 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
-					// ÅĞ¶ÏÊÇ·ñÒÑ¾­×öÎªÆğÊ¼Éè±¸½øĞĞËÑË÷£¬Èç¹ûÊÇÔòÌø¹ı
+					// åˆ¤æ–­æ˜¯å¦å·²ç»åšä¸ºèµ·å§‹è®¾å¤‡è¿›è¡Œæœç´¢ï¼Œå¦‚æœæ˜¯åˆ™è·³è¿‡
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
@@ -403,16 +403,16 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 					}
 				}
 
-				// ±¾´Î²éÑ¯µÄÔª¼şCIMID
+				// æœ¬æ¬¡æŸ¥è¯¢çš„å…ƒä»¶CIMID
 				unitId = unitIter->second;
 
-				// ²éÑ¯Ôª¼şÀàĞÍ
+				// æŸ¥è¯¢å…ƒä»¶ç±»å‹
 				unitIter = unitMap.find("UnitType");
 
-				// Éè±¸ÀàĞÍ
+				// è®¾å¤‡ç±»å‹
 				int etype ;
 
-				// ±ê¼ÇÊ±ºòĞèÒªÍØÆË 0 ĞèÒªÍØÆË£¬1 ²»ĞèÒªÍØÆË
+				// æ ‡è®°æ—¶å€™éœ€è¦æ‹“æ‰‘ 0 éœ€è¦æ‹“æ‰‘ï¼Œ1 ä¸éœ€è¦æ‹“æ‰‘
 				int flag = 0;
 
 				if (unitIter != unitMap.end())
@@ -420,22 +420,22 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 					etype = str2i(unitIter->second);
 					if (etype == eBREAKER || etype == eSWITCH)
 					{
-						// 4.Èç¹û¸ÃÉè±¸ÎªÎª¿ª¹Ø£¬µ¶Õ¢£¬±ÕºÏ¼´Îª´øµç£¬·ñÔòÎª²»´øµç£»
+						// 4.å¦‚æœè¯¥è®¾å¤‡ä¸ºä¸ºå¼€å…³ï¼Œåˆ€é—¸ï¼Œé—­åˆå³ä¸ºå¸¦ç”µï¼Œå¦åˆ™ä¸ºä¸å¸¦ç”µï¼›
 						unitIter = unitMap.find("State");
 						if (unitIter != unitMap.end())
 						{
 							int state = str2i(unitIter->second);
 							if (state == 1)
 							{
-								// ¸üĞÂ¸ÃÉè±¸´øµç×´Ì¬Îª´øµç
+								// æ›´æ–°è¯¥è®¾å¤‡å¸¦ç”µçŠ¶æ€ä¸ºå¸¦ç”µ
 								updateIsGroundByUnitId(saveid,unitId,1);
 							}
 							else
 							{
-								// 6.Èç¹û¸ÃÉè±¸Îª¿ª¹Ø£¬ÇÒÎª¶Ï¿ª£¬Ôò²»ÓÃÔÙ±éÀú¸ÃÉè±¸µÄ¹ØÁªÉè±¸£»
+								// 6.å¦‚æœè¯¥è®¾å¤‡ä¸ºå¼€å…³ï¼Œä¸”ä¸ºæ–­å¼€ï¼Œåˆ™ä¸ç”¨å†éå†è¯¥è®¾å¤‡çš„å…³è”è®¾å¤‡ï¼›
 								updateIsGroundByUnitId(saveid,unitId,0);
 
-								// ±ê¼Ç²»ĞèÒªÍØÆË
+								// æ ‡è®°ä¸éœ€è¦æ‹“æ‰‘
 								flag = 1;
 							}
 						}
@@ -443,7 +443,7 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 					}
 					else
 					{
-						// 5.Èç¹û¸ÃÉè±¸²»ÊÇ¿ª¹ØÉè±¸£¬ÔòÉèÖÃÎª½ÓµØ£»
+						// 5.å¦‚æœè¯¥è®¾å¤‡ä¸æ˜¯å¼€å…³è®¾å¤‡ï¼Œåˆ™è®¾ç½®ä¸ºæ¥åœ°ï¼›
 						updateIsGroundByUnitId(saveid,unitId,1);
 					}
 				}
@@ -453,13 +453,13 @@ void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMA
 				string sId;
 				if (unitIter != unitMap.end())
 				{
-					// Õ¾µãID
+					// ç«™ç‚¹ID
 					sId = unitIter->second;
 				}
 
 				if (flag != 1)
 				{
-					// µİ¹é£¬ÒÔ¸ÃÔª¼şÎªÆğµã½øĞĞÖØĞÂ±éÀú
+					// é€’å½’ï¼Œä»¥è¯¥å…ƒä»¶ä¸ºèµ·ç‚¹è¿›è¡Œé‡æ–°éå†
 					topoByGround(saveid,unitid,sId,passNodes);
 				}
 
@@ -522,13 +522,13 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 	string cimid = req.unitcim();
 	int state = req.type();
 
-	// Éè±¸µÄcimid,´øµç×´Ì¬ 1´øµç£¬0²»´øµç
+	// è®¾å¤‡çš„cimid,å¸¦ç”µçŠ¶æ€ 1å¸¦ç”µï¼Œ0ä¸å¸¦ç”µ
 	vector<PBNS::StateBean>	rsltMap;
 
-	// ÒÑ¾­×ö¸öÆğµã·ÖÎöµÄÉè±¸ID¼¯ºÏ
+	// å·²ç»åšä¸ªèµ·ç‚¹åˆ†æçš„è®¾å¤‡IDé›†åˆ
 	STRMAP passedNodes;
 
-	// 1. ²éÑ¯Ö¸¶¨saveid£¬Ö¸¶¨unit¶ÔÓ¦Õ¾µãÏÂÃæµÄÉè±¸×´Ì¬¼¯ºÏ£»
+	// 1. æŸ¥è¯¢æŒ‡å®šsaveidï¼ŒæŒ‡å®šunitå¯¹åº”ç«™ç‚¹ä¸‹é¢çš„è®¾å¤‡çŠ¶æ€é›†åˆï¼›
 	char * psql = "select a.UnitCim,a.StationCim,IsElectric,IsPower,c.Color,a.State " \
 		"from unit_status a " \
 		"left join units b on a.UnitCim=b.CimId " \
@@ -538,13 +538,13 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 
 	LISTMAP unitList = App_Dba::instance()->getList(sql.c_str());
 
-	// 2.¶ÔÒÔÉÏ½á¹ûÖĞµÄispowerµÄÖµµÈÓÚ1»òÕß2µÄ¼ÇÂ¼×÷ÎªÆğµã½øĞĞÍØÆË·ÖÎö¡£
+	// 2.å¯¹ä»¥ä¸Šç»“æœä¸­çš„ispowerçš„å€¼ç­‰äº1æˆ–è€…2çš„è®°å½•ä½œä¸ºèµ·ç‚¹è¿›è¡Œæ‹“æ‰‘åˆ†æã€‚
 	for (int i = 0;i<unitList.size();i++)
 	{
 		STRMAP unitMap = unitList.at(i);
 		MAP_ITERATOR iter = unitMap.find("IsPower");
 
-		// Ïà¶ÔµçÔ´µã»ò¾ø¶ÔµçÔ´µç¼ÇÂ¼
+		// ç›¸å¯¹ç”µæºç‚¹æˆ–ç»å¯¹ç”µæºç”µè®°å½•
 		if (iter != unitMap.end() && (str2i(iter->second) == 1 || str2i(iter->second) == 2))
 		{
 			iter = unitMap.find("UnitCim");
@@ -553,57 +553,57 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 				PBNS::StateBean bean;
 				bean.set_cimid(iter->second);
 				
-				// ±£´æµçÑ¹µÈ¼¶ÑÕÉ«
+				// ä¿å­˜ç”µå‹ç­‰çº§é¢œè‰²
 				bean.set_volcolor(COM->getVal(unitMap,"Color"));
 
-				//±£´æ´øµç×´Ì¬
+				//ä¿å­˜å¸¦ç”µçŠ¶æ€
 				bean.set_iselectric(1);
 
-				//±£´æÕ¾µãcim
+				//ä¿å­˜ç«™ç‚¹cim
 				bean.set_stationcim(COM->getVal(unitMap,"StationCim"));
 
-				//½«ÕÒµ½µÄµçÔ´µã¼ÓÈë´øµç¼¯ºÏ
+				//å°†æ‰¾åˆ°çš„ç”µæºç‚¹åŠ å…¥å¸¦ç”µé›†åˆ
 				rsltMap.push_back(bean);
 
-				// ÒÔ¸ÃÉè±¸ÎªÆğµã½øĞĞÍØÆË·ÖÎö
+				// ä»¥è¯¥è®¾å¤‡ä¸ºèµ·ç‚¹è¿›è¡Œæ‹“æ‰‘åˆ†æ
 				topoByUnitIdMem(bean,passedNodes,rsltMap,req);
 			}
 		}
 	}
 
-	// ÍØÆË½á¹û·µ»Ø¿Í»§¶Ë
+	// æ‹“æ‰‘ç»“æœè¿”å›å®¢æˆ·ç«¯
 	PBNS::OprationMsg_Response res;
 	res.set_optype(state);
 
 	for (int i = 0;i<unitList.size();i++)
 	{
-		// °ÑÕûÕ¾µÄÉè±¸Ä¬ÈÏ´øµç×´Ì¬ÉèÖÃÎª0
+		// æŠŠæ•´ç«™çš„è®¾å¤‡é»˜è®¤å¸¦ç”µçŠ¶æ€è®¾ç½®ä¸º0
 		STRMAP unitMap = unitList.at(i);
 		PBNS::StateBean* pbean = res.add_devstate();
 
-		// ±£´æCIM
+		// ä¿å­˜CIM
 		pbean->set_cimid(COM->getVal(unitMap,"UnitCim"));
 
-		// Èç¹ûÎª±¾´Î²Ù×÷Éè±¸£¬Ôò°Ñ×´Ì¬¸üĞÂÎª²Ù×÷ºóµÄ×´Ì¬
+		// å¦‚æœä¸ºæœ¬æ¬¡æ“ä½œè®¾å¤‡ï¼Œåˆ™æŠŠçŠ¶æ€æ›´æ–°ä¸ºæ“ä½œåçš„çŠ¶æ€
 		if (pbean->cimid() == cimid)
 		{
-			// ·µ»ØÉè±¸µÄ×´Ì¬
+			// è¿”å›è®¾å¤‡çš„çŠ¶æ€
 			pbean->set_state(state);
 		}
 		else
 		{
-			// ·µ»ØÊı¾İ¿âÉè±¸µÄ×´Ì¬
+			// è¿”å›æ•°æ®åº“è®¾å¤‡çš„çŠ¶æ€
 			pbean->set_state(COM->getIval(unitMap,"State"));
 		}
 
-		// °ÑÕûÕ¾µÄÉè±¸Ä¬ÈÏ´øµç×´Ì¬ÉèÖÃÎª0
+		// æŠŠæ•´ç«™çš„è®¾å¤‡é»˜è®¤å¸¦ç”µçŠ¶æ€è®¾ç½®ä¸º0
 		pbean->set_iselectric(0);
 
-		// ·µ»ØÉè±¸µÄµçÑ¹µÈ¼¶
+		// è¿”å›è®¾å¤‡çš„ç”µå‹ç­‰çº§
 		pbean->set_volcolor(COM->getVal(unitMap,"Color"));
 
 	
-		// ±éÀúÍØÆËºó´øµçµÄ¼¯ºÏ
+		// éå†æ‹“æ‰‘åå¸¦ç”µçš„é›†åˆ
 		for (int j = 0;j<rsltMap.size();j++)
 		{
 			PBNS::StateBean bean = rsltMap.at(j);
@@ -613,7 +613,7 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 			}
 		}
 	}
-	LOG->debug("·µ»ØÉè±¸×ÜÊıÁ¿:%d,´øµçÉè±¸ÊıÁ¿£º%d",res.devstate_size(),rsltMap.size());
+	LOG->debug("è¿”å›è®¾å¤‡æ€»æ•°é‡:%d,å¸¦ç”µè®¾å¤‡æ•°é‡ï¼š%d",res.devstate_size(),rsltMap.size());
 	return res.SerializeAsString();
 
 }
@@ -621,13 +621,13 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 {
 	/*
-	ÊäÈë²ÎÊı£º	1.´æµµID
-						2.Ôª¼şCIMID
-						3.ÊÇ·ñÔÊĞíĞ£Ñé
-	ÔËËã½á¹û£º
-					ÕÒ³ö±¾Õ¾Éè±¸ÔÚ´Ë´Î¿ª¹Ø±äÎ»ºóµÄµÄ´øµç×´Ì¬.
+	è¾“å…¥å‚æ•°ï¼š	1.å­˜æ¡£ID
+						2.å…ƒä»¶CIMID
+						3.æ˜¯å¦å…è®¸æ ¡éªŒ
+	è¿ç®—ç»“æœï¼š
+					æ‰¾å‡ºæœ¬ç«™è®¾å¤‡åœ¨æ­¤æ¬¡å¼€å…³å˜ä½åçš„çš„å¸¦ç”µçŠ¶æ€.
 	*/
-	// ±£´æÍØÆË·ÖÎöµÄ½á¹û£¬¼´Éè±¸µÄ´øµç×´Ì¬
+	// ä¿å­˜æ‹“æ‰‘åˆ†æçš„ç»“æœï¼Œå³è®¾å¤‡çš„å¸¦ç”µçŠ¶æ€
 	PBNS::OprationMsg_Request req;
 	req.ParseFromArray(msg->data,msg->length);
 	int saveId = req.saveid();
@@ -641,7 +641,7 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 
 	if (req.ischeck())
 	{
-		// ¹æÔòĞ£Ñé
+		// è§„åˆ™æ ¡éªŒ
 		roleCheck(msg->connectId,req);
 	}
 	else
@@ -662,13 +662,13 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 	
 	LOG->debug("topoByUnitIdMem,uinit cimid:%s",unitid.c_str());
 
-	// °Ñµ±Ç°Ôª¼ş¼ÓÈëµ½ÒÑ·ÖÎöÁĞ±í
+	// æŠŠå½“å‰å…ƒä»¶åŠ å…¥åˆ°å·²åˆ†æåˆ—è¡¨
 	passNodes.insert(MAPVAL(unitid,unitid));
 
-	// 2.¸ù¾İÔª¼şID£¬²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã£¨¿ÉÄÜÊÇÁ½¸ö£©
+	// 2.æ ¹æ®å…ƒä»¶IDï¼ŒæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹ï¼ˆå¯èƒ½æ˜¯ä¸¤ä¸ªï¼‰
 	LISTMAP connIds = getConnIdByUnitsId(unitid);
 
-	// 3.¸ù¾İÁ¬½ÓµãIDÔÚÁ¬½Ó¹ØÏµ±í²éÑ¯¹ØÁªµÄÉè±¸
+	// 3.æ ¹æ®è¿æ¥ç‚¹IDåœ¨è¿æ¥å…³ç³»è¡¨æŸ¥è¯¢å…³è”çš„è®¾å¤‡
 	for (int j = 0;j<connIds.size();j++)
 	{
 		STRMAP connMap = connIds.at(j);
@@ -676,7 +676,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 		if (connIter != connMap.end())
 		{
 
-			// ÅĞ¶ÏÊÇ·ñÒÑ¾­²éÕÒ¹ıµÄÁ¬½Óµã£¬Èç¹ûÊÇÔòÌø³ö£¬²»ÊÇÔò¼ÓÈë
+			// åˆ¤æ–­æ˜¯å¦å·²ç»æŸ¥æ‰¾è¿‡çš„è¿æ¥ç‚¹ï¼Œå¦‚æœæ˜¯åˆ™è·³å‡ºï¼Œä¸æ˜¯åˆ™åŠ å…¥
 			if (passNodes.find(connIter->second) != passNodes.end())
 			{
 				continue;
@@ -686,15 +686,15 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 				passNodes.insert(MAPVAL(connIter->second,connIter->second));
 			}
 
-			// ¸ù¾İÁ¬½Óµã£¬²éÕÒ¸ÃÁ¬½Óµã¹ØÁªµÄÉè±¸¼¯ºÏ
+			// æ ¹æ®è¿æ¥ç‚¹ï¼ŒæŸ¥æ‰¾è¯¥è¿æ¥ç‚¹å…³è”çš„è®¾å¤‡é›†åˆ
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
 
-			// ±éÀú¸ÃÉè±¸¼¯ºÏ
+			// éå†è¯¥è®¾å¤‡é›†åˆ
 			for (int k = 0;k<unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
 
-				//ÅĞ¶ÏÊÇ·ñÎªµ±Ç°Õ¾µãµÄÔª¼ş£¬²»ÊÇÔòÌø¹ı
+				//åˆ¤æ–­æ˜¯å¦ä¸ºå½“å‰ç«™ç‚¹çš„å…ƒä»¶ï¼Œä¸æ˜¯åˆ™è·³è¿‡
 				MAP_ITERATOR unitIter = unitMap.find("StationId");
 				if (unitIter != unitMap.end())
 				{
@@ -706,7 +706,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
-					// ÅĞ¶ÏÊÇ·ñÒÑ¾­×öÎªÆğÊ¼Éè±¸½øĞĞËÑË÷£¬Èç¹ûÊÇÔòÌø¹ı
+					// åˆ¤æ–­æ˜¯å¦å·²ç»åšä¸ºèµ·å§‹è®¾å¤‡è¿›è¡Œæœç´¢ï¼Œå¦‚æœæ˜¯åˆ™è·³è¿‡
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
@@ -720,35 +720,35 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 				PBNS::StateBean cbean;
 				cbean.set_cimid(unitIter->second);
 
-				// ±¾´Î²éÑ¯µÄÔª¼şCIMID
+				// æœ¬æ¬¡æŸ¥è¯¢çš„å…ƒä»¶CIMID
 				unitId = unitIter->second;
 
-				// ²éÑ¯Ôª¼şÀàĞÍ
+				// æŸ¥è¯¢å…ƒä»¶ç±»å‹
 				unitIter = unitMap.find("UnitType");
 				cbean.set_unittype(COM->str2i(unitIter->second));
 
-				// Éè±¸ÀàĞÍ
+				// è®¾å¤‡ç±»å‹
 				int etype ;
 
-				// ±êÖ¾ÊÇ·ñĞèÒª°´´ËÉè±¸ÎªÆğµã½øĞĞÍØÆË¡£Èç¹û¸ÃÉè±¸Îª¿ª¹Ø£¬ÇÒÎ´¶Ï¿ª×´Ì¬£¬Ôò²»ÓÃÒÔ¸ÃÉè±¸ÎªÆğµã½øĞĞÍØÆË
+				// æ ‡å¿—æ˜¯å¦éœ€è¦æŒ‰æ­¤è®¾å¤‡ä¸ºèµ·ç‚¹è¿›è¡Œæ‹“æ‰‘ã€‚å¦‚æœè¯¥è®¾å¤‡ä¸ºå¼€å…³ï¼Œä¸”æœªæ–­å¼€çŠ¶æ€ï¼Œåˆ™ä¸ç”¨ä»¥è¯¥è®¾å¤‡ä¸ºèµ·ç‚¹è¿›è¡Œæ‹“æ‰‘
 				int flag = 0;
 
 				if (unitIter != unitMap.end())
 				{
 					etype = str2i(unitIter->second);
 
-					// È¡µçÑ¹µÈ¼¶ÑÕÉ«
+					// å–ç”µå‹ç­‰çº§é¢œè‰²
 					cbean.set_volcolor(COM->getVal(unitMap,"Color"));
 
 					if (etype == eBREAKER || etype == eSWITCH)
 					{
-						// 4.Èç¹û¸ÃÉè±¸ÎªÎª¿ª¹Ø£¬µ¶Õ¢£¬±ÕºÏ¼´Îª´øµç£¬·ñÔòÎª²»´øµç£»
+						// 4.å¦‚æœè¯¥è®¾å¤‡ä¸ºä¸ºå¼€å…³ï¼Œåˆ€é—¸ï¼Œé—­åˆå³ä¸ºå¸¦ç”µï¼Œå¦åˆ™ä¸ºä¸å¸¦ç”µï¼›
 						unitIter = unitMap.find("State");
 						if (unitIter != unitMap.end())
 						{
 							int state = str2i(unitIter->second);
 
-							// ÅĞ¶ÏÊÇ·ñÔÚ¿Í»§¶Ë²Ù×÷ÁĞ±íÖĞ£¬Èç¹ûÔÚÓÃ¿Í»§¶Ë²Ù×÷ÁĞ±íÖĞµÄ×´Ì¬
+							// åˆ¤æ–­æ˜¯å¦åœ¨å®¢æˆ·ç«¯æ“ä½œåˆ—è¡¨ä¸­ï¼Œå¦‚æœåœ¨ç”¨å®¢æˆ·ç«¯æ“ä½œåˆ—è¡¨ä¸­çš„çŠ¶æ€
 							PBNS::StateBean fbean;
 							int idx = findUnitByCim(cbean.cimid(),req,fbean);
 							if(idx >= 0)
@@ -758,7 +758,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 
 							cbean.set_state(state);
 							
-							// ÅĞ¶ÏÊÇ·ñÎª±¾´Î²Ù×÷Éè±¸£¬Èç¹ûÊÇ£¬Ôò¸ù¾İ±¾´Î²Ù×÷µÄ×îÖÕ×´Ì¬½øĞĞ·ÖÎö
+							// åˆ¤æ–­æ˜¯å¦ä¸ºæœ¬æ¬¡æ“ä½œè®¾å¤‡ï¼Œå¦‚æœæ˜¯ï¼Œåˆ™æ ¹æ®æœ¬æ¬¡æ“ä½œçš„æœ€ç»ˆçŠ¶æ€è¿›è¡Œåˆ†æ
 							if (cbean.cimid() == cimid)
 							{
 								if (objState == 0)
@@ -775,10 +775,10 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 								}
 							}
 
-							//  °Ñ¸Ã¿ª¹ØÉè±¸×´Ì¬±äÎª1£¬¼ÌĞøÒÔ¸ÃÉè±¸ÎªÆğµã½øĞĞÍØÆË£¬Èç¹ûÎª0£¬ÔòÌø¹ıÕâ¸öÉè±¸
+							//  æŠŠè¯¥å¼€å…³è®¾å¤‡çŠ¶æ€å˜ä¸º1ï¼Œç»§ç»­ä»¥è¯¥è®¾å¤‡ä¸ºèµ·ç‚¹è¿›è¡Œæ‹“æ‰‘ï¼Œå¦‚æœä¸º0ï¼Œåˆ™è·³è¿‡è¿™ä¸ªè®¾å¤‡
 							else if (state == 1 ) 
 							{
-								// ±£³Ö´øµç×´Ì¬
+								// ä¿æŒå¸¦ç”µçŠ¶æ€
 								cbean.set_iselectric(1);
 
 								rsltMap.push_back(cbean);
@@ -787,7 +787,7 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 							{
 								cbean.set_iselectric(0);
 
-								// ±ê¼ÇÎª²»ĞèÒª½øĞĞÍØÆË
+								// æ ‡è®°ä¸ºä¸éœ€è¦è¿›è¡Œæ‹“æ‰‘
 								flag = 1;
 							}
 
@@ -796,21 +796,21 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 					}
 					else
 					{
-						// 5.Èç¹û¸ÃÉè±¸²»ÊÇ¿ª¹ØÉè±¸£¬ÔòÉèÖÃÎª´øµç£»
+						// 5.å¦‚æœè¯¥è®¾å¤‡ä¸æ˜¯å¼€å…³è®¾å¤‡ï¼Œåˆ™è®¾ç½®ä¸ºå¸¦ç”µï¼›
 						cbean.set_iselectric(1);
 
 						rsltMap.push_back(cbean);
 					}
 				}
 
-				// ¹ıÂË²»ĞèÒª½øĞĞÍØÆËµÄÉè±¸
+				// è¿‡æ»¤ä¸éœ€è¦è¿›è¡Œæ‹“æ‰‘çš„è®¾å¤‡
 				if (flag != 1)
 				{
-					// ²éÑ¯Ôª¼şÕ¾µãcim£¬ÏÂÒ»´Îµİ¹éĞèÒªÓÃµ½
+					// æŸ¥è¯¢å…ƒä»¶ç«™ç‚¹cimï¼Œä¸‹ä¸€æ¬¡é€’å½’éœ€è¦ç”¨åˆ°
 					unitIter = unitMap.find("StationId");
 					cbean.set_stationcim(unitIter->second);
 
-					// µİ¹é£¬ÒÔ¸ÃÔª¼şÎªÆğµã½øĞĞÖØĞÂ±éÀú
+					// é€’å½’ï¼Œä»¥è¯¥å…ƒä»¶ä¸ºèµ·ç‚¹è¿›è¡Œé‡æ–°éå†
 					topoByUnitIdMem(cbean,passNodes,rsltMap,req);
 				}
 			
@@ -880,14 +880,14 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 	int optype = req.type();
 
 	
-	// ´¥·¢µÄ¹æÔòÁĞ±í
+	// è§¦å‘çš„è§„åˆ™åˆ—è¡¨
 	vector<int> ruleList;
 
 	switch (devtype)
 	{
 	case eBREAKER:
 
-		// ¿ª¹Ø±ÕºÏ
+		// å¼€å…³é—­åˆ
 		if (optype == 1)
 		{
 			if (check1(saveid,unitcim,req))
@@ -948,7 +948,7 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 			}
 		}
 
-		// ¿ª¹Ø¶Ï¿ª
+		// å¼€å…³æ–­å¼€
 		else
 		{
 
@@ -1055,7 +1055,7 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 		break;
 	}
 
-	// Èç¹ûÃ»ÓĞ´¥·¢¹æÔò£¬Ôò·µ»Ø¿Í»§¶ËÖ´ĞĞ±äÎ»²Ù×÷
+	// å¦‚æœæ²¡æœ‰è§¦å‘è§„åˆ™ï¼Œåˆ™è¿”å›å®¢æˆ·ç«¯æ‰§è¡Œå˜ä½æ“ä½œ
 	if (ruleList.size() == 0)
 	{
 		string data = execTopoOnBreakerChange(req);
@@ -1063,7 +1063,7 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 	}
 	else
 	{
-		// °Ñ´¥·¢µÄ¹æÔò£¬·µ»Øµ½¿Í»§¶Ë
+		// æŠŠè§¦å‘çš„è§„åˆ™ï¼Œè¿”å›åˆ°å®¢æˆ·ç«¯
 		sendRuleBack(connid,optype,ruleList);
 	}
 }
@@ -1086,7 +1086,7 @@ void TopoBizCmd::sendRuleBack(int connid,int optype,vector<int> ruleList)
 	}
 	PBNS::OprationMsg_Response res;
 
-	// ²éÑ¯¹æÔòÁĞ±í
+	// æŸ¥è¯¢è§„åˆ™åˆ—è¡¨
 	char * psql = "select id, name,AlarmLevel,Description from rules where id in(%s)";
 	string sql = App_Dba::instance()->formatSql(psql,ids.c_str());
 
@@ -1138,7 +1138,7 @@ bool TopoBizCmd::check1(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 
 	RMAP ruleMap;
 
-	// Á½¸öÌõ¼ş
+	// ä¸¤ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 
@@ -1156,7 +1156,7 @@ bool TopoBizCmd::check2(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 	r1.setReq(req);
 	RMAP ruleMap;
 
-	// Á½¸öÌõ¼ş
+	// ä¸¤ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	return r1.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
@@ -1173,7 +1173,7 @@ bool TopoBizCmd::check4(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 	r4.setReq(req);
 	RMAP ruleMap;
 
-	// Á½¸öÌõ¼ş
+	// ä¸¤ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	return r4.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
@@ -1192,7 +1192,7 @@ bool TopoBizCmd::check5(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 	r.setPassedNodes(passedNodes);
 	RMAP ruleMap;
 
-	// Á½¸öÌõ¼ş
+	// ä¸¤ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
@@ -1211,7 +1211,7 @@ bool TopoBizCmd::check12(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setOpcim(unitcim);
 	RMAP ruleMap;
 
-	// Á½¸öÌõ¼ş
+	// ä¸¤ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
@@ -1227,7 +1227,7 @@ bool TopoBizCmd::check16(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 1¸öÌõ¼ş
+	// 1ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
@@ -1243,7 +1243,7 @@ bool TopoBizCmd::check18(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 1¸öÌõ¼ş
+	// 1ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
@@ -1259,7 +1259,7 @@ bool TopoBizCmd::check20(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
@@ -1276,7 +1276,7 @@ bool TopoBizCmd::check21(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	
@@ -1295,7 +1295,7 @@ bool TopoBizCmd::check22(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
@@ -1311,7 +1311,7 @@ bool TopoBizCmd::check25(int saveid,string unitcim,int optype,PBNS::OprationMsg_
 	r.setReq(req);
 	RMAP ruleMap;
 
-	//3¸öÌõ¼ş
+	//3ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
@@ -1331,7 +1331,7 @@ bool TopoBizCmd::check26(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 3¸öÌõ¼ş
+	// 3ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
@@ -1349,14 +1349,14 @@ bool TopoBizCmd::check27(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 3¸öÌõ¼ş
+	// 3ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
 
-// 28,29 Âß¼­ÏàÍ¬
+// 28,29 é€»è¾‘ç›¸åŒ
 bool TopoBizCmd::check28(int saveid,string unitcim,PBNS::OprationMsg_Request req)
 {
 	if (!checkRuleIsUse(unitcim,R_CHECK_28))
@@ -1369,7 +1369,7 @@ bool TopoBizCmd::check28(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setBeginCim(unitcim);
 	RMAP ruleMap;
 
-	// 1¸öÌõ¼ş
+	// 1ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
 }
@@ -1394,7 +1394,7 @@ bool TopoBizCmd::check32(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
@@ -1411,7 +1411,7 @@ bool TopoBizCmd::check33(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	return r.topoByUnit(saveid,unitcim,passedNodes,ruleMap);
@@ -1428,7 +1428,7 @@ bool TopoBizCmd::check34(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 3¸öÌõ¼ş
+	// 3ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
@@ -1447,7 +1447,7 @@ bool TopoBizCmd::check35(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 3¸öÌõ¼ş
+	// 3ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
@@ -1466,7 +1466,7 @@ bool TopoBizCmd::check38(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 3¸öÌõ¼ş
+	// 3ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 	ruleMap.insert(RVAL(3,3));
@@ -1484,7 +1484,7 @@ bool TopoBizCmd::check39(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 
@@ -1502,7 +1502,7 @@ bool TopoBizCmd::check43(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 
@@ -1520,7 +1520,7 @@ bool TopoBizCmd::check45(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 
@@ -1537,7 +1537,7 @@ bool TopoBizCmd::check46(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 
@@ -1554,7 +1554,7 @@ bool TopoBizCmd::check47(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 
@@ -1572,7 +1572,7 @@ bool TopoBizCmd::check48(int saveid,string unitcim,PBNS::OprationMsg_Request req
 	r.setReq(req);
 	RMAP ruleMap;
 
-	// 2¸öÌõ¼ş
+	// 2ä¸ªæ¡ä»¶
 	ruleMap.insert(RVAL(1,1));
 	ruleMap.insert(RVAL(2,2));
 

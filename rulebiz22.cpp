@@ -1,10 +1,10 @@
-#include "rulebiz22.h"
+ï»¿#include "rulebiz22.h"
 
 int RuleBiz22::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// 1.Èç¹ûÎª´øµçÔª¼ş»òÕß¶Ï¿ªµÄµ¶Õ¢¡¢¿ª¹Ø£¬ÖÕÖ¹¸ÃÌõÂ·µÄ±éÀú
+	// 1.å¦‚æœä¸ºå¸¦ç”µå…ƒä»¶æˆ–è€…æ–­å¼€çš„åˆ€é—¸ã€å¼€å…³ï¼Œç»ˆæ­¢è¯¥æ¡è·¯çš„éå†
 	if (((bean.unittype() == eBREAKER 
 		|| bean.unittype() == eSWITCH) 
 		&& bean.state() == 0) || bean.iselectric() == 1 )
@@ -13,12 +13,12 @@ int RuleBiz22::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}
 	else if (bean.unittype() == eGROUNDSWITCH)
 	{
-		// Èç¹ûÎª½ÓµØÔª¼ş,Âú×ãÌõ¼şÒ»
+		// å¦‚æœä¸ºæ¥åœ°å…ƒä»¶,æ»¡è¶³æ¡ä»¶ä¸€
 		COM->triggerRule(ruleMap,1);
 		
 	}
 	
-	// ÅĞ¶ÏÌõ¼şÊÇ·ñÈ«²¿´¥·¢£¬Èç¹ûÊÇÔò·µ»Ø£¬¹æÔò´¥·¢
+	// åˆ¤æ–­æ¡ä»¶æ˜¯å¦å…¨éƒ¨è§¦å‘ï¼Œå¦‚æœæ˜¯åˆ™è¿”å›ï¼Œè§„åˆ™è§¦å‘
 	if (ruleMap.size()>0)
 	{
 		return 1;

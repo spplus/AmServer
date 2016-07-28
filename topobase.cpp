@@ -1,4 +1,4 @@
-#include "topobase.h"
+ï»¿#include "topobase.h"
 
 void TopoBase::setReq(PBNS::OprationMsg_Request req)
 {
@@ -14,20 +14,20 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 {
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
-	// °Ñµ±Ç°Ôª¼ş¼ÓÈëµ½ÒÑ·ÖÎöÁĞ±í
+	// æŠŠå½“å‰å…ƒä»¶åŠ å…¥åˆ°å·²åˆ†æåˆ—è¡¨
 	passNodes.insert(MAPVAL(unitcim,unitcim));
 
-	// 2.¸ù¾İÔª¼şID£¬²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã£¨¿ÉÄÜÊÇÁ½¸ö£©
+	// 2.æ ¹æ®å…ƒä»¶IDï¼ŒæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹ï¼ˆå¯èƒ½æ˜¯ä¸¤ä¸ªï¼‰
 	LISTMAP connIds = getConnIdByUnitsId(unitcim);
 
-	// 3.¸ù¾İÁ¬½ÓµãIDÔÚÁ¬½Ó¹ØÏµ±í²éÑ¯¹ØÁªµÄÉè±¸
+	// 3.æ ¹æ®è¿æ¥ç‚¹IDåœ¨è¿æ¥å…³ç³»è¡¨æŸ¥è¯¢å…³è”çš„è®¾å¤‡
 	for (int j = 0;j<connIds.size();j++)
 	{
 		STRMAP connMap = connIds.at(j);
 		MAP_ITERATOR connIter = connMap.find("connId");
 		if (connIter != connMap.end())
 		{
-			// ÅĞ¶ÏÊÇ·ñÒÑ¾­²éÕÒ¹ıµÄÁ¬½Óµã£¬Èç¹ûÊÇÔòÌø³ö£¬²»ÊÇÔò¼ÓÈë
+			// åˆ¤æ–­æ˜¯å¦å·²ç»æŸ¥æ‰¾è¿‡çš„è¿æ¥ç‚¹ï¼Œå¦‚æœæ˜¯åˆ™è·³å‡ºï¼Œä¸æ˜¯åˆ™åŠ å…¥
 			if (passNodes.find(connIter->second) != passNodes.end())
 			{
 				continue;
@@ -37,10 +37,10 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 				passNodes.insert(MAPVAL(connIter->second,connIter->second));
 			}
 
-			// ¸ù¾İÁ¬½Óµã£¬²éÕÒ¸ÃÁ¬½Óµã¹ØÁªµÄÉè±¸¼¯ºÏ
+			// æ ¹æ®è¿æ¥ç‚¹ï¼ŒæŸ¥æ‰¾è¯¥è¿æ¥ç‚¹å…³è”çš„è®¾å¤‡é›†åˆ
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,COM->i2str(saveid));
 
-			// ±éÀú¸ÃÉè±¸¼¯ºÏ
+			// éå†è¯¥è®¾å¤‡é›†åˆ
 			for (int k = 0;k<unitsList.size();k++)
 			{
 				STRMAP  unitMap = unitsList.at(k);
@@ -48,7 +48,7 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
-					// ÅĞ¶ÏÊÇ·ñÒÑ¾­×öÎªÆğÊ¼Éè±¸½øĞĞËÑË÷£¬Èç¹ûÊÇÔòÌø¹ı
+					// åˆ¤æ–­æ˜¯å¦å·²ç»åšä¸ºèµ·å§‹è®¾å¤‡è¿›è¡Œæœç´¢ï¼Œå¦‚æœæ˜¯åˆ™è·³è¿‡
 					if (passNodes.find(unitIter->second) != passNodes.end())
 					{
 						continue;
@@ -59,41 +59,41 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 					}
 				}
 
-				// ±¾´Î²éÑ¯µÄÔª¼şCIMID
+				// æœ¬æ¬¡æŸ¥è¯¢çš„å…ƒä»¶CIMID
 				unitId = unitIter->second;
 
-				// ÅĞ¶ÏÊÇ·ñÊÇ±¾´Î²Ù×÷µÄÉè±¸£¬Èç¹ûÊÇ£¬ÔòÌø¹ı
+				// åˆ¤æ–­æ˜¯å¦æ˜¯æœ¬æ¬¡æ“ä½œçš„è®¾å¤‡ï¼Œå¦‚æœæ˜¯ï¼Œåˆ™è·³è¿‡
 				if (unitcim == unitId)
 				{
 					continue;
 				}
 
-				// ±¾ÂÖÍØÆËµÄÒµÎñ´¦Àí£¬¾ßÌå×ÓÀàÊµÏÖ
+				// æœ¬è½®æ‹“æ‰‘çš„ä¸šåŠ¡å¤„ç†ï¼Œå…·ä½“å­ç±»å®ç°
 				int topoRst = topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
 				bool ret = false;
 
 				if (topoRst == 1)
 				{
-					// µİ¹é£¬ÒÔ¸ÃÔª¼şÎªÆğµã½øĞĞÖØĞÂ±éÀú
+					// é€’å½’ï¼Œä»¥è¯¥å…ƒä»¶ä¸ºèµ·ç‚¹è¿›è¡Œé‡æ–°éå†
 					ret = topoByUnit(saveid,unitId,passNodes,ruleMap);
 				}
-				// ÅĞ¶ÏÊÇ·ñÖ±½ÓÍË³ö
+				// åˆ¤æ–­æ˜¯å¦ç›´æ¥é€€å‡º
 				else if (topoRst == 2)
 				{
 					return false;
 				}
-				// Ìø¹ı¸ÃÁ¬½ÓµãÏÂµÄËùÓĞÉè±¸
+				// è·³è¿‡è¯¥è¿æ¥ç‚¹ä¸‹çš„æ‰€æœ‰è®¾å¤‡
 				else if (topoRst == 3)
 				{
 					break;
 				}
 				else if (topoRst == 4)
 				{
-					// ¹æÔò±»´¥·¢
+					// è§„åˆ™è¢«è§¦å‘
 					return true;
 				}
 
-				// ÅĞ¶ÏÊÇ·ñ¹æÔò´¥·¢
+				// åˆ¤æ–­æ˜¯å¦è§„åˆ™è§¦å‘
 				if (ruleMap.size() == 0)
 				{
 					return true;
@@ -117,7 +117,7 @@ PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 	
 	if (unitcim.length()<=0)
 	{
-		LOG->warn("²ÎÊı´íÎó£¬cim²»¿ÉÒÔÎª¿Õ");
+		LOG->warn("å‚æ•°é”™è¯¯ï¼Œcimä¸å¯ä»¥ä¸ºç©º");
 		return bean;
 	}
 
@@ -161,10 +161,10 @@ PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 	}
 	else
 	{
-		LOG->warn("Êı¾İ´íÎó£¬Í¬Ò»´æµµÏÂÃæÓĞ¶à¸öÏàÍ¬cimµÄÔª¼ş:%s",unitcim.c_str());
+		LOG->warn("æ•°æ®é”™è¯¯ï¼ŒåŒä¸€å­˜æ¡£ä¸‹é¢æœ‰å¤šä¸ªç›¸åŒcimçš„å…ƒä»¶:%s",unitcim.c_str());
 	}
 
-	// ÅĞ¶ÏÊÇ·ñÔÚ¿Í»§¶Ë²Ù×÷ÁĞ±íÖĞ£¬Èç¹ûÔÚ£¬ÔòÓÃ¿Í»§¶Ë×´Ì¬
+	// åˆ¤æ–­æ˜¯å¦åœ¨å®¢æˆ·ç«¯æ“ä½œåˆ—è¡¨ä¸­ï¼Œå¦‚æœåœ¨ï¼Œåˆ™ç”¨å®¢æˆ·ç«¯çŠ¶æ€
 	int flag = 0;
 	PBNS::StateBean fbean;
 	for (int i = 0;i<m_req.opdevlist_size();i++)

@@ -1,4 +1,4 @@
-#include "rulebiz38-1.h"
+ï»¿#include "rulebiz38-1.h"
 
 RuleBiz38_1::RuleBiz38_1()
 {
@@ -10,7 +10,7 @@ int RuleBiz38_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationc
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 	if (bean.unittype() == eSWITCH)
 	{
-		// Èç¹û½á¹ûÔª¼þÎªµ¶Õ¢£¨ÎÞÂÛ±ÕºÏ¶Ï¿ª£©£¬¼ÌÐø±éÀúµ¶Õ¢ÁíÒ»²àµÄÁ¬½Óµã
+		// å¦‚æžœç»“æžœå…ƒä»¶ä¸ºåˆ€é—¸ï¼ˆæ— è®ºé—­åˆæ–­å¼€ï¼‰ï¼Œç»§ç»­éåŽ†åˆ€é—¸å¦ä¸€ä¾§çš„è¿žæŽ¥ç‚¹
 		m_flag = true;
 		return 1;
 	}
@@ -18,7 +18,7 @@ int RuleBiz38_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationc
 	{
 		if (m_flag)
 		{
-			// Èç¹û½á¹ûÔª¼þ°üº¬Ä¸Ïß£¬Ìõ¼þÈý³ÉÁ¢¡£
+			// å¦‚æžœç»“æžœå…ƒä»¶åŒ…å«æ¯çº¿ï¼Œæ¡ä»¶ä¸‰æˆç«‹ã€‚
 			COM->triggerRule(ruleMap,3);
 		}
 	}

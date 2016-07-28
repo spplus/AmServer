@@ -1,4 +1,4 @@
-#include "cimtask.h"
+ï»¿#include "cimtask.h"
 #include "confmgr.h"
 #include "defines.h"
 #include "comutils.h"
@@ -20,22 +20,22 @@ void CimTask::start()
 	m_cimName = App_Config::instance()->getValue(CIM_ROOT,CIM_NAME);
 	if (m_cimName.length() <= 0)
 	{
-		LOG->warn("ÇëÅäÖÃCIMÎÄ¼şÃû³Æ");
+		LOG->warn("è¯·é…ç½®CIMæ–‡ä»¶åç§°");
 		return;
 	}
 	if (m_workPath.length() <= 0)
 	{
-		LOG->warn("ÇëÅäÖÃCIMÎÄ¼şµÄ¹¤×÷Ä¿Â¼");
+		LOG->warn("è¯·é…ç½®CIMæ–‡ä»¶çš„å·¥ä½œç›®å½•");
 		return;
 	}
 	if (m_ftpPath.length()<=0 )
 	{
-		LOG->warn("ÇëÅäÖÃCIMÎÄ¼şµÄFTPÄ¿Â¼");
+		LOG->warn("è¯·é…ç½®CIMæ–‡ä»¶çš„FTPç›®å½•");
 		return;
 	}
 	if (m_checkHour < 0)
 	{
-		LOG->message("Î´ÅäÖÃCIMÎÄ¼ş¼ì²éÊ±¼ä£¬½«ÓÚÃ¿ÌìÁãµã½øĞĞ¼ì²é");
+		LOG->message("æœªé…ç½®CIMæ–‡ä»¶æ£€æŸ¥æ—¶é—´ï¼Œå°†äºæ¯å¤©é›¶ç‚¹è¿›è¡Œæ£€æŸ¥");
 		m_checkHour = CIM_DEFAULT_CHECKHOUR;
 	}
 
@@ -56,10 +56,10 @@ int CimTask::svc()
 		string curdate = getCurDate();
 		if (getHour() == m_checkHour && m_lastCheckDate != curdate)
 		{
-			// ¼ì²âÊ±¼äµ½£¬½øĞĞÎÄ¼ş±È½Ï
+			// æ£€æµ‹æ—¶é—´åˆ°ï¼Œè¿›è¡Œæ–‡ä»¶æ¯”è¾ƒ
 			if(checkFile())
 			{
-				// ĞèÒª¸üĞÂCIM£¬¸üĞÂÊı¾İ¿â×Ö¶ÎÎ´´ıµ¼¿â
+				// éœ€è¦æ›´æ–°CIMï¼Œæ›´æ–°æ•°æ®åº“å­—æ®µæœªå¾…å¯¼åº“
 				updateIsNew();
 			}
 
@@ -93,25 +93,25 @@ bool CimTask::checkFile()
 
 	if (ACE_OS::access(workfile.c_str(),0) == -1)
 	{
-		// ¹¤×÷Ä¿Â¼ÎÄ¼ş²»´æÔÚ£¬²»ÓÃ±È½Ï£¬Ö±½Ó°ÑÎÄ¼ş¿½±´µ½¹¤×÷Ä¿Â¼
+		// å·¥ä½œç›®å½•æ–‡ä»¶ä¸å­˜åœ¨ï¼Œä¸ç”¨æ¯”è¾ƒï¼Œç›´æ¥æŠŠæ–‡ä»¶æ‹·è´åˆ°å·¥ä½œç›®å½•
 		if(!fileCopy(ftpfile.c_str(),workfile.c_str()))
 		{
 			return false;
 		}
 		else
 		{
-			LOG->message("¿½±´CIMÎÄ¼şµ½¹¤×÷Ä¿Â¼³É¹¦");
+			LOG->message("æ‹·è´CIMæ–‡ä»¶åˆ°å·¥ä½œç›®å½•æˆåŠŸ");
 			return true;
 		}
 	}
 	else
 	{
-		 // Èç¹û¹¤×÷Ä¿Â¼ÒÑ¾­´æÔÚÎÄ¼ş£¬Ôò½øĞĞÎÄ¼ş±È½Ï£¬±È½Ï×îºóĞŞ¸ÄÊ±¼ä
+		 // å¦‚æœå·¥ä½œç›®å½•å·²ç»å­˜åœ¨æ–‡ä»¶ï¼Œåˆ™è¿›è¡Œæ–‡ä»¶æ¯”è¾ƒï¼Œæ¯”è¾ƒæœ€åä¿®æ”¹æ—¶é—´
 		if (needUpdate(workfile.c_str(),ftpfile.c_str()))
 		{
 			if(fileCopy(workfile.c_str(),ftpfile.c_str()))
 			{
-				LOG->message("¿½±´CIMÎÄ¼şµ½¹¤×÷Ä¿Â¼³É¹¦");
+				LOG->message("æ‹·è´CIMæ–‡ä»¶åˆ°å·¥ä½œç›®å½•æˆåŠŸ");
 				return true;
 			}
 		}
@@ -129,7 +129,7 @@ bool CimTask::fileCopy(const char* output_name,const char* input_name)
     output = fopen(output_name, "wb");
     if(input==NULL || output==NULL)
     {
-		LOG->warn("¿½±´cimÎÄ¼şµ½¹¤×÷Ä¿Â¼Ê§°Ü:%s",output_name);
+		LOG->warn("æ‹·è´cimæ–‡ä»¶åˆ°å·¥ä½œç›®å½•å¤±è´¥:%s",output_name);
         return false;
     }
     
@@ -172,11 +172,11 @@ void CimTask::updateIsNew()
 
 	if(DBA->execSql(psql) == 1)
 	{
-		LOG->message("ĞÂÔöCIM¸üĞÂ±êÖ¾³É¹¦");
+		LOG->message("æ–°å¢CIMæ›´æ–°æ ‡å¿—æˆåŠŸ");
 	}
 	else
 	{
-		LOG->warn("ĞÂÔöCIM¸üĞÂ±êÖ¾Ê§°Ü");
+		LOG->warn("æ–°å¢CIMæ›´æ–°æ ‡å¿—å¤±è´¥");
 	}
 
 }

@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:		ÍØÆË·ÖÎöÏà¹ØÂß¼­.
+	DESC:		æ‹“æ‰‘åˆ†æç›¸å…³é€»è¾‘.
 	DATE:		2016-05-24
 	AUTHOR:	YUANLS	
 */
@@ -14,61 +14,61 @@ class TopoBizCmd	:public CmdBase
 public:
 	void			exec(sClientMsg* msg);
 
-	// °´´æµµID½øĞĞÍØÆË
+	// æŒ‰å­˜æ¡£IDè¿›è¡Œæ‹“æ‰‘
 	void			topoBySaveId(string saveid,int unittype=eGENERATOR);
 private:
 
-	// CIMÈë¿â
+	// CIMå…¥åº“
 	void		loadCim();
 
-	// ÕûÕ¾ÍØÆË
+	// æ•´ç«™æ‹“æ‰‘
 	void		topoEntire(sClientMsg *msg);
 
-	// ¸ù¾İÔª¼şID½øĞĞÍØÆË£¬¸üĞÂÊı¾İ¿â°æ±¾
+	// æ ¹æ®å…ƒä»¶IDè¿›è¡Œæ‹“æ‰‘ï¼Œæ›´æ–°æ•°æ®åº“ç‰ˆæœ¬
 	void		topoByUnitId(string saveid,string unitid,string stationid,STRMAP& passNodes);
 
-	// ÍØÆË½ÓµØµ¶Õ¢
+	// æ‹“æ‰‘æ¥åœ°åˆ€é—¸
 	void		topoByGround(string saveid,string unitid,string stationid,STRMAP& passNodes);
 
-	// ¸ù¾İÔª¼şID²éÕÒ¶ÔÓ¦µÄÁ¬½Óµã
+	// æ ¹æ®å…ƒä»¶IDæŸ¥æ‰¾å¯¹åº”çš„è¿æ¥ç‚¹
 	LISTMAP		getConnIdByUnitsId(string unitid);
 
-	// ¸ù¾İ½ø³öÏßID£¬²éÕÒ½ø³öÏß¹ØÁªµÄÕ¾µãID
+	// æ ¹æ®è¿›å‡ºçº¿IDï¼ŒæŸ¥æ‰¾è¿›å‡ºçº¿å…³è”çš„ç«™ç‚¹ID
 	LISTMAP		getStationIdByLineId(string unitid,string stationid);
 
-	// ¸ù¾İÁ¬½Óµã²éÕÒ¹ØÁªµÄÉè±¸
+	// æ ¹æ®è¿æ¥ç‚¹æŸ¥æ‰¾å…³è”çš„è®¾å¤‡
 	LISTMAP		getUnitsByConnId(string connid,string saveid);
 
-	// ¸üĞÂÉè±¸´øµç×´Ì¬
+	// æ›´æ–°è®¾å¤‡å¸¦ç”µçŠ¶æ€
 	void		updateIsElectricByUnitId(string saveid,string unitid,int state);
 
-	// ¸üĞÂÎªÊÇ·ñ½ÓµØ
+	// æ›´æ–°ä¸ºæ˜¯å¦æ¥åœ°
 	void		updateIsGroundByUnitId(string saveid,string unitid,int state);
 
-	// ¸üĞÂÉè±¸ÊÇ¾ø¶ÔµçÔ´µã
+	// æ›´æ–°è®¾å¤‡æ˜¯ç»å¯¹ç”µæºç‚¹
 	void		updateIsPowerByUnitId(string unitid,string stationid,string saveid);
 
 
-	// ¿ª¹Ø±äÎ»ÍØÆË
+	// å¼€å…³å˜ä½æ‹“æ‰‘
 	void		topoOnBreakerChange(sClientMsg *msg);
 
-	// ¸ù¾İÔª¼şCIMID½øĞĞÍØÆË£¬²»¸üĞÂÊı¾İ¿â°æ±¾
+	// æ ¹æ®å…ƒä»¶CIMIDè¿›è¡Œæ‹“æ‰‘ï¼Œä¸æ›´æ–°æ•°æ®åº“ç‰ˆæœ¬
 	void		topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap,PBNS::OprationMsg_Request req);
 
-	// Ö´ĞĞ¿ª¹Ø±äÎ»ÍØÆË
+	// æ‰§è¡Œå¼€å…³å˜ä½æ‹“æ‰‘
 	string	execTopoOnBreakerChange(PBNS::OprationMsg_Request req);
 
-	// ¹æÔò¼ì²é
+	// è§„åˆ™æ£€æŸ¥
 	void		roleCheck(int connid,PBNS::OprationMsg_Request req);
 	void		sendRuleBack(int connid,int optype,vector<int> ruleList);
 
-	// ÉèÖÃ´øµç×´Ì¬
+	// è®¾ç½®å¸¦ç”µçŠ¶æ€
 	void		updateIsElectric(string saveid,string unitcim,int state);
 
-	// ´Ó¿Í»§¶Ë²Ù×÷ÁĞ±íÖĞ²éÕÒbean
+	// ä»å®¢æˆ·ç«¯æ“ä½œåˆ—è¡¨ä¸­æŸ¥æ‰¾bean
 	int		findUnitByCim(string cim,PBNS::OprationMsg_Request& req,PBNS::StateBean &bean);
 
-	// ¼ì²â¹æÔòÊÇ·ñÉúĞ§
+	// æ£€æµ‹è§„åˆ™æ˜¯å¦ç”Ÿæ•ˆ
 	bool		checkRuleIsUse(string cimid,int ruleid);
 
 	bool		check1(int saveid,string unitcim,PBNS::OprationMsg_Request req);

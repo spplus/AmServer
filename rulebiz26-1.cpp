@@ -1,15 +1,15 @@
-#include "rulebiz26-1.h"
+ï»¿#include "rulebiz26-1.h"
 
 int RuleBiz26_1::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim)
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// 1.Èç¹ûÔª¼þ°üº¬µ¶Õ¢ÇÒ±ÕºÏ£¬Âú×ãÌõ¼þÈý£»
+	// 1.å¦‚æžœå…ƒä»¶åŒ…å«åˆ€é—¸ä¸”é—­åˆï¼Œæ»¡è¶³æ¡ä»¶ä¸‰ï¼›
 	if (bean.unittype() == eSWITCH && bean.state() == 1)
 	{
 		COM->triggerRule(ruleMap,3);
 	}
 
-	// ²»½øÐÐµÝ¹é±éÀú£¬±¾´Î±éÀú½áÊøºóÍË³ö
+	// ä¸è¿›è¡Œé€’å½’éåŽ†ï¼Œæœ¬æ¬¡éåŽ†ç»“æŸåŽé€€å‡º
 	return 0;
 }

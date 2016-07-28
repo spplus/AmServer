@@ -1,6 +1,6 @@
-/************************************************************************/
+ï»¿/************************************************************************/
 /* 
-	DESC:	·þÎñÆ÷Èë¿Ú.
+	DESC:	æœåŠ¡å™¨å…¥å£.
 	DATE:	2016-04-20
 	AUTHOR:	YUANLS	
 */
@@ -17,32 +17,32 @@ int ACE_TMAIN (int, ACE_TCHAR *[])
 {
 	ACE::init();
 
-	// Æô¶¯ÈÕÖ¾
+	// å¯åŠ¨æ—¥å¿—
 	App_Logger::instance()->load_config(CONFIG_FILE);
 	App_Logger::instance()->set_logname(LOGNAME);
 	App_Logger::instance()->open_logger();
 
-	// ¼ÓÔØ·þÎñÆ÷ÅäÖÃ
+	// åŠ è½½æœåŠ¡å™¨é…ç½®
 	if (!App_Config::instance()->load(SERVER_CONFIG))
 	{
-		LOG->error("¼ÓÔØ·þÎñÆ÷ÅäÖÃÊ§°Ü£¬·þÎñÆ÷×Ô¶¯ÍË³ö.");
+		LOG->error("åŠ è½½æœåŠ¡å™¨é…ç½®å¤±è´¥ï¼ŒæœåŠ¡å™¨è‡ªåŠ¨é€€å‡º.");
 		return 0;
 	}
-	// Æô¶¯CIM Èë¿â¼ì²éÏß³Ì
+	// å¯åŠ¨CIM å…¥åº“æ£€æŸ¥çº¿ç¨‹
 	App_CIMTask::instance()->start();
 
-	// ³õÊ¼»¯Êý¾Ý¿âÁ¬½Ó
+	// åˆå§‹åŒ–æ•°æ®åº“è¿žæŽ¥
 	App_Dba::instance()->init();
 
-	// Æô¶¯·þÎñÆ÷
+	// å¯åŠ¨æœåŠ¡å™¨
 	App_TcpServer::instance()->init();
 	App_TcpServer::instance()->start();
 
-	// Æô¶¯¿Í»§¶ËÁ¬½Ó
+	// å¯åŠ¨å®¢æˆ·ç«¯è¿žæŽ¥
 	App_ScadaClient::instance()->init();
 	App_ScadaClient::instance()->start();
 
-	// Æô¶¯ÊÂ¼þÑ­»·
+	// å¯åŠ¨äº‹ä»¶å¾ªçŽ¯
 	ACE_Reactor::instance()->run_reactor_event_loop();
 	
 	ACE::fini();
