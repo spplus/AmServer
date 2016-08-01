@@ -100,6 +100,10 @@ LISTMAP DbAccess::getList(const char* sql)
 	LISTMAP retList;
 	if (!conn2db())
 	{
+		//将数据库连接失败与查询不到记录进行区别
+		STRMAP record;
+		record.insert(MAPVAL("0","0"));
+		retList.push_back(record);
 		return retList;
 	}
 	MYSQL_RES *result = NULL;
