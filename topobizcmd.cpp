@@ -198,9 +198,61 @@ LISTMAP TopoBizCmd::getStationIdByLineId(string unitid,string stationid)
 
 LISTMAP TopoBizCmd::getUnitsByConnId(string connid,string saveid)
 {
+	LISTMAP transList,unitsList;
 
-	// 问题：关联查询设备状态的时候，不用考虑saveid么？unit_status表中，同一个unit可能会有多条记录，以哪天记录为准呢？
-	LISTMAP unitsList ;
+	//该连接点连接有变压器时，对应的UnitCim是winding的CimId，不是变压器的CimId，需特殊处理
+	//先确定连接点是否连接有变压器
+
+	char* ptranSql = "select a.UnitCim, b.CimId from relations a left join units b on a.UnitCim=b.CimId where ConnCim='%s'";
+	string tranSql = App_Dba::instance()->formatSql(ptranSql,connid.c_str());
+	transList = App_Dba::instance()->getList(tranSql.c_str());
+	for(int i = 0;i<transList.size();i++)
+	{
+		STRMAP unitMap = transList.at(i);
+		MAP_ITERATOR unitIter = unitMap.find("CimId");
+		string unitId = unitIter->second;
+		if(unitId.empty())//如果连接有winding，则CimId为空，UnitCim为winding的CimId，不为空
+		{
+			unitId = unitMap.find("UnitCim")->second;
+			if(unitId.empty())//如果UnitCim也为空，数据有误不处理
+				break;
+
+			//设置变压器cim
+			char* pdataSql = "select a.CimId,a.StationCim,"\
+				"c.Color from units a left join voltages c on c.CimId=a.VolCim where "\
+				"a.CimId=(select UnitCim from windings where CimId='%s')";
+			string dataSql = App_Dba::instance()->formatSql(pdataSql,unitId.c_str());
+			LISTMAP dataList = App_Dba::instance()->getList(dataSql.c_str());
+			if(dataList.size() > 0)
+			{
+				transBean.set_cimid(dataList.at(0).find("CimId")->second);
+				
+				// 保存电压等级颜色
+				transBean.set_volcolor(dataList.at(0).find("Color")->second);
+
+				//保存带电状态
+				transBean.set_iselectric(1);
+
+				//保存站点cim
+				transBean.set_stationcim(dataList.at(0).find("StationCim")->second);
+			}
+
+			transList.clear();
+			//通过winding查询变压器所有winding对应的连接点，对应的所有元件集合
+			char* ptranListSql = "select d.CimId as id,d.UnitType,d.StationCim as StationId,e.State,"\
+				"f.VolValue,f.Color from (select x.UnitCim from Relations x right join "\
+"(select a.ConnCim from relations a right join (select CimId from windings where UnitCim = "\
+"(select UnitCim from windings where CimId='%s')) b on a.UnitCim=b.CimId) y "\
+"on x.ConnCim=y.ConnCim) c left join Units d on c.UnitCim=d.CimId left join "\
+"(select UnitCim, State from unit_status where saveId=%s) e on e.UnitCim=d.CimId left join "\
+"voltages f on f.CimId=d.VolCim";
+			string tranListSql = App_Dba::instance()->formatSql(ptranListSql,unitId.c_str(),saveid.c_str());
+			transList =App_Dba::instance()->getList(tranListSql.c_str());
+			return transList;
+		}
+	}
+
+
 	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,"\
 		"c.State,d.VolValue,d.Color from (select UnitCim from Relations where ConnCim='%s') a left join "\
 		"Units b on a.UnitCim=b.CimId  left join (select UnitCim, State from unit_status "\
@@ -743,6 +795,13 @@ void TopoBizCmd::topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<P
 
 			// 根据连接点，查找该连接点关联的设备集合
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
+
+			//将找到的变压器加入带电集合
+			if(!transBean.cimid().empty())
+			{
+				rsltMap.push_back(transBean);
+				transBean.Clear();
+			}
 
 			// 遍历该设备集合
 			for (int k = 0;k<unitsList.size();k++)

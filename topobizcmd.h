@@ -101,6 +101,9 @@ private:
 	bool		check46(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check47(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check48(int saveid,string unitcim,PBNS::OprationMsg_Request req);
+
+	//拓扑中需要着色的变压器cim（拓扑中只会拓扑到winding，所以变压器本身需单独处理）
+	PBNS::StateBean transBean;
 };
 
 #endif
