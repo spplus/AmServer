@@ -71,6 +71,9 @@ private:
 	// 检测规则是否生效
 	bool		checkRuleIsUse(string cimid,int ruleid);
 
+	// 判断是否是推车刀闸
+	void		checkIsCarSwitch(PBNS::OprationMsg_Request& req);
+
 	bool		check1(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check2(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check4(int saveid,string unitcim,PBNS::OprationMsg_Request req);

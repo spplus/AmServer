@@ -636,9 +636,15 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 	{
 		return;
 	}
-	/*eDeviceType devtype = (eDeviceType)req.unittype();
-	int optype = req.type();*/
-
+	
+	// 仅对科动的厂家生效
+	int factype = COM->str2i(App_Config::instance()->getValue(CIM_ROOT,CIM_PRODUCTID));
+	if (factype == 2)
+	{
+		// 检查是否为推车刀闸，如果是则把推车刀闸加入到已操作列表
+		checkIsCarSwitch(req);
+	}
+	
 	if (req.ischeck())
 	{
 		// 规则校验
@@ -649,6 +655,55 @@ void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)
 		string data = execTopoOnBreakerChange(req);
 
 		App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
+	}
+}
+
+void TopoBizCmd::checkIsCarSwitch(PBNS::OprationMsg_Request& req)
+{
+	// 判断是否 为开关，如果不是则返回
+	if (req.unittype() == eBREAKER)
+	{
+		// 标记查找到几个刀闸
+		int flag = 0;
+
+		string unitcim = "";
+
+		// 查询该元件两端的连接点集合
+		LISTMAP connList = getConnIdByUnitsId(req.unitcim());
+
+		for (int i = 0;i<connList.size();i++)
+		{
+			STRMAP connMap = connList.at(i);
+
+			// 根据连接点查找对应的设备集合
+			string connId = COM->getVal(connMap,"connId");
+
+			LISTMAP unitList = getUnitsByConnId(connId,COM->i2str(req.saveid()));
+
+			for (int j = 0;j<unitList.size();j++)
+			{
+				STRMAP unitMap = unitList.at(j);
+				
+				int unitType = COM->getIval(unitMap,"UnitType");
+				if (unitType == eSWITCH)
+				{
+					flag++;
+					unitcim = COM->getVal(unitMap,"id");
+				}
+
+			}
+
+		}
+
+		// 如果只找到一个刀闸，则标识为推车，把该刀闸的cim加入到已操作列表中，并置为闭合
+		if (flag == 1)
+		{
+			PBNS::StateBean *bean = req.add_opdevlist();
+			bean->set_unittype(eSWITCH);
+			bean->set_cimid(unitcim);
+			bean->set_state(1);
+
+		}
 	}
 }
 
