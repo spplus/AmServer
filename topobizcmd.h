@@ -33,6 +33,9 @@ private:
 	// 根据元件ID查找对应的连接点
 	LISTMAP		getConnIdByUnitsId(string unitid);
 
+	//根据变压器ID查找对应的连接点
+	LISTMAP		getConnIdByTransId(string unitid);
+
 	// 根据进出线ID，查找进出线关联的站点ID
 	LISTMAP		getStationIdByLineId(string unitid,string stationid);
 

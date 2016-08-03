@@ -187,6 +187,15 @@ LISTMAP TopoBizCmd::getConnIdByUnitsId(string unitid)
 	return connList;
 }
 
+LISTMAP TopoBizCmd::getConnIdByTransId(string unitid)
+{
+	LISTMAP connList ;
+	char* psql = "select a.ConnCim as connId from Relations a left join windings b on a.UnitCim = b.CimId where b.UnitCim='%s'";
+	string sql = App_Dba::instance()->formatSql(psql,unitid.c_str());
+	connList = App_Dba::instance()->getList(sql.c_str());
+	return connList;
+}
+
 LISTMAP TopoBizCmd::getStationIdByLineId(string unitid,string stationid)
 {
 	LISTMAP stationList;

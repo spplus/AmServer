@@ -976,7 +976,7 @@ int ParseXML::dealTransformerWinding()
 			tfwdingg.ptfcimid = ptfiter->first;
 			tfwdingg.bvcimid = strprimbvid;
 			tfwdingg.wdindex = 0;
-			tfwdingg.wdgrade = 1;
+			tfwdingg.wdgrade = 3;
 			mapTransformerWindingUnt.insert(std::pair<std::string,TransformerWinding_Units>(strprimcimid,tfwdingg));
 
 			//低压侧对应值
@@ -985,7 +985,7 @@ int ParseXML::dealTransformerWinding()
 			tfwdingd.ptfcimid = ptfiter->first;
 			tfwdingd.bvcimid = strpscndbvid;
 			tfwdingd.wdindex = 1;
-			tfwdingd.wdgrade = 3;
+			tfwdingd.wdgrade = 1;
 			mapTransformerWindingUnt.insert(std::pair<std::string,TransformerWinding_Units>(strpscndcimid,tfwdingd));
 		}
 
@@ -998,7 +998,7 @@ int ParseXML::dealTransformerWinding()
 			tfwdingg.ptfcimid = ptfiter->first;
 			tfwdingg.bvcimid = strprimbvid;
 			tfwdingg.wdindex = 0;
-			tfwdingg.wdgrade = 1;
+			tfwdingg.wdgrade = 3;
 			mapTransformerWindingUnt.insert(std::pair<std::string,TransformerWinding_Units>(strprimcimid,tfwdingg));
 
 			//中压侧对应值
@@ -1016,7 +1016,7 @@ int ParseXML::dealTransformerWinding()
 			tfwdingd.ptfcimid = ptfiter->first;
 			tfwdingd.bvcimid = strptertbvid;
 			tfwdingd.wdindex = 2;
-			tfwdingd.wdgrade = 3;
+			tfwdingd.wdgrade = 1;
 			mapTransformerWindingUnt.insert(std::pair<std::string,TransformerWinding_Units>(strptertcimid,tfwdingd));
 		}
 

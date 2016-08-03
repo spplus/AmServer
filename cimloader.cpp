@@ -932,6 +932,7 @@ int CimLoader::saveTransformerWinding()
 	//创建临时表
 	string createsql = string("CREATE TABLE `Windings_temp` (\
 		`UnitCim` varchar(100) NOT NULL,\
+		`CimId` varchar(100) DEFAULT NULL,\
 		`VolId` varchar(100) NOT NULL,\
 		`WindingIndex` tinyint(4) NOT NULL,\
 		`WindingGrade` tinyint(4) NOT NULL\
@@ -949,14 +950,14 @@ int CimLoader::saveTransformerWinding()
 	
 	}
 
-	string sqlInsert = string("INSERT INTO Windings_temp (UnitCim,VolId,WindingIndex,WindingGrade) VALUES ");
+	string sqlInsert = string("INSERT INTO Windings_temp (UnitCim,CimId,VolId,WindingIndex,WindingGrade) VALUES ");
 	string sqlVal = "";
 	string sql = "";
 
 	//组合插入语句值部分
 	for (tsfwiter=mapTsfw.begin();tsfwiter!=mapTsfw.end();tsfwiter++)
 	{
-		string sqlval = DBA->formatSql("('%s','%s',%d,%d),",tsfwiter->second.ptfcimid.c_str(),tsfwiter->second.bvcimid.c_str(),tsfwiter->second.wdindex,tsfwiter->second.wdgrade);
+		string sqlval = DBA->formatSql("('%s','%s','%s',%d,%d),",tsfwiter->second.ptfcimid.c_str(),tsfwiter->second.tfwcimid.c_str(),tsfwiter->second.bvcimid.c_str(),tsfwiter->second.wdindex,tsfwiter->second.wdgrade);
 
 		sqlVal.append(sqlval);
 
@@ -999,8 +1000,8 @@ int CimLoader::saveTransformerWinding()
 
 
 	//将临时表中的内容插入到Windings中
-	string selupsql = string("INSERT INTO Windings(UnitCim,VolId,WindingIndex,WindingGrade) \
-							   SELECT UnitCim,(SELECT id FROM voltages WHERE CimId = wdt.volid) AS volid ,WindingIndex,WindingGrade from Windings_temp wdt");
+	string selupsql = string("INSERT INTO Windings(UnitCim,CimId,VolId,WindingIndex,WindingGrade) \
+							   SELECT UnitCim,CimId,(SELECT id FROM voltages WHERE CimId = wdt.volid) AS volid ,WindingIndex,WindingGrade from Windings_temp wdt");
 	ret = DBA->execSql(selupsql.c_str());
 	if (ret <= 0)
 	{
@@ -1259,18 +1260,32 @@ int CimLoader::saveUnitStatus()
 		
 	}
 
-	//填充unit_status表
+	//填充unit_status表:实时态Saveid=0
 	string selupsql = string("INSERT INTO unit_status(UnitCim,StationCim) SELECT CimId,StationCim from units");
 	ret = DBA->execSql(selupsql.c_str());
 	if (ret <= 0)
 	{
-		LOG->message("saveUnitStatus: units data to unit_status data error selupsql=%s ",selupsql.c_str());
+		LOG->message("saveUnitStatus: units data Saveid=0 to unit_status data error selupsql=%s ",selupsql.c_str());
 		
 	}
 	else
 	{
-		LOG->message("saveUnitStatus: units data to unit_status data success selupsql=%s ",selupsql.c_str());
+		LOG->message("saveUnitStatus: units data Saveid=0 to unit_status data success selupsql=%s ",selupsql.c_str());
 		
+	}
+
+	//填充unit_status表:模拟态Saveid=1
+	string selupdesql = string("INSERT INTO unit_status(Saveid,UnitCim,StationCim) SELECT 1 as saveid,CimId,StationCim from units");
+	ret = DBA->execSql(selupdesql.c_str());
+	if (ret <= 0)
+	{
+		LOG->message("saveUnitStatus: units data Saveid=1 to unit_status data error selupsql=%s ",selupdesql.c_str());
+
+	}
+	else
+	{
+		LOG->message("saveUnitStatus: units data Saveid=1 to unit_status data success selupsql=%s ",selupdesql.c_str());
+
 	}
 
 	//更新unit_status表中设备为发电机的带电和是否电源点信息
