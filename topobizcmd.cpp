@@ -590,7 +590,7 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 	STRMAP passedNodes;
 
 	// 1. 查询指定saveid，指定unit对应站点下面的设备状态集合；
-	char * psql = "select a.UnitCim,a.StationCim,IsElectric,IsPower,c.Color,a.State " \
+	char * psql = "select a.UnitCim,a.StationCim,IsElectric,IsPower,c.Color,a.State,b.UnitType " \
 		"from unit_status a " \
 		"left join units b on a.UnitCim=b.CimId " \
 		"left join voltages c on c.CimId = b.VolCim " \
@@ -644,6 +644,9 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 
 		// 保存CIM
 		pbean->set_cimid(COM->getVal(unitMap,"UnitCim"));
+
+		// 保存设备类型
+		pbean->set_unittype(COM->getIval(unitMap,"UnitType"));
 
 		// 如果为本次操作设备，则把状态更新为操作后的状态
 		if (pbean->cimid() == cimid)
