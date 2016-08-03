@@ -106,6 +106,9 @@ int RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
+	if(bean.cimid().empty())
+		return 0;
+
 	// 1.如果为开关或刀闸且闭合，继续遍历，断开则终止
 	if (bean.unittype() == eBREAKER)
 	{

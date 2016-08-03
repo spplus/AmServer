@@ -7,14 +7,11 @@ int RuleBiz5_2::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationci
 	if (bean.unittype() == eSWITCH)
 	{
 		// 如果为刀闸，且刀闸为闭合，满足条件五
-		COM->triggerRule(ruleMap,5);
-
-		// 停止继续拓扑
-		return 0;
+		return 4;
 	}
 	else
 	{
-		// 继续递归拓扑
-		return 1;
+		// 返回false，停止继续拓扑
+		return 0;
 	}
 }
