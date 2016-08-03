@@ -645,6 +645,9 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 		// 保存CIM
 		pbean->set_cimid(COM->getVal(unitMap,"UnitCim"));
 
+		int unittype = COM->getIval(unitMap,"UnitType");
+
+
 		// 保存设备类型
 		pbean->set_unittype(COM->getIval(unitMap,"UnitType"));
 
