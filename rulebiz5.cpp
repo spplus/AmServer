@@ -83,9 +83,20 @@ bool RuleBiz5::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 			// 当条件一满足时，以开关为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含两个闭合的刀闸，满足条件五，规则被触发
 			if (m_breakerCim.length() > 0)
 			{
-				RuleBiz5_1 r;
-				r.setReq(m_req);
-				r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
+				if(range)
+				{
+					//间隔边界为非母线，操作刀闸为线刀
+					RuleBiz5_1 r;
+					r.setReq(m_req);
+					r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
+				}
+				else
+				{
+					//间隔边界为母线，操作刀闸为母刀
+					RuleBiz5_2 r;
+					r.setReq(m_req);
+					r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
+				}
 			}
 		}
 	
@@ -115,6 +126,7 @@ int RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/
 		// 如果为开关（B），且开关为闭合，直接退出逻辑，
 		if (bean.state() == 0)
 		{
+			m_breakerCim = bean.cimid();
 			// 如开关（B）为断开，满足条件一
 			COM->triggerRule(ruleMap,1);	
 
@@ -127,19 +139,16 @@ int RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/
 	}
 	else if (bean.unittype() == eSWITCH )
 	{
-		/*
-		包含开关的结果元件集合如包含刀闸（非起始条件自己）且闭合，满足条件二，
-		*/
-		if (bean.state() == 1 && bean.cimid() != m_opcim)
+		/*if (bean.state() == 1 && bean.cimid() != m_opcim)
 		{
 			COM->triggerRule(ruleMap,2);
-		}
+		}*/
 
 	}
 	else if (bean.unittype() == eBUS)
 	{
 		// 如果为母线，满足条件3
-		COM->triggerRule(ruleMap,3);
+		//COM->triggerRule(ruleMap,3);
 
 	}
 	else
@@ -148,13 +157,6 @@ int RuleBiz5::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/
 		range = true;
 	}
 
-	// 触发掉三个条件时，规则被触发
-	if (ruleMap.size()<= 0)
-	{
-		return 4;
-	}
-	else
-	{
-		return 0;
-	}
+	return 0;
+
 }
