@@ -113,27 +113,12 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 	{
 		//string msg = ShowMsg(mb->rd_ptr(),mb->length());
 		LOG->debug("Recive data length:%d",mb->length());
-		LOG->debug("Recive data :%s",mb->rd_ptr());
-		ACE_OS::printf("%s\n",mb->rd_ptr());
+		//LOG->debug("Recive data :%s",mb->rd_ptr());
+		//ACE_OS::printf("%s\n",mb->rd_ptr());
 		if (m_recvTask->putq(mb) == -1)
 		{
 			App_Logger::instance()->error("Put queue error.");
 		}
-
-		/*
-		char *data = mb->rd_ptr();
-		// 消息标识头
-		unsigned char type;
-		unsigned char end;
-		int pos = 0;
-		ACE_OS::memcpy(&type,data+pos,1);
-		//
-		if (plen == 4 && type == 0x0B)
-		{
-			App_ScadaClient::instance()->startProTimer();
-		}*/
-		
-
 	}
 	else
 	{
@@ -142,9 +127,8 @@ int ScadaHandler::handle_input(ACE_HANDLE fd )
 		LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
 	}
 
-/*
 
-	
+/*
 	char buff[FRAME_HEAD_LEN];
 	int len = peer().recv(buff,FRAME_HEAD_LEN,&nowait);
 	if (len <= 0)

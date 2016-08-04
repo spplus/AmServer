@@ -1036,6 +1036,20 @@ int CimLoader::saveRelateLine()
 	MAPACLINE mapACline = parseXML.getACLineSegment();
 	MAPACLINE::iterator aciter;
 
+	//删除related_line表中内容
+	string delsql = string("DELETE FROM related_line;");
+	ret = DBA->execSql(delsql.c_str());
+	if (ret <= 0)
+	{
+		LOG->message("saveRelateLine: delete table related_line data error delsql=%s ",delsql.c_str());
+
+	}
+	else
+	{
+		LOG->message("saveRelateLine: delete table related_line data success delsql=%s ",delsql.c_str());
+
+	}
+
 	string sqlInsert = string("INSERT INTO related_line (UnitCim,StationCim) VALUES ");
 	string sqlVal = "";
 	string sql = "";
@@ -1205,6 +1219,20 @@ int CimLoader::saveTerminalRelation()
 	int ncount=0;
 	MAPTMLRAL mapTmla = parseXML.getTerminalRelation();
 	MAPTMLRAL::iterator tmlaiter;
+
+	//删除relations表中内容
+	string delsql = string("DELETE FROM relations;");
+	ret = DBA->execSql(delsql.c_str());
+	if (ret <= 0)
+	{
+		LOG->message("saveTerminalRelation: delete table relations data error delsql=%s ",delsql.c_str());
+
+	}
+	else
+	{
+		LOG->message("saveTerminalRelation: delete table relations data success delsql=%s ",delsql.c_str());
+
+	}
 
 	string sqlInsert = string("INSERT INTO relations (CimId,Name,StationCim,UnitCim,Port,ConnCim) VALUES ");
 	string sqlVal = "";

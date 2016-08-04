@@ -680,6 +680,17 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 			}
 		}
 	}
+	// 返回服务器自动设置设备列表，加入到客户端操作设备列表
+	for (int i = 0;i<req.opdevlist_size();i++)
+	{
+		PBNS::StateBean obean = req.opdevlist(i);
+		if (obean.isop() == 1)
+		{
+			PBNS::StateBean *pobean = res.add_oplist();
+			pobean->CopyFrom(obean);
+		}
+	}
+
 	LOG->debug("返回设备总数量:%d,带电设备数量：%d",res.devstate_size(),rsltMap.size());
 	return res.SerializeAsString();
 
@@ -769,7 +780,7 @@ void TopoBizCmd::checkIsCarSwitch(PBNS::OprationMsg_Request& req)
 			bean->set_unittype(eSWITCH);
 			bean->set_cimid(unitcim);
 			bean->set_state(1);
-
+			bean->set_isop(1);
 		}
 	}
 }

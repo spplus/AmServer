@@ -59,11 +59,38 @@ void ProtocolMgr::setCallAll(int nAll)
 	m_CallALL = nAll;
 }
 
+void  ProtocolMgr::HexOutput(const char* buf, size_t len)  
+{  
+	//printf("The Hex output of data :/n/t0x");  
+	string strframe;
+	string strbuf;
+	char buff[2048]={0};
+	for(size_t i=0; i<len; ++i)  
+	{  
+		unsigned char c = buf[i]; // must use unsigned char to print >128 value  
+		if( c< 16)  
+		{  
+			//printf("0%x", c);  
+			sprintf(buff,"0%x ", c);
+			strframe.append(buff);
+		}  
+		else  
+		{  
+			//printf("%x", c);  
+			sprintf(buff,"%x ", c);
+			strframe.append(buff);
+		}  
+	}  
+	LOG->debug("%s",strframe.c_str());
+	
+	return;
+}  
+
 int ProtocolMgr::handle_timeout(const ACE_Time_Value &current_time,const void * /* = 0 */)
 {
-	LOG->debug("=========protocolmgr：send_I_Frame===========");
 	//if (brcvflag)
 	{
+		LOG->debug("=========protocolmgr：send_I_Frame===========");
 		//定时发送I帧:总召唤
 		sendIFrame();
 	}
@@ -90,7 +117,8 @@ void ProtocolMgr::sendUFrame()
 	m_client->send(mb);
 
 	std::string strsenddata = uBuffer;
-	LOG->debug("send sendUFrame data:%s",strsenddata.c_str());
+	LOG->debug("send sendUFrame data:");
+	HexOutput(uBuffer,6);
 }
 
 void ProtocolMgr::sendIFrame()
@@ -139,7 +167,8 @@ void ProtocolMgr::sendIFrame()
     m_nLocalSendNum += 1 ;
 
 	std::string strsenddata = IBuffer;
-	LOG->debug("send sendIFrame data:%s",strsenddata.c_str());
+	LOG->debug("send sendIFrame data:");
+	HexOutput(IBuffer,16);
 
 	return;
 }
@@ -165,8 +194,9 @@ void ProtocolMgr::sendSFrame()
 	m_client->send(mb);
 
 	std::string strsenddata = sBuffer;
-	LOG->debug("send sendSFrame data:%s",strsenddata.c_str());
-
+	LOG->debug("send sendSFrame data:");
+	HexOutput(sBuffer,6);
+	LOG->debug("\n");
 }
 
 // 发送测试帧（如果主站超过一定时间没有下发报文或者RTU也没有上送任何报文则双方都可以按频率发送U帧，测试帧）
@@ -187,7 +217,8 @@ void ProtocolMgr::sendTestFrame()
 	m_client->send(mb);
 
 	std::string strsenddata = testBuffer;
-	LOG->debug("send sendTestFrame data:%s",strsenddata.c_str());
+	LOG->debug("send sendTestFrame data:");
+	HexOutput(testBuffer,6);
 }
 
 // 发送测试确认帧
@@ -208,7 +239,8 @@ void ProtocolMgr::sendTestConFrame()
 	m_client->send(mb);
 
 	std::string strsenddata = testBuffer;
-	LOG->debug("send sendTestConFrame data:%s",strsenddata.c_str());
+	LOG->debug("send sendTestConFrame data:");
+	HexOutput(testBuffer,6);
 }
 
 void ProtocolMgr::parseDataFrame(char *data,int datalength)
@@ -223,7 +255,8 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 	char revdata[1024];
 	ACE_OS::memcpy(&revdata,data,datalength);
 	std::string strdata = revdata;
-	LOG->debug("Recive data:%s",strdata.c_str());
+	LOG->debug("Recive data:");
+	HexOutput(data,datalength);
 
 	// 消息标识头
 	unsigned char type;
@@ -323,7 +356,7 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 		unsigned short nRTUaddr = (unsigned short)pdataHead->sRTUAddr ;	// RTU地址/厂站序号(地址 2个字节)
 		//可变结构限定词 高低字节没有转换，后续处理
 		m_nRecvDataSum = pdataHead->cDeterminer & 0x7f;					// 可变结构限定词的低7位表示接收数据的个数
-		int nContType = pdataHead->cDeterminer & 0x80;					// 可变结构限定词的高1位表示后面的数据是连续非连续，0表示非连续,1表示连续
+		int nContType = pdataHead->cDeterminer>>7; // & 0x80;			// 可变结构限定词的高1位表示后面的数据是连续非连续，0表示非连续,1表示连续
 		char szCode[32]={0};
 		LOG->debug("开始解析SCADA实时数据,类型为=%u",uFrameClass);
 		LOG->debug("传输原因=%u",pdataHead->cTransReason);
@@ -640,7 +673,8 @@ void ProtocolMgr::parseDataFrame(char *data,int datalength)
 void ProtocolMgr::startITimer()
 {
 	ACE_Time_Value initialDelay (1);
-	ACE_Time_Value interval (m_CallALL*60*1000);
+	//ACE_Time_Value interval (m_CallALL*60*1000);
+	ACE_Time_Value interval (m_CallALL*60);
 
 	ACE_Reactor::instance()->schedule_timer (this,0,initialDelay,interval);
 

@@ -93,21 +93,21 @@ bool TopoBase::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 					return true;
 				}
 
-				// 判断是否规则触发
-				if (ruleMap.size() == 0)
-				{
-					return true;
-				}
-				else
-				{
-					return ret;
-				}
 			}
 
 		}
 
 	}
-	return false;
+
+	// 判断是否规则触发
+	if (ruleMap.size() == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
@@ -188,8 +188,35 @@ PBNS::StateBean TopoBase::getUnitByCim(int saveid,string unitcim)
 
 LISTMAP TopoBase::getUnitsByConnId(string connid,string saveid)
 {
+	//该连接点连接有变压器时，对应的UnitCim是winding的CimId，不是变压器的CimId，需特殊处理
+	//先确定连接点是否连接有变压器
+	LISTMAP transList,dataList;
 
-	// 
+	char* ptranSql = "select a.UnitCim, b.CimId from relations a left join units b on a.UnitCim=b.CimId where ConnCim='%s'";
+	string tranSql = App_Dba::instance()->formatSql(ptranSql,connid.c_str());
+	dataList = App_Dba::instance()->getList(tranSql.c_str());
+	for(int i = 0;i<dataList.size();i++)
+	{
+		STRMAP unitMap = dataList.at(i);
+		MAP_ITERATOR unitIter = unitMap.find("CimId");
+		string unitId = unitIter->second;
+		if(unitId.empty())//如果连接有winding，则CimId为空，UnitCim为winding的CimId，不为空
+		{
+			unitId = unitMap.find("UnitCim")->second;
+			if(unitId.empty())//如果UnitCim也为空，数据有误不处理
+				break;
+
+			//获取变压器
+			char* pdataSql = "select CimId as id,UnitType,StationCim as StationId"\
+				" from units where "\
+				"CimId=(select UnitCim from windings where CimId='%s')";
+			string dataSql = App_Dba::instance()->formatSql(pdataSql,unitId.c_str());
+			transList = App_Dba::instance()->getList(dataSql.c_str());
+			break;
+		}
+	}
+	
+
 	LISTMAP unitsList ;
 	char* psql = "select b.CimId as id,b.UnitType,b.StationCim as StationId,"\
 		"c.State,d.VolValue from (select UnitCim from Relations where ConnCim='%s') a left join "\
@@ -198,6 +225,13 @@ LISTMAP TopoBase::getUnitsByConnId(string connid,string saveid)
 
 	string sql = DBA->formatSql(psql,connid.c_str(),saveid.c_str());
 	unitsList = DBA->getList(sql.c_str());
+
+	//unitsList获取的变压器属性将为空，需将变压器加入集合
+	if(transList.size() > 0)
+	{
+		unitsList.push_back(transList[0]);
+	}
+
 	return unitsList;
 }
 

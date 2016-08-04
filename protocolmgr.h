@@ -23,6 +23,8 @@ public:
 	void	setRtuAddr(unsigned short nRtuAddr);
 	//设置定时周期
 	void	setCallAll(int nAll);
+	//打印16进制
+	void HexOutput(const char* buf, size_t len);
 	//发送U帧建立链接
 	void	sendUFrame();
 	//发送总召唤I帧

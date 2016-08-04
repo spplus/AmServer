@@ -31,6 +31,25 @@ bool RuleBiz4::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 			// 根据连接点，查找该连接点关联的设备集合
 			LISTMAP unitsList = getUnitsByConnId(connIter->second,COM->i2str(saveid));
 
+			//先判断集合内是否有间隔边界，有的话其他元件不再递归，跳过该连接点
+			if(topoRange(unitsList))
+			{
+				// 如果为非开关、刀闸、地刀的任何元件，条件一成立
+				R_ITERATOR iter = ruleMap.find(1);
+				if (iter == ruleMap.end())
+				{
+					COM->triggerRule(ruleMap,2);
+
+					continue;
+				}
+				else
+				{
+					COM->triggerRule(ruleMap,1);
+
+					continue;
+				}
+			}
+
 			// 遍历该设备集合
 			for (int k = 0;k<unitsList.size();k++)
 			{
@@ -55,26 +74,13 @@ bool RuleBiz4::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rule
 
 				// 本轮拓扑的业务处理，具体子类实现
 				int topoRst = topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
-				bool ret = false;
 
 				if (topoRst == eRuleRecursion)
 				{
 					// 递归，以该元件为起点进行重新遍历
-					ret = topoByUnit(saveid,unitId,passNodes,ruleMap);
+					topoByUnit(saveid,unitId,passNodes,ruleMap);
 				}
-				// 判断是否直接退出
-				else if (topoRst == eRuleExit)
-				{
-					return false;
-				}
-				// 跳过该连接点下的所有设备
-				else if (topoRst == eRuleBreak)
-				{
-					break;
-				}
-				
 			}
-
 		}
 	}
 
@@ -111,22 +117,20 @@ int RuleBiz4::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/
 	{
 		return 0;
 	}
-	else
+}
+
+bool RuleBiz4::topoRange(LISTMAP unitsList)
+{
+	for (int k = 0;k<unitsList.size();k++)
 	{
-		// 如果为非开关、刀闸、地刀的任何元件，条件一成立
-		R_ITERATOR iter = ruleMap.find(1);
-		if (iter == ruleMap.end())
-		{
-			COM->triggerRule(ruleMap,2);
+		STRMAP  unitMap = unitsList.at(k);
+		MAP_ITERATOR unitIter = unitMap.find("UnitType");
+		int unitType = COM->str2i(unitIter->second);
 
-			return eRuleExit;
-		}
-		else
-		{
-			COM->triggerRule(ruleMap,1);
-
-			// 跳过该连接点剩余设备
-			return eRuleBreak;
-		}
+		// 1.如果为非开关、刀闸、地刀，即间隔边界
+		if (unitType != eBREAKER && unitType != eSWITCH && unitType != eGROUNDSWITCH)
+			return true;
 	}
+
+	return false;
 }

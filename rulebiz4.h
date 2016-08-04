@@ -19,6 +19,9 @@ public:
 
 private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim="");
+
+	//在当前集合查找间隔边界
+	bool topoRange(LISTMAP unitsList);
 };
 
 #endif
