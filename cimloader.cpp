@@ -1140,7 +1140,7 @@ int CimLoader::saveConnectivityNode()
 	//组合插入语句值部分
 	for (cnoditer=mapCNode.begin();cnoditer!=mapCNode.end();cnoditer++)
 	{
-		string sqlval = DBA->formatSql("('%s,'%s','%d'),",cnoditer->second.nodecimid.c_str(),cnoditer->second.nodename.c_str(),cnoditer->second.faccimid.c_str());
+		string sqlval = DBA->formatSql("('%s','%s','%d'),",cnoditer->second.nodecimid.c_str(),cnoditer->second.nodename.c_str(),cnoditer->second.faccimid.c_str());
 
 		sqlVal.append(sqlval);
 
@@ -1148,7 +1148,7 @@ int CimLoader::saveConnectivityNode()
 	}
 
 	//去除最后一个逗号
-	sqlVal = sqlVal.substr(sqlVal.length()-1);
+	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
 
 	//拼接完整插入sql语句
 	sql.append(sqlInsert).append(sqlVal);

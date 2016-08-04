@@ -4,6 +4,7 @@
 RuleBiz26::RuleBiz26()
 {
 	m_breakerCim = "";
+	hasBus = false;
 }
 
 bool RuleBiz26::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
@@ -59,22 +60,24 @@ bool RuleBiz26::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				unitId = unitIter->second;
 
 				// 本轮拓扑的业务处理，具体子类实现
-				topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
+				int rel = topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
 
-
+				// 判断是否直接退出
+				if (rel == 2)
+				{
+					return false;
+				}
 			}
-			
-			// 以开关为起始元件继续遍历另一端的连接点，以及连接点对应的结果元件，如果结果元件包含刀闸且闭合，满足条件三；
-			if (m_breakerCim.length()>0)
-			{
-				RuleBiz26_1 r;
-				r.setReq(m_req);
-				r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
-
-			}
-
 		}
+	}
 
+	// 以开关为起始元件继续遍历，此时已经确定操作的是母刀
+	if (m_breakerCim.length()>0 && hasBus)
+	{
+		RuleBiz26_1 r;
+		r.setReq(m_req);
+		r.curUnit = unitcim;
+		r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
 	}
 
 	// 条件一、二、三同时满足时触发规则
@@ -93,14 +96,20 @@ int RuleBiz26::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 {
 	PBNS::StateBean bean = getUnitByCim(saveid,unitcim);
 
-	// 1.如果包含开关（无论断开闭合），满足条件二。
+	// 1.如果包含开关且断开，满足条件二。
 	if (bean.unittype() == eBREAKER)
 	{
+		if(bean.state() == 1)//开关闭合直接退出
+			return 2;
+
 		COM->triggerRule(ruleMap,2);
 		m_breakerCim = bean.cimid();
 	}
 	else if (bean.unittype() == eBUS)
 	{
+		//找到母线,说明操作的是母刀
+		hasBus = true;
+		
 		// 如果结果包含母线，满足条件一
 		COM->triggerRule(ruleMap,1);
 	}

@@ -4,6 +4,7 @@
 RuleBiz27::RuleBiz27()
 {
 	m_breakerCim = "";
+	hasBus = false;
 }
 
 bool RuleBiz27::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
@@ -62,22 +63,19 @@ bool RuleBiz27::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				topoBiz(saveid,unitId,ruleMap,beginBean.stationcim());
 
 			}
-			
-			// 条件一、二满足时，以开关为起始元件继续遍历另一端的连接点
-			R_ITERATOR iter1 = ruleMap.find(1);
-			R_ITERATOR iter2 = ruleMap.find(2);
-			if (iter1 == ruleMap.end() && iter2 == ruleMap.end())
-			{
-				if (m_breakerCim.length()>0)
-				{
-					RuleBiz27_1 r;
-					r.setReq(m_req);
-					r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
-				}
-			}
-
 		}
+	}
 
+	// 以开关为起始元件继续遍历，此时已经确定操作的是母刀
+	if (m_breakerCim.length()>0 && hasBus)
+	{
+		if (m_breakerCim.length()>0)
+		{
+			RuleBiz27_1 r;
+			r.setReq(m_req);
+			r.curUnit = unitcim;
+			r.topoByUnit(saveid,m_breakerCim,passNodes,ruleMap);
+		}
 	}
 
 	// 条件一、二、三同时满足时触发规则
@@ -104,6 +102,9 @@ int RuleBiz27::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim
 	}
 	else if (bean.unittype() == eBUS)
 	{
+		//找到母线,说明操作的是母刀
+		hasBus = true;
+
 		// 如果结果包含母线，满足条件二
 		COM->triggerRule(ruleMap,2);
 	}

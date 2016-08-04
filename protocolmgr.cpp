@@ -696,9 +696,9 @@ void ProtocolMgr::initDBCimid()
 
 void ProtocolMgr::getCimidSerialnum()
 {
-	//string sql = "select CimId,SerialNum from cim_serial ;";
+	string sql = "select CimId,SerialNum from cim_serial ;";
 	//科东的cimid和提供的关联cimid有区别前面加_Breaker_
-	string sql = "select CONCAT('_Breaker_',CimId) as CimId,SerialNum from cim_serial ;";
+	//string sql = "select CONCAT('_Breaker_',CimId) as CimId,SerialNum from cim_serial ;";
 	
 	LISTMAP staList;
 
@@ -729,6 +729,9 @@ void ProtocolMgr::getCimidSerialnum()
 		m_cimid_num_c_list.insert(std::pair<std::string,CIMID_NUM>(cimid_num.cimid,cimid_num));
 
 	}
+
+	LOG->debug("m_cimid_num_c_list.size()=%d ",m_cimid_num_c_list.size());
+	LOG->debug("m_cimid_num_n_list.size()=%d ",m_cimid_num_n_list.size());
 }
 
 void ProtocolMgr::setDataRelation()
@@ -754,6 +757,9 @@ void ProtocolMgr::setDataRelation()
 		}
 	}
 
+	LOG->debug("m_yxcimidval_list.size()=%d ",m_yxcimidval_list.size());
+	LOG->debug("m_yxpointval_list.size()=%d ",m_yxpointval_list.size());
+
 	//将解析到的数据更新到数据库中
 	updateData2DB();
 	//清除保存的解析点号和yx值对应关联关系列表
@@ -762,6 +768,7 @@ void ProtocolMgr::setDataRelation()
 
 void ProtocolMgr::updateData2DB()
 {
+	/*
 	//更新事件同步表
 	YXCIMID_VAL_LIST::iterator iter;
 	for (iter=m_yxcimidval_list.begin();iter!=m_yxcimidval_list.end();iter++)
@@ -776,10 +783,113 @@ void ProtocolMgr::updateData2DB()
 		psql = "UPDATE unit_status SET State=%d WHERE UnitCim='%s' ";
 		sql = App_Dba::instance()->formatSql(psql,iter->second.yxVal,iter->second.cimid.c_str());
 
-		int mret = App_Dba::instance()->execSql(sql.c_str());
+		//int mret = App_Dba::instance()->execSql(sql.c_str());
+	}
+	*/
+
+	
+
+
+
+	int ret;
+	int ncount=0;
+	//创建临时表:创建之前删除临时表
+	string dropsql = string("DROP TABLE IF EXISTS `syn_events_temp`;");
+	ret = DBA->execSql(dropsql.c_str());
+	if (ret <= 0)
+	{
+		LOG->message("updateData2DB: drop table syn_events_temp error dropsql=%s ",dropsql.c_str());
+
+	}
+	else
+	{
+		LOG->message("updateData2DB: drop table syn_events_temp success dropsql=%s ",dropsql.c_str());
+
 	}
 
-	//更新设备状态
+	//创建临时表
+	string createsql = string("CREATE TABLE `syn_events_temp` (\
+							  `UnitId` varchar(100) NOT NULL,\
+							  `EventValue` tinyint(4) NOT NULL,\
+							  `SynTime` varchar(50) NOT NULL DEFAULT ''\
+							  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+	ret = DBA->execSql(createsql.c_str());
+	if (ret <= 0)
+	{
+		LOG->message("updateData2DB: create table syn_events_temp error createsql=%s ",createsql.c_str());
+
+	}
+	else
+	{
+		LOG->message("updateData2DB: create table syn_events_temp success createsql=%s ",createsql.c_str());
+
+	}
+
+	string sqlInsert = string("INSERT INTO syn_events_temp (UnitId,EventValue,SynTime) VALUES ");
+	string sqlVal = "";
+	string  sql = "";
+
+	//组合插入语句值部分
+	YXCIMID_VAL_LIST::iterator iter;
+	for (iter=m_yxcimidval_list.begin();iter!=m_yxcimidval_list.end();iter++)
+	{
+		string sqlval = DBA->formatSql("('%s',%d,'%s'),",iter->second.cimid.c_str(),iter->second.yxVal,iter->second.dtime);
+
+		sqlVal.append(sqlval);
+
+		ncount++;
+	}
+
+	//去除最后一个逗号
+	sqlVal = sqlVal.substr(0,sqlVal.length()-1);
+
+	//拼接完整插入sql语句
+	sql.append(sqlInsert).append(sqlVal);
+
+	//执行插入语句
+	ret = DBA->execSql(sql.c_str());
+	if (ret <= 0)
+	{
+		LOG->message("updateData2DB: insert data to table syn_events_temp error sql=%s ",sql.c_str());
+
+		return;
+	}
+	else
+	{
+		LOG->message("updateData2DB: insert syn_events_temp data to table Counts = %d ",ncount);
+
+	}
+
+	//UPDATE syn_events sye,syn_events_temp syet set sye.eventvalue=syet.eventvalue,sye.syntime=syet.syntime where sye.unitid=syet.unitid
+	//UPDATE syn_events sye INNER JOIN syn_events_temp syet ON sye.unitid = syet.unitid SET sye.eventvalue = syet.eventvalue,sye.syntime = syet.syntime
+	//整体更新同步事件表:
+	string updatesynsql = string("UPDATE syn_events sye INNER JOIN syn_events_temp syet ON sye.unitid = syet.unitid SET sye.eventvalue = syet.eventvalue,sye.syntime = syet.syntime;");
+	ret = DBA->execSql(updatesynsql.c_str());
+	if (ret <= 0)
+	{
+		LOG->message("updateData2DB: update table syn_events from syn_events_temp error dropsql=%s ",updatesynsql.c_str());
+
+	}
+	else
+	{
+		LOG->message("updateData2DB: update table syn_events from syn_events_temp success dropsql=%s ",updatesynsql.c_str());
+
+	}
+
+	//UPDATE unit_status SET State=(SELECT syn_events.eventvalue from syn_events WHERE syn_events.unitid=unit_status.UnitCim)
+	//整体更新状态表:更新设备状态
+	string updateutssql = string("UPDATE unit_status SET State=(SELECT syn_events.eventvalue from syn_events WHERE syn_events.unitid=unit_status.UnitCim);");
+	ret = DBA->execSql(updateutssql.c_str());
+	if (ret <= 0)
+	{
+		LOG->message("updateData2DB: update table unit_status from syn_events error dropsql=%s ",updateutssql.c_str());
+
+	}
+	else
+	{
+		LOG->message("updateData2DB: update table unit_status from syn_events success dropsql=%s ",updateutssql.c_str());
+
+	}
 
 }
 
