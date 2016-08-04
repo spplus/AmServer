@@ -677,6 +677,7 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 			if (bean.cimid() == COM->getVal(unitMap,"UnitCim"))
 			{
 				pbean->set_iselectric(1);
+				LOG->debug("is electric unit:%s",bean.cimid().c_str());
 			}
 		}
 	}
@@ -751,7 +752,14 @@ void TopoBizCmd::checkIsCarSwitch(PBNS::OprationMsg_Request& req)
 
 		for (int i = 0;i<connList.size();i++)
 		{
+
 			STRMAP connMap = connList.at(i);
+
+			// 标记是否有母线
+			bool isBus = false;
+
+			// 本连接点找到的刀闸数量
+			int curNodeSwitchCount = 0;
 
 			// 根据连接点查找对应的设备集合
 			string connId = COM->getVal(connMap,"connId");
@@ -765,12 +773,27 @@ void TopoBizCmd::checkIsCarSwitch(PBNS::OprationMsg_Request& req)
 				int unitType = COM->getIval(unitMap,"UnitType");
 				if (unitType == eSWITCH)
 				{
-					flag++;
+					//flag++;
+					curNodeSwitchCount++;
 					unitcim = COM->getVal(unitMap,"id");
+				}
+				else if (unitType == eBUS)
+				{
+					isBus = true;
+					break;
 				}
 
 			}
 
+			// 如果找到母线，则该连接点被忽略
+			if (isBus)
+			{
+				curNodeSwitchCount = 0;
+			}
+			else
+			{
+				flag += curNodeSwitchCount;
+			}
 		}
 
 		// 如果只找到一个刀闸，则标识为推车，把该刀闸的cim加入到已操作列表中，并置为闭合
