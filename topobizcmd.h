@@ -99,7 +99,7 @@ private:
 	bool		check38(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check39(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check43(int saveid,string unitcim,PBNS::OprationMsg_Request req);
-
+	bool		check44(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check45(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check46(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check47(int saveid,string unitcim,PBNS::OprationMsg_Request req);

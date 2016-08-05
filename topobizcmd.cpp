@@ -21,6 +21,7 @@
 #include "rulebiz38.h"
 #include "rulebiz39.h"
 #include "rulebiz43.h"
+#include "rulebiz44.h"
 #include "rulebiz45.h"
 #include "rulebiz46.h"
 #include "rulebiz47.h"
@@ -747,6 +748,9 @@ void TopoBizCmd::checkIsCarSwitch(PBNS::OprationMsg_Request& req)
 
 		string unitcim = "";
 
+		// 保存找到的刀闸cim集合
+		vector<string> cimStack;
+
 		// 查询该元件两端的连接点集合
 		LISTMAP connList = getConnIdByUnitsId(req.unitcim());
 
@@ -776,6 +780,7 @@ void TopoBizCmd::checkIsCarSwitch(PBNS::OprationMsg_Request& req)
 					//flag++;
 					curNodeSwitchCount++;
 					unitcim = COM->getVal(unitMap,"id");
+					cimStack.push_back(unitcim);
 				}
 				else if (unitType == eBUS)
 				{
@@ -788,6 +793,13 @@ void TopoBizCmd::checkIsCarSwitch(PBNS::OprationMsg_Request& req)
 			// 如果找到母线，则该连接点被忽略
 			if (isBus)
 			{
+				
+				// 把该连接点找到的刀闸从堆栈中弹出
+				for (int k=0;k<curNodeSwitchCount;k++)
+				{
+					cimStack.pop_back();
+				}
+
 				curNodeSwitchCount = 0;
 			}
 			else
@@ -797,8 +809,9 @@ void TopoBizCmd::checkIsCarSwitch(PBNS::OprationMsg_Request& req)
 		}
 
 		// 如果只找到一个刀闸，则标识为推车，把该刀闸的cim加入到已操作列表中，并置为闭合
-		if (flag == 1)
+		if (flag == 1 && cimStack.size() == 1)
 		{
+			unitcim = cimStack.at(0);
 			PBNS::StateBean *bean = req.add_opdevlist();
 			bean->set_unittype(eSWITCH);
 			bean->set_cimid(unitcim);
@@ -1133,7 +1146,11 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 				ruleList.push_back(R_CHECK_48);
 			}
 		}
-		
+		//44规则未实现完整，暂不调用
+		/*if (check44(saveid,unitcim,req))
+		{
+			ruleList.push_back(R_CHECK_44);
+		}*/
 		if (check43(saveid,unitcim,req))
 		{
 			ruleList.push_back(R_CHECK_43);
