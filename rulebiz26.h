@@ -21,7 +21,7 @@ private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */);
 
 private:
-
+	bool				hasBus;
 	// 满足条件二的开关cim
 	string			m_breakerCim;
 };
