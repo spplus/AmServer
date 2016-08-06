@@ -131,13 +131,8 @@ void TopoBizCmd::loadCim()
 		}
 	}
 }
-
-void TopoBizCmd::topoEntire(sClientMsg *msg)
+void TopoBizCmd::topoEntireBiz()
 {
-
-	// 导CIM
-	loadCim();
-
 	// 检查状态表有没有ispower等于2的记录，如果没有说明尚未导入cim数据，则不执行拓扑分析
 	int count = 0;
 	char* psql = "select count(*) as count from unit_status where IsPower=2 ";
@@ -174,6 +169,18 @@ void TopoBizCmd::topoEntire(sClientMsg *msg)
 			//topoBySaveId(iter->second,eGROUNDSWITCH);
 		}
 	}
+}
+
+void TopoBizCmd::topoEntire(sClientMsg *msg)
+{
+
+	// 导CIM
+	loadCim();
+
+	// 全站拓扑逻辑
+	topoEntireBiz();
+	
+	// 返回客户端
 	PBNS::OprationMsg_Response res;
 	res.set_rescode(1);
 	App_ClientMgr::instance()->sendData(msg->connectId,res.SerializeAsString(),msg->type);

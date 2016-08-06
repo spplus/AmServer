@@ -25,6 +25,9 @@ public:
 	// 把消息加入到消息队列
 	int		put(ACE_Message_Block* mb);
 
+	//连接id
+	unsigned int	m_connectId;
+
 protected:
 	int		svc();
 	
@@ -32,6 +35,9 @@ private:
 
 	// 消息解析，再次进行协议解析，分离出数据区，交由业务处理成进行处理
 	void	parseData(ACE_Message_Block* mb);
+
+	//获取cimid对应的设备类型
+	int		getTypeByCimid(string cimid);
 
 private:
 	bool m_stop;

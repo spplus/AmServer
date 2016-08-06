@@ -53,7 +53,7 @@ public:
 	void	setDataRelation();
 
 	//更新数据到数据库
-	void	updateData2DB();
+	bool	updateData2DB();
 
 private:
 	TcpClient *m_client;

@@ -32,4 +32,19 @@ struct sClientMsg
 	}
 };
 
+//遥控数据本体
+typedef struct _YK_QUESTION
+{
+	unsigned char cType;		    // 遥控类型（0:遥控,   1:升降）
+	char   szOperator[16];			// 遥控操作人
+	char   szKeeper[16];		    // 遥控监护人
+	char   szObjCode[40];			// 遥控设备ID，开关/刀闸或变压器
+	char   szObjName[64];			// 遥控设备名称
+	unsigned char cOprateType;	    // 遥控：0拉闸，1合闸。升降：0降 1升 2急停
+	unsigned char cCheckMode;	    // 校验模式（0,表示紧急操作；1，表示带令操作，2，表示强制遥控）
+	unsigned char cPermissio;    	// 0可控　1不可控　2确认可控
+	char   szInfo[256];				// 可控不可控的原因
+}YK_QUESTION, *LPYKQUESTION;
+
+
 #endif

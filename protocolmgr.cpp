@@ -1,6 +1,6 @@
 ﻿#include "protocolmgr.h"
 #include "defines.h"
-
+#include "topobizcmd.h"
 
 // 本端的发送序号: 每发送一包I格式帧,发送序号+1
 unsigned short m_nLocalSendNum = 0x00 ;				// 本端的发送序号
@@ -761,12 +761,16 @@ void ProtocolMgr::setDataRelation()
 	LOG->debug("m_yxpointval_list.size()=%d ",m_yxpointval_list.size());
 
 	//将解析到的数据更新到数据库中
-	updateData2DB();
+	if(updateData2DB())
+	{
+		TopoBizCmd topo;
+		topo.topoEntireBiz();
+	}
 	//清除保存的解析点号和yx值对应关联关系列表
 	m_yxpointval_list.clear();
 }
 
-void ProtocolMgr::updateData2DB()
+bool ProtocolMgr::updateData2DB()
 {
 	/*
 	//更新事件同步表
@@ -852,7 +856,7 @@ void ProtocolMgr::updateData2DB()
 	{
 		LOG->message("updateData2DB: insert data to table syn_events_temp error sql=%s ",sql.c_str());
 
-		return;
+		return false;
 	}
 	else
 	{
@@ -876,9 +880,10 @@ void ProtocolMgr::updateData2DB()
 
 	}
 
+	//UPDATE unit_status,syn_events SET unit_status.State=syn_events.eventvalue where syn_events.unitid=unit_status.UnitCim and unit_status.SaveId=0
 	//UPDATE unit_status SET State=(SELECT syn_events.eventvalue from syn_events WHERE syn_events.unitid=unit_status.UnitCim)
 	//整体更新状态表:更新设备状态
-	string updateutssql = string("UPDATE unit_status SET State=(SELECT syn_events.eventvalue from syn_events WHERE syn_events.unitid=unit_status.UnitCim);");
+	string updateutssql = string("UPDATE unit_status,syn_events SET unit_status.State=syn_events.eventvalue where syn_events.unitid=unit_status.UnitCim and unit_status.SaveId=0;");
 	ret = DBA->execSql(updateutssql.c_str());
 	if (ret <= 0)
 	{
@@ -889,6 +894,15 @@ void ProtocolMgr::updateData2DB()
 	{
 		LOG->message("updateData2DB: update table unit_status from syn_events success dropsql=%s ",updateutssql.c_str());
 
+	}
+
+	if (ret>0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 
 }

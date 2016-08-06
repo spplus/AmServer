@@ -55,63 +55,143 @@ int ClientHandler::handle_input(ACE_HANDLE fd )
 	}
 
 	// 解析出数据包长度
-	int plen = 0;
+	unsigned long int plen = 0;
 	ACE_OS::memcpy(&plen,buff,FRAME_HEAD_LEN);
-	
-	// 判断数据包长度是否非法
-	if (plen > MAX_PACKET_LEN || plen <0)
-	{
-		LOG->warn("invalid packet length:%d",plen);
-		return 0;
-	}
-	// 接收包体内容
-	ACE_Message_Block* mb = new ACE_Message_Block(plen);
 
-	// 总接收长度
-	int total = 0;
-
-	// 继续读取包体内容
-	int dlen = peer().recv(mb->wr_ptr(),plen,&nowait);
-	if (dlen <= 0)
+	//判断是否是scada请求校验帧,校验帧帧头共8个字节帧头标志(4个字节:0xeb90eb90)+帧长度(4个字节:0x0000018c)
+	if (plen == 0x90eb90eb)
 	{
-		LOG->warn("recv packet failed,recived :%d",dlen);
-		mb->release();
-		return -1;
-	}
-	total = dlen;
-	mb->wr_ptr(dlen);
-
-	// 如果短读，则继续读取。
-	while(total < plen)
-	{
-		ACE_DEBUG((LM_DEBUG,"[%D]total:%d,this length:%d,read:%d.\n",plen,dlen,total));
-		dlen = peer().recv(mb->wr_ptr(),plen-total,&nowait);
-		if (dlen<=0)
+		char buffer[FRAME_HEAD_LEN];
+		int lenth = peer().recv(buffer,FRAME_HEAD_LEN,&nowait);
+		if (lenth <= 0)
 		{
+			LOG->message("recv length 0,connection closed.");
+			return -1;
+		}
+		if (lenth != FRAME_HEAD_LEN)
+		{
+			LOG->warn("invalid frame head len:%d",lenth);
+			return 0;
+		}
+
+		// 解析出数据包长度
+		unsigned long int plenth = 0;
+		ACE_OS::memcpy(&plenth,buffer,FRAME_HEAD_LEN);
+
+		// 判断数据包长度是否非法
+		if (plenth > MAX_PACKET_LEN || plenth <0)
+		{
+			LOG->warn("invalid packet length:%d",plen);
+			return 0;
+		}
+		// 接收包体内容
+		ACE_Message_Block* mb = new ACE_Message_Block(plenth);
+
+		// 总接收长度
+		int total = 0;
+
+		// 继续读取包体内容
+		int dlen = peer().recv(mb->wr_ptr(),plenth,&nowait);
+		if (dlen <= 0)
+		{
+			LOG->warn("recv packet failed,recived :%d",dlen);
 			mb->release();
 			return -1;
 		}
+		total = dlen;
 		mb->wr_ptr(dlen);
-		total += dlen;
-	}
 
-	// 接收完整包，投递到数据处理队列
-	if (total == plen)
-	{
-		// 把消息标记上连接ID,以业务层处理完可以原路返回
-		mb->msg_type(m_connectId);
-		if(App_CMService::instance()->putq(mb) != -1)
+		// 如果短读，则继续读取。
+		while(total < plenth)
 		{
-			LOG->debug("put one packet to message queue.");
+			ACE_DEBUG((LM_DEBUG,"[%D]total:%d,this length:%d,read:%d.\n",plenth,dlen,total));
+			dlen = peer().recv(mb->wr_ptr(),plenth-total,&nowait);
+			if (dlen<=0)
+			{
+				mb->release();
+				return -1;
+			}
+			mb->wr_ptr(dlen);
+			total += dlen;
 		}
-	}
+
+		// 接收完整包，投递到数据处理队列
+		if (total == plenth)
+		{
+			// 把消息标记上连接ID,以业务层处理完可以原路返回
+			mb->msg_type(m_connectId);
+			App_CMService::instance()->m_connectId = m_connectId;
+			if(App_CMService::instance()->putq(mb) != -1)
+			{
+				LOG->debug("put one packet to message queue.");
+			}
+		}
+		else
+		{
+			mb->release();
+
+			// 接收包长度错误
+			LOG->error("Invalid packet length.packet length %d,recive %d.",plenth,total);
+		}
+	} 
 	else
 	{
-		mb->release();
+		// 判断数据包长度是否非法
+		if (plen > MAX_PACKET_LEN || plen <0)
+		{
+			LOG->warn("invalid packet length:%d",plen);
+			return 0;
+		}
+		// 接收包体内容
+		ACE_Message_Block* mb = new ACE_Message_Block(plen);
 
-		// 接收包长度错误
-		LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
+		// 总接收长度
+		int total = 0;
+
+		// 继续读取包体内容
+		int dlen = peer().recv(mb->wr_ptr(),plen,&nowait);
+		if (dlen <= 0)
+		{
+			LOG->warn("recv packet failed,recived :%d",dlen);
+			mb->release();
+			return -1;
+		}
+		total = dlen;
+		mb->wr_ptr(dlen);
+
+		// 如果短读，则继续读取。
+		while(total < plen)
+		{
+			ACE_DEBUG((LM_DEBUG,"[%D]total:%d,this length:%d,read:%d.\n",plen,dlen,total));
+			dlen = peer().recv(mb->wr_ptr(),plen-total,&nowait);
+			if (dlen<=0)
+			{
+				mb->release();
+				return -1;
+			}
+			mb->wr_ptr(dlen);
+			total += dlen;
+		}
+
+		// 接收完整包，投递到数据处理队列
+		if (total == plen)
+		{
+			// 把消息标记上连接ID,以业务层处理完可以原路返回
+			mb->msg_type(m_connectId);
+			if(App_CMService::instance()->putq(mb) != -1)
+			{
+				LOG->debug("put one packet to message queue.");
+			}
+		}
+		else
+		{
+			mb->release();
+
+			// 接收包长度错误
+			LOG->error("Invalid packet length.packet length %d,recive %d.",plen,total);
+		}
 	}
+	
 	return 0;
 }
 

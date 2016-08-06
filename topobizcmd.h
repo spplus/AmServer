@@ -14,6 +14,9 @@ class TopoBizCmd	:public CmdBase
 public:
 	void			exec(sClientMsg* msg);
 
+	// 外部条件触发全站拓扑
+	void			topoEntireBiz();
+
 	// 按存档ID进行拓扑
 	void			topoBySaveId(string saveid,int unittype=eGENERATOR);
 private:

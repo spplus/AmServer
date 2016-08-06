@@ -27,7 +27,6 @@ private:
 private: 
 	// 连接ID
 	unsigned int	m_connectId;
-
 };
 
 #endif
