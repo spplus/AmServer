@@ -1088,15 +1088,19 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 				ruleList.push_back(R_CHECK_20);
 			}
 
-			if (check22(saveid,unitcim,req))
+			//乌海无地刀数据
+			/*if (check22(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_22);
-			}
+			}*/
 
-			if (check29(saveid,unitcim,req))
+			//合环规则暂不启用
+			/*if (check29(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_29);
-			}
+			}*/
+			//乌海无电抗器
+			/*
 			if (check32(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_32);
@@ -1104,8 +1108,9 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 			if (check33(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_33);
-			}
-
+			}*/
+			//乌海用不到
+			/*
 			if (check34(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_34);
@@ -1114,7 +1119,7 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 			if (check35(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_35);
-			}
+			}*/
 
 			if (check39(saveid,unitcim,req))
 			{
@@ -1124,11 +1129,12 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 			{
 				ruleList.push_back(R_CHECK_45);
 			}
-
+			//乌海无电抗器
+			/*
 			if (check46(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_46);
-			}
+			}*/
 		}
 
 		// 开关断开
@@ -1140,14 +1146,18 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 				ruleList.push_back(R_CHECK_2);
 			}
 
+			//解环规则暂不启用
+			/*
 			if (check28(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_28);
-			}
+			}*/
+			//乌海无电抗器
+			/*
 			if (check47(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_47);
-			}
+			}*/
 			if (check48(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_48);
@@ -1174,19 +1184,24 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 			{
 				ruleList.push_back(R_CHECK_21);
 			}
+			//乌海无地刀数据
+			/*
 			if (check22(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_22);
-			}
+			}*/
 			if (check26(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_26);
 			}
-
+			//合环规则暂不启用
+			/*
 			if (check29(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_29);
-			}
+			}*/
+			//乌海无电抗器
+			/*
 			if (check32(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_32);
@@ -1194,7 +1209,7 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 			if (check33(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_33);
-			}
+			}*/
 		}
 		else
 		{
@@ -1206,10 +1221,12 @@ void TopoBizCmd::roleCheck(int connid,PBNS::OprationMsg_Request req)
 			{
 				ruleList.push_back(R_CHECK_27);
 			}
+			//解环规则暂不启用
+			/*
 			if (check28(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_28);
-			}
+			}*/
 			if (check38(saveid,unitcim,req))
 			{
 				ruleList.push_back(R_CHECK_38);

@@ -13,8 +13,18 @@
 
 class RuleBiz1		:public TopoBase
 {
+public:
+	RuleBiz1();
+	bool topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
+
 private:
-	virtual int		topoBiz(int saveid,string unitcim,map<int,int>& ruleMap,string stationcim="");
+	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim="");
+
+	//在当前集合查找间隔边界,并针对边界类型做不同处理
+	bool topoRange(LISTMAP unitsList, RMAP& ruleMap);
+
+	//第一次执行时检查手车
+	bool isInit;
 };
 
 #endif

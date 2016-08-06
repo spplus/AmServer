@@ -14,6 +14,7 @@
 class RuleBiz4		:public TopoBase
 {
 public:
+	RuleBiz4();
 	// 拓扑分析框架算法
 	virtual	bool		topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
 
@@ -22,6 +23,9 @@ private:
 
 	//在当前集合查找间隔边界
 	bool topoRange(LISTMAP unitsList);
+
+	//第一次执行时检查手车
+	bool isInit;
 };
 
 #endif

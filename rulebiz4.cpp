@@ -1,8 +1,19 @@
 ﻿#include "rulebiz4.h"
 
+RuleBiz4::RuleBiz4()
+{
+	isInit = true;
+}
 
 bool RuleBiz4::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap)
 {
+	// 第一次执行时检查是否为推车刀闸，如果是则把推车刀闸加入到已操作列表
+	if(isInit)
+	{
+		isInit = !isInit;
+		checkIsCarSwitch(m_req);
+	}
+
 	PBNS::StateBean beginBean = getUnitByCim(saveid,unitcim);
 
 	// 把当前元件加入到已分析列表

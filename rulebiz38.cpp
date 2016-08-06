@@ -58,17 +58,13 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				// 本次查询的元件CIMID
 				unitId = unitIter->second;
 				int ret = topoBiz(saveid,unitId,ruleMap,"");
-				if (ret ==1)
-				{
-					topoByUnit(saveid,unitId,passNodes,ruleMap);
-				}
-				else if (ret == 2)
+				if (ret == 2)
 				{
 					return false;
 				}
 				
 				
-				//条件一、二成立时说明变压器间隔连通且另一边界为母线，接下来查询母线其他连通间隔是否含有变压器。查询母线另一侧的连接点
+				//条件一、二成立时说明开关闭合且一个边界为母线，接下来查询开关另一侧边界
 				// 判断条件一，条件二是否成立
 
 				R_ITERATOR iter1 = ruleMap.find(1);
@@ -77,22 +73,21 @@ bool RuleBiz38::topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& rul
 				{
 					RuleBiz38_1 r;
 					r.setReq(m_req);
-					r.topoByUnit(saveid,m_unitCim,passNodes,ruleMap);
-				}
-
-				// 规则被触发
-				if (ruleMap.size() == 0)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
+					if(!r.topoByUnit(saveid,m_unitCim,passNodes,ruleMap))
+						return false;
 				}
 			}
 		}
 	}
-	return false;
+	// 规则被触发
+	if (ruleMap.size() == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 

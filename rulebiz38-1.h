@@ -15,8 +15,10 @@ class RuleBiz38_1		:public TopoBase
 {
 public:
 	RuleBiz38_1();
+	bool topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
 private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */);
+	int topoRange(int saveid,LISTMAP unitsList,RMAP& ruleMap);
 
 private:
 	

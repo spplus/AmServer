@@ -19,18 +19,8 @@ public:
 private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */);
 
-private:
-	// 包含的刀闸数量
-	int				m_switchCount;
-
-	// 刀闸状态
-	bool				m_switchState;
-
-	// next cim
-	string			m_unitCim;
-
-	// 刀闸列表
-	vector<string>	m_switchList;
+	//检查集合中有没有间隔边界以及边界是何类型
+	int RuleBiz44::checkList(int saveid,LISTMAP unitsList);
 };
 
 #endif

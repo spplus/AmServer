@@ -36,6 +36,15 @@ public:
 	// 设置经历过的节点
 	void				setPassedNodes(STRMAP &passedNodes);
 
+	//开关变位拓扑，获取整站元件的带电状态
+	bool topoOnBreakerChange(PBNS::OprationMsg_Request req);
+
+	//以指定元件进行一轮拓扑
+	void topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap,PBNS::OprationMsg_Request req);
+
+	// 判断是否是推车刀闸
+	void		checkIsCarSwitch(PBNS::OprationMsg_Request& req);
+
 protected:
 	// 通过cimid获取unit信息
 	PBNS::StateBean getUnitByCim(int saveid,string unitcim);
@@ -46,11 +55,16 @@ protected:
 	// 根据连接点查找关联的设备
 	LISTMAP			getUnitsByConnId(string connid,string saveid);
 
+	//根据cimid获取元件对象
+	int findUnitByCim(string cim,PBNS::OprationMsg_Request& req,PBNS::StateBean &bean);
+
 protected:
 	// 本次操作设备的cim
 	string			m_opcim;
 	STRMAP			m_passedNodes;
 	PBNS::OprationMsg_Request	m_req;
+	//开关变位请求拓扑出的预期元件状态集合
+	vector<PBNS::StateBean> expectMap;
 };
 
 #endif

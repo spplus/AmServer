@@ -1,5 +1,4 @@
 ﻿#include "rulebiz25.h"
-#include "rulebiz25-1.h"
 
 RuleBiz25::RuleBiz25()
 {
@@ -132,7 +131,7 @@ int RuleBiz25::topoBiz(int saveid,string unitcim,RMAP& ruleMap,string conncim)
 	// 保存连接点cim
 	bean.set_stationcim(conncim);
 
-	// 1.如果包含开关且闭合，满足条件一，否则直接跳出逻辑。
+	// 将找到的所有其他刀闸都保存
 	if (bean.unittype() == eSWITCH && bean.cimid() != m_opcim)
 	{
 		m_switchList.push_back(bean);
