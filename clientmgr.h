@@ -15,6 +15,7 @@
 #include "ace/Singleton.h"
 #include "clienthandler.h"
 #include "packetparser.h"
+#include "clientmsgservice.h"
 
 using namespace std;
 
@@ -34,6 +35,8 @@ public:
 	int			sendData(unsigned int connid,string data,int msgtype);
 
 private:
+	//保存scada请求校验返回的关联信息
+	void	saveQusetion2DB(string cimid,int action,string rulelist);
 
 	// 数据打包
 	PacketParser	m_pack;

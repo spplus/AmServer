@@ -871,12 +871,12 @@ bool ProtocolMgr::updateData2DB()
 	ret = DBA->execSql(updatesynsql.c_str());
 	if (ret <= 0)
 	{
-		LOG->message("updateData2DB: update table syn_events from syn_events_temp error dropsql=%s ",updatesynsql.c_str());
+		LOG->message("updateData2DB: update table syn_events from syn_events_temp error updatesql=%s ",updatesynsql.c_str());
 
 	}
 	else
 	{
-		LOG->message("updateData2DB: update table syn_events from syn_events_temp success dropsql=%s ",updatesynsql.c_str());
+		LOG->message("updateData2DB: update table syn_events from syn_events_temp success updatesql=%s ",updatesynsql.c_str());
 
 	}
 
@@ -887,12 +887,12 @@ bool ProtocolMgr::updateData2DB()
 	ret = DBA->execSql(updateutssql.c_str());
 	if (ret <= 0)
 	{
-		LOG->message("updateData2DB: update table unit_status from syn_events error dropsql=%s ",updateutssql.c_str());
+		LOG->message("updateData2DB: update table unit_status from syn_events error updatesql=%s ",updateutssql.c_str());
 
 	}
 	else
 	{
-		LOG->message("updateData2DB: update table unit_status from syn_events success dropsql=%s ",updateutssql.c_str());
+		LOG->message("updateData2DB: update table unit_status from syn_events success updatesql=%s ",updateutssql.c_str());
 
 	}
 

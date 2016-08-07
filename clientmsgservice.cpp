@@ -5,6 +5,7 @@
 #include "defines.h"
 #include "dbaccess.h"
 #include "buff/msgbody.pb.h"
+#include "clientmgr.h"
 
 void ClientMsgService::start()
 {
@@ -60,8 +61,21 @@ void ClientMsgService::parseData(ACE_Message_Block* mb)
 
 		//解析数据区数据
 		YK_QUESTION *pYk = (YK_QUESTION*)&jydata[0];
+		//赋值指针供返回发送到客户端(scada服务器)时用
+		pykqust = new YK_QUESTION;
+		pykqust = pYk;
 		
+		//遥控操作:遥控：0拉闸，1合闸。升降：0降 1升 2急停
 		int nyktype = (int)pYk->cOprateType;
+		if (nyktype == 2)	//急停直接返回
+		{
+			//直接返回中的数据不再这里填充，在发送时再填充
+			string strdata="scada";
+			App_ClientMgr::instance()->sendData(m_connectId,strdata,CMD_SCADA_QUESTION);
+			return;
+		}
+
+		//操作对应的设备cimid
 		string cimid = pYk->szObjCode;
 		//根据设备cimid获取设备类型
 		int cimtype = getTypeByCimid(cimid);
@@ -120,7 +134,6 @@ int ClientMsgService::getTypeByCimid(string cimid)
 
 	char * psql = "SELECT UnitType from units where CimId='%s'";
 	string sql = DBA->formatSql(psql,cimid.c_str());
-	//QString qsql = QString("SELECT COUNT(CimId) AS count FROM stations WHERE CimId='%1'").arg(subiter->second.faccimid.c_str());
 	LISTMAP countlist;
 
 	int unitType = 0;

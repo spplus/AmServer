@@ -27,6 +27,8 @@ public:
 
 	//连接id
 	unsigned int	m_connectId;
+	//scada请求校验数据区指针
+	YK_QUESTION     *pykqust;
 
 protected:
 	int		svc();

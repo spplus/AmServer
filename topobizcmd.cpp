@@ -69,7 +69,7 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 	for (int i = 0;i<powerList.size();i++)
 	{
 		STRMAP power = powerList.at(i);
-		iter = power.find("Id");
+		iter = power.find("CimId");
 		string powerid ,stationid;
 		if (iter != power.end())
 		{
@@ -100,37 +100,35 @@ void TopoBizCmd::topoBySaveId(string saveid,int unittype)
 void TopoBizCmd::loadCim()
 {
 	// 判断是否有更新
-	char *psql = "select id, count(*) as count from system_config where isnew=1";
+	char *psql = "select id from system_config where isnew=1";
 	LISTMAP countList = DBA->getList(psql);
 	if (countList.size() > 0)
 	{
 		STRMAP countMap = countList.at(0);
-		int count = COM->getIval(countMap,"count");
-		if (count > 0)
+		int factype = COM->str2i(App_Config::instance()->getValue(CIM_ROOT,CIM_PRODUCTID));
+		CimLoader cloader;
+		string cimname = App_Config::instance()->getValue(CIM_ROOT,CIM_WORKPATH);
+		cimname += "/";
+		cimname +=  App_Config::instance()->getValue(CIM_ROOT,CIM_NAME);
+
+		// 如果导库成功，则更新系统标志位0
+		if(cloader.Load(cimname,factype) == 0)
 		{
-			int factype = COM->str2i(App_Config::instance()->getValue(CIM_ROOT,CIM_PRODUCTID));
-			CimLoader cloader;
-			string cimname = App_Config::instance()->getValue(CIM_ROOT,CIM_WORKPATH);
-			cimname += "/";
-			cimname +=  App_Config::instance()->getValue(CIM_ROOT,CIM_NAME);
-			
-			// 如果导库成功，则更新系统标志位0
-			if(cloader.Load(cimname,factype) == 0)
+			psql = "update system_config set IsNew=0,ModifyTime=now() where id=%d";
+			string sql = DBA->formatSql(psql,COM->getIval(countMap,"id"));
+			if (DBA->execSql(sql.c_str()) <=0 )
 			{
-				psql = "update system_config set IsNew=0,ModifyTime=now() where id=%d";
-				string sql = DBA->formatSql(psql,COM->getIval(countMap,"id"));
-				if (DBA->execSql(sql.c_str()) <=0 )
-				{
-					LOG->warn("更新CIM文件变更标志失败");
-				}
-				else
-				{
-					LOG->message("更新CIM文件变更标志成功");
-				}
+				LOG->warn("更新CIM文件变更标志失败");
+			}
+			else
+			{
+				LOG->message("更新CIM文件变更标志成功");
 			}
 		}
 	}
 }
+
+
 void TopoBizCmd::topoEntireBiz()
 {
 	// 检查状态表有没有ispower等于2的记录，如果没有说明尚未导入cim数据，则不执行拓扑分析
@@ -314,6 +312,152 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 			{
 				STRMAP  unitMap = unitsList.at(k);
 				MAP_ITERATOR unitIter = unitMap.find("id");
+				string subUnitId ;
+				if (unitIter != unitMap.end())
+				{
+					// 判断是否已经做为起始设备进行搜索，如果是则跳过
+					if (passNodes.find(unitIter->second) != passNodes.end())
+					{
+						continue;
+					}
+					else
+					{
+						passNodes.insert(MAPVAL(unitIter->second,unitIter->second));
+					}
+				}
+
+				// 本次查询的元件CIMID
+				subUnitId = unitIter->second;
+
+				// 查询元件类型
+				unitIter = unitMap.find("UnitType");
+
+				// 设备类型
+				int etype ;
+
+				// 标记时候需要拓扑 0 需要拓扑，1 不需要拓扑
+				int flag = 0;
+
+				if (unitIter != unitMap.end())
+				{
+					etype = str2i(unitIter->second);
+					if (etype == eBREAKER || etype == eSWITCH)
+					{
+						// 4.如果该设备为为开关，刀闸，闭合即为带电，否则为不带电；
+						unitIter = unitMap.find("State");
+						if (unitIter != unitMap.end())
+						{
+							int state = str2i(unitIter->second);
+							if (state == 1)
+							{
+								// 更新该设备带电状态为带电
+								updateIsElectricByUnitId(saveid,subUnitId,1);
+							}
+							else
+							{
+								// 6.如果该设备为开关，且为断开，则不用再遍历该设备的关联设备；
+								updateIsElectricByUnitId(saveid,subUnitId,0);
+
+								// 标记不需要拓扑
+								flag = 1;
+							}
+						}
+
+					}
+					else
+					{
+						// 5.如果该设备不是开关设备，则设置为带电；
+						updateIsElectricByUnitId(saveid,subUnitId,1);
+					}
+				}
+
+				// 如果当前设备为进出线，则到进出线关联关系表中，查出进出线关联的另一端站点ID，更新状态表中进出线在该站点为相对电源点
+				if (etype == eLINE)
+				{
+					LISTMAP stationList = getStationIdByLineId(subUnitId,stationid);
+					if (stationList.size()>0)
+					{
+						STRMAP stationMap = stationList.at(0);
+						unitIter = stationMap.find("StationCim");
+						if (unitIter != stationMap.end())
+						{
+							updateIsPowerByUnitId(subUnitId,unitIter->second,saveid);
+						}
+					}
+
+				}
+
+				// 判断是否为跨站点
+				unitIter = unitMap.find("StationId");
+				//if (unitIter != unitMap.end())
+				//{
+
+				//	// 如果该次遍历出的设备站点ID与起始设备的站点ID不相同，且该设备为进出线，则标记该进出线为相对电源点；
+				//	if (str2i(unitIter->second) != str2i(stationid))
+				//	{
+				//		if (etype == eLine)
+				//		{
+				//			updateIsPowerByUnitId(unitid);
+				//		}
+				//	}
+				//}
+
+				string sId;
+				if (unitIter != unitMap.end())
+				{
+					// 站点ID
+					sId = unitIter->second;
+				}
+
+				if (flag != 1)
+				{
+					// 递归，以该元件为起点进行重新遍历
+					topoByUnitId(saveid,subUnitId,sId,passNodes);
+				}
+
+			}
+
+		}
+
+	}
+}
+
+
+/*
+void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMAP& passNodes)
+{
+	// 把当前元件加入到已分析列表
+	passNodes.insert(MAPVAL(unitid,unitid));
+
+	// 2.根据元件ID，查找对应的连接点（可能是两个）
+	LISTMAP connIds = getConnIdByUnitsId(unitid);
+
+	// 3.根据连接点ID在连接关系表查询关联的设备
+	for (int j = 0;j<connIds.size();j++)
+	{
+		STRMAP connMap = connIds.at(j);
+		MAP_ITERATOR connIter = connMap.find("connId");
+		if (connIter != connMap.end())
+		{
+			// 判断是否已经查找过的连接点，如果是则跳出，不是则加入
+			if (passNodes.find(connIter->second) != passNodes.end())
+			{
+				continue;
+			}
+			else
+			{
+				passNodes.insert(MAPVAL(connIter->second,connIter->second));
+			}
+
+
+			// 根据连接点，查找该连接点关联的设备集合
+			LISTMAP unitsList = getUnitsByConnId(connIter->second,saveid);
+
+			// 遍历该设备集合
+			for (int k = 0;k<unitsList.size();k++)
+			{
+				STRMAP  unitMap = unitsList.at(k);
+				MAP_ITERATOR unitIter = unitMap.find("id");
 				string unitId ;
 				if (unitIter != unitMap.end())
 				{
@@ -423,7 +567,7 @@ void TopoBizCmd::topoByUnitId(string saveid,string unitid,string stationid,STRMA
 
 	}
 }
-
+*/
 void TopoBizCmd::topoByGround(string saveid,string unitid,string stationid,STRMAP& passNodes)
 {
 	// 把当前元件加入到已分析列表
@@ -585,10 +729,42 @@ void TopoBizCmd::updateIsGroundByUnitId(string saveid,string unitid,int state)
 	}
 }
 
+void TopoBizCmd::adjustPowerPoint(LISTMAP &pList,PBNS::OprationMsg_Request req)
+{
+	LISTMAP retList;
+	for (int i = 0;i<pList.size();i++)
+	{
+		STRMAP pMap = pList.at(i);
+
+		int unittype = COM->getIval(pMap,"IsPower");
+		string stationcim = COM->getVal(pMap,"StationCim");
+
+		if (unittype == 1 || unittype == 2)
+		{
+			// 判断是否需要剔除
+			// 从客户端发过来的列表中查找，如果找到，判断state是否为0，如果为0，则剔除此电源点
+			// 把查询到的进行标记，在服务器端列表查询结束后，检测没有查询到的记录，如果state为1，
+			// 则需要添加到列表
+			for (int j = 0;j<req.linelist_size();j++)
+			{
+				PBNS::StateBean lbean = req.linelist(j);
+				if (lbean.stationcim() == stationcim)
+				{
+
+				}
+			}
+			
+		}
+
+	}
+
+}
+
 string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 {
 	int saveId = req.saveid();
 	string cimid = req.unitcim();
+	string stationcim = req.stationcim();
 	int state = req.type();
 
 	// 设备的cimid,带电状态 1带电，0不带电
@@ -602,8 +778,8 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 		"from unit_status a " \
 		"left join units b on a.UnitCim=b.CimId " \
 		"left join voltages c on c.CimId = b.VolCim " \
-		"where a.SaveId=%d and a.StationCim =(select StationCim from units where CimId='%s')";
-	string sql = App_Dba::instance()->formatSql(psql,saveId,cimid.c_str());
+		"where a.SaveId=%d and a.StationCim = '%s'";
+	string sql = App_Dba::instance()->formatSql(psql,saveId,stationcim.c_str());
 
 	LISTMAP unitList = App_Dba::instance()->getList(sql.c_str());
 
@@ -639,9 +815,65 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 			}
 		}
 	}
-
 	// 拓扑结果返回客户端
 	PBNS::OprationMsg_Response res;
+
+	/*
+	// 查询进出线列表
+	psql = "select a.CimId,b.IsElectric, c.StationCim from " \
+		"(select CimId from units where StationCim='%s' and UnitType=9) a " \
+		"left join unit_status b on a.CimId=b.UnitCim left join " \
+		"related_line c on a.CimId=c.UnitCim " \
+		"where b.SaveId=%d and b.IsPower=0 and c.StationCim !='%s'";
+	sql = DBA->formatSql(sql.c_str(),stationcim.c_str(),saveId,stationcim.c_str());
+
+	LISTMAP lineList = DBA->getList(sql.c_str());
+	for (int i = 0;i<lineList.size();i++)
+	{
+		STRMAP lineMap = lineList.at(i);
+		string cim = COM->getVal(lineMap,"CimId");
+		int isEle = COM->getIval(lineMap,"IsElectric");
+		string objcim = COM->getVal(lineMap,"StationCim");
+
+		int flag = 0;
+		for (int j = 0;j<rsltMap.size();j++)
+		{
+			PBNS::StateBean bean = rsltMap.at(j);
+			if (bean.cimid() == cim)
+			{
+				flag = 1;
+				break;
+			}
+		}
+
+		// 判断是否带电
+		if (flag == 1)
+		{
+			if (isEle == 0)
+			{
+				// 带电状态由0到1的标记为需要增加的；
+				PBNS::StateBean *pbean = res.add_linelist();
+				pbean->set_iselectric(1);
+				pbean->set_cimid(cim);
+				pbean->set_stationcim(objcim);
+				pbean->set_state(1);
+			}
+		}
+		else
+		{
+			if (isEle == 1)
+			{
+				PBNS::StateBean *pbean = res.add_linelist();
+				pbean->set_iselectric(0);
+				pbean->set_cimid(cim);
+				pbean->set_stationcim(objcim);
+				pbean->set_state(0);
+			}
+			
+		}
+	}
+
+	*/
 	res.set_optype(state);
 
 	for (int i = 0;i<unitList.size();i++)
@@ -689,6 +921,7 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 			}
 		}
 	}
+	
 	// 返回服务器自动设置设备列表，加入到客户端操作设备列表
 	for (int i = 0;i<req.opdevlist_size();i++)
 	{

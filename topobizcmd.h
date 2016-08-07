@@ -80,6 +80,9 @@ private:
 	// 判断是否是推车刀闸
 	void		checkIsCarSwitch(PBNS::OprationMsg_Request& req);
 
+	// 检测是否需要补充或剔除电源电
+	void		adjustPowerPoint(LISTMAP &pList,PBNS::OprationMsg_Request req);
+
 	bool		check1(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check2(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check4(int saveid,string unitcim,PBNS::OprationMsg_Request req);

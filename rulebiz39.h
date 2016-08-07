@@ -18,19 +18,23 @@ public:
 	bool				topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
 private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */);
+	int topoRange(int saveid,LISTMAP unitsList,RMAP& ruleMap);
 
 private:
-	// 包含的刀闸数量
-	int				m_switchCount;
+	// 遍历到的刀闸
+	LISTMAP  switchList;
 
-	// 刀闸状态
-	bool				m_switchState;
+	//当前连接点cim
+	string curConn;
 
-	// next cim
-	string			m_unitCim;
+	//找到母线次数
+	int busNum;
 
-	// 刀闸列表
-	vector<string>	m_switchList;
+	//第一次执行该方法，非递归
+	bool isInit;
+
+	//开关两侧的连接点
+	STRMAP connBreaker;
 };
 
 #endif
