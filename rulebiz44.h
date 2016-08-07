@@ -15,12 +15,12 @@ class RuleBiz44		:public TopoBase
 {
 public:
 	RuleBiz44();
-	bool				topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
+	bool			topoByUnit(int saveid,string unitcim,STRMAP& passNodes,RMAP& ruleMap);
 private:
 	virtual int		topoBiz(int saveid,string unitcim,RMAP& ruleMap,string stationcim/* ="" */);
 
 	//检查集合中有没有间隔边界以及边界是何类型
-	int RuleBiz44::checkList(int saveid,LISTMAP unitsList);
+	int				checkList(int saveid,LISTMAP unitsList);
 };
 
 #endif
