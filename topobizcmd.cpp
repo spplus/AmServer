@@ -41,6 +41,10 @@ void TopoBizCmd::exec(sClientMsg* msg)
 	case CMD_CHECK_PASS:					// 规则校验通过
 		topoOnBreakerChange(msg);
 		break;
+	case CMD_DEV_STATE:
+		topoOnFileOpen(msg);
+		
+		break;
 	default:
 		break;
 	}
@@ -729,35 +733,157 @@ void TopoBizCmd::updateIsGroundByUnitId(string saveid,string unitid,int state)
 	}
 }
 
-void TopoBizCmd::adjustPowerPoint(LISTMAP &pList,PBNS::OprationMsg_Request req)
+LISTMAP TopoBizCmd::adjustPowerPoint(LISTMAP &pList,PBNS::OprationMsg_Request req)
 {
-	LISTMAP retList;
+	// 服务器端待拓扑的进出线列表
+	LISTMAP slineList;
 	for (int i = 0;i<pList.size();i++)
 	{
 		STRMAP pMap = pList.at(i);
 
 		int unittype = COM->getIval(pMap,"IsPower");
-		string stationcim = COM->getVal(pMap,"StationCim");
 
 		if (unittype == 1 || unittype == 2)
 		{
-			// 判断是否需要剔除
-			// 从客户端发过来的列表中查找，如果找到，判断state是否为0，如果为0，则剔除此电源点
-			// 把查询到的进行标记，在服务器端列表查询结束后，检测没有查询到的记录，如果state为1，
-			// 则需要添加到列表
-			for (int j = 0;j<req.linelist_size();j++)
-			{
-				PBNS::StateBean lbean = req.linelist(j);
-				if (lbean.stationcim() == stationcim)
-				{
-
-				}
-			}
-			
+			slineList.push_back(pMap);
 		}
-
 	}
 
+	// 判断客户端是否传进出线列表，如果没有，则直接返回
+	if (req.linelist_size()<=0)
+	{
+		return slineList;
+	}
+
+	LISTMAP retList;
+	string stationcim = req.stationcim();
+	
+	vector<PBNS::StateBean> lineList;
+	
+	// 1.从客户端进出线列表中找出该站点下的记录
+	for (int i = 0;i<req.linelist_size();i++)
+	{
+		PBNS::StateBean lbean = req.linelist(i);
+		if (lbean.stationcim() == stationcim)
+		{
+			lineList.push_back(lbean);
+		}
+	}
+
+	// 如果没有当前站点的进出线，直接返回
+	if (lineList.size()<=0)
+	{
+		return slineList;
+	}
+
+	// 2.在找出的本站点的进出线集合中查看，该进出线的状态，如果为1，则判断是否存在于服务器端列表中
+	// 如果不存在，则加入
+	// 如果为0，则判断是否存在于服务器列表，如果存在，则删除
+	list<PBNS::StateBean> addList,subList;
+	
+	for(int j=0;j<lineList.size();j++)
+	{
+		PBNS::StateBean lbean = lineList.at(j);
+		if (lbean.state() == 1)
+		{
+			if (findLineFromServerList(slineList,lbean.cimid()) < 0)
+			{
+				addList.push_back(lbean);
+			}
+		}
+		else
+		{
+			if (findLineFromServerList(slineList,lbean.cimid()) >= 0 )
+			{
+				subList.push_back(lbean);
+			}
+		}
+	}
+
+	// 组建返回值列表
+	// 先剔除，再添加
+	vector<string> cimList;
+	for (int i = 0;i<slineList.size();i++)
+	{
+		STRMAP smap = slineList.at(i);
+		
+		string unitcim = COM->getVal(smap,"UnitCim");
+		
+		// 从剔除列表中查找是否存在，如果存在，则不加入到返回值列表
+		if (findLineFromList(subList,unitcim) >= 0)
+		{
+			continue;
+		}
+		cimList.push_back(unitcim);
+	}
+	
+	// 把新增的加入到返回值列表
+
+	list<PBNS::StateBean>::iterator iter = addList.begin();
+	for (;iter != addList.end();iter++)
+	{
+		// 新增记录不在服务器
+		if (findLineFromServerList(slineList,iter->cimid()) < 0)
+		{
+			cimList.push_back(iter->cimid());
+		}
+	}
+
+	// 拼接SQL条件
+	string cims;
+	for (int i = 0;i<cimList.size();i++)
+	{
+		cims += cimList.at(i);
+		cims += ",";
+	}
+
+	if (cims.length()>0)
+	{
+		cims = cims.substr(0,cims.length()-1);
+	}
+	else
+	{
+		return slineList;
+	}
+	
+
+	// 查询电压等级等
+	char * psql = "select a.UnitCim,a.StationCim,IsElectric,IsPower,c.Color,a.State,b.UnitType " \
+		"from unit_status a " \
+		"left join units b on a.UnitCim=b.CimId " \
+		"left join voltages c on c.CimId = b.VolCim " \
+		"where a.SaveId=%d and a.UnitCim in ('%s')";
+	string sql = App_Dba::instance()->formatSql(psql,req.saveid(),cims.c_str());
+
+	retList = DBA->getList(sql.c_str());
+	return retList;
+}
+
+int TopoBizCmd::findLineFromList(list<PBNS::StateBean> plist,string cim)
+{
+	list<PBNS::StateBean>::iterator iter = plist.begin();
+	for (;iter != plist.end();iter++)
+	{
+		if (iter->cimid() == cim)
+		{
+			return 1;
+		}
+	}
+
+	return -1;
+}
+
+int TopoBizCmd::findLineFromServerList(LISTMAP plist,string cim)
+{
+	for (int n = 0;n<plist.size();n++)
+	{
+		STRMAP lineMap = plist.at(n);
+		if (COM->getVal(lineMap,"UnitCim") == cim)
+		{
+			return n;
+		}
+	}
+	return -1;
 }
 
 string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
@@ -784,15 +910,17 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 	LISTMAP unitList = App_Dba::instance()->getList(sql.c_str());
 
 	// 2.对以上结果中的ispower的值等于1或者2的记录作为起点进行拓扑分析。
-	for (int i = 0;i<unitList.size();i++)
+	LISTMAP lineList = adjustPowerPoint(unitList,req);
+
+	for (int i = 0;i<lineList.size();i++)
 	{
-		STRMAP unitMap = unitList.at(i);
-		MAP_ITERATOR iter = unitMap.find("IsPower");
+		STRMAP unitMap = lineList.at(i);
+		//MAP_ITERATOR iter = unitMap.find("IsPower");
 
 		// 相对电源点或绝对电源电记录
-		if (iter != unitMap.end() && (str2i(iter->second) == 1 || str2i(iter->second) == 2))
+		//if (iter != unitMap.end() && (str2i(iter->second) == 1 || str2i(iter->second) == 2))
 		{
-			iter = unitMap.find("UnitCim");
+			MAP_ITERATOR iter = unitMap.find("UnitCim");
 			if (iter != unitMap.end())
 			{
 				PBNS::StateBean bean;
@@ -818,62 +946,10 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 	// 拓扑结果返回客户端
 	PBNS::OprationMsg_Response res;
 
-	/*
-	// 查询进出线列表
-	psql = "select a.CimId,b.IsElectric, c.StationCim from " \
-		"(select CimId from units where StationCim='%s' and UnitType=9) a " \
-		"left join unit_status b on a.CimId=b.UnitCim left join " \
-		"related_line c on a.CimId=c.UnitCim " \
-		"where b.SaveId=%d and b.IsPower=0 and c.StationCim !='%s'";
-	sql = DBA->formatSql(sql.c_str(),stationcim.c_str(),saveId,stationcim.c_str());
-
-	LISTMAP lineList = DBA->getList(sql.c_str());
-	for (int i = 0;i<lineList.size();i++)
-	{
-		STRMAP lineMap = lineList.at(i);
-		string cim = COM->getVal(lineMap,"CimId");
-		int isEle = COM->getIval(lineMap,"IsElectric");
-		string objcim = COM->getVal(lineMap,"StationCim");
-
-		int flag = 0;
-		for (int j = 0;j<rsltMap.size();j++)
-		{
-			PBNS::StateBean bean = rsltMap.at(j);
-			if (bean.cimid() == cim)
-			{
-				flag = 1;
-				break;
-			}
-		}
-
-		// 判断是否带电
-		if (flag == 1)
-		{
-			if (isEle == 0)
-			{
-				// 带电状态由0到1的标记为需要增加的；
-				PBNS::StateBean *pbean = res.add_linelist();
-				pbean->set_iselectric(1);
-				pbean->set_cimid(cim);
-				pbean->set_stationcim(objcim);
-				pbean->set_state(1);
-			}
-		}
-		else
-		{
-			if (isEle == 1)
-			{
-				PBNS::StateBean *pbean = res.add_linelist();
-				pbean->set_iselectric(0);
-				pbean->set_cimid(cim);
-				pbean->set_stationcim(objcim);
-				pbean->set_state(0);
-			}
-			
-		}
-	}
-
-	*/
+	// 设置本次拓扑产生的进出线变更列表
+	setLineList2Res(res,saveId,stationcim,rsltMap);
+	
+	// 返回本次操作的类型
 	res.set_optype(state);
 
 	for (int i = 0;i<unitList.size();i++)
@@ -936,6 +1012,71 @@ string TopoBizCmd::execTopoOnBreakerChange(PBNS::OprationMsg_Request req)
 	LOG->debug("返回设备总数量:%d,带电设备数量：%d",res.devstate_size(),rsltMap.size());
 	return res.SerializeAsString();
 
+}
+
+
+void TopoBizCmd::setLineList2Res(PBNS::OprationMsg_Response& res,int saveId,string stationCim,vector<PBNS::StateBean> &rsltMap)
+{
+	char* psql = "select a.CimId,b.IsElectric, c.StationCim from " \
+		"(select CimId from units where StationCim='%s' and UnitType=9) a " \
+		"left join unit_status b on a.CimId=b.UnitCim left join " \
+		"related_line c on a.CimId=c.UnitCim " \
+		"where b.SaveId=%d and b.IsPower=0 and c.StationCim !='%s'";
+	string sql = DBA->formatSql(psql,stationCim.c_str(),saveId,stationCim.c_str());
+
+	LISTMAP lineList = DBA->getList(sql.c_str());
+	for (int i = 0;i<lineList.size();i++)
+	{
+		STRMAP lineMap = lineList.at(i);
+		string cim = COM->getVal(lineMap,"CimId");
+		int isEle = COM->getIval(lineMap,"IsElectric");
+		string objcim = COM->getVal(lineMap,"StationCim");
+
+		int flag = 0;
+		for (int j = 0;j<rsltMap.size();j++)
+		{
+			PBNS::StateBean bean = rsltMap.at(j);
+			if (bean.cimid() == cim)
+			{
+				flag = 1;
+				break;
+			}
+		}
+
+		// 判断是否带电
+		if (flag == 1)
+		{
+			if (isEle == 0)
+			{
+				// 带电状态由0到1的标记为需要增加的；
+				PBNS::StateBean *pbean = res.add_linelist();
+				pbean->set_iselectric(1);
+				pbean->set_cimid(cim);
+				pbean->set_stationcim(objcim);
+				pbean->set_state(1);
+			}
+		}
+		else
+		{
+			if (isEle == 1)
+			{
+				PBNS::StateBean *pbean = res.add_linelist();
+				pbean->set_iselectric(0);
+				pbean->set_cimid(cim);
+				pbean->set_stationcim(objcim);
+				pbean->set_state(0);
+			}
+
+		}
+	}
+}
+
+void TopoBizCmd::topoOnFileOpen(sClientMsg* msg)
+{
+	PBNS::OprationMsg_Request req;
+	req.ParseFromArray(msg->data,msg->length);
+	string data = execTopoOnBreakerChange(req);
+	App_ClientMgr::instance()->sendData(msg->connectId,data,msg->type);
 }
 
 void TopoBizCmd::topoOnBreakerChange(sClientMsg *msg)

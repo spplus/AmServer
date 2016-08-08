@@ -10,9 +10,9 @@ void DevStateCmd::exec(sClientMsg* msg)
 	}
 	switch (msg->type)
 	{
-	case CMD_DEV_STATE:
+	/*case CMD_DEV_STATE:
 		getDevState(msg);
-		break;
+		break;*/
 	case CMD_STATION_TYPE:
 		getStationType(msg);
 		break;

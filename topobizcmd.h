@@ -58,6 +58,9 @@ private:
 	// 开关变位拓扑
 	void		topoOnBreakerChange(sClientMsg *msg);
 
+	// 打开图形，全站拓扑获取带电状态
+	void		topoOnFileOpen(sClientMsg* msg);
+
 	// 根据元件CIMID进行拓扑，不更新数据库版本
 	void		topoByUnitIdMem(PBNS::StateBean bean,STRMAP& passNodes,vector<PBNS::StateBean>& rsltMap,PBNS::OprationMsg_Request req);
 
@@ -81,7 +84,11 @@ private:
 	void		checkIsCarSwitch(PBNS::OprationMsg_Request& req);
 
 	// 检测是否需要补充或剔除电源电
-	void		adjustPowerPoint(LISTMAP &pList,PBNS::OprationMsg_Request req);
+	LISTMAP	adjustPowerPoint(LISTMAP &pList,PBNS::OprationMsg_Request req);
+	int		findLineFromServerList(LISTMAP plist,string cim);
+	int		findLineFromList(list<PBNS::StateBean> plist,string cim);
+	void		setLineList2Res(PBNS::OprationMsg_Response& res,int saveId,string stationCim,vector<PBNS::StateBean> &rlstMap);
+
 
 	bool		check1(int saveid,string unitcim,PBNS::OprationMsg_Request req);
 	bool		check2(int saveid,string unitcim,PBNS::OprationMsg_Request req);
